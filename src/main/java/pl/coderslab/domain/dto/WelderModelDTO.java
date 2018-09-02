@@ -7,17 +7,17 @@ public class WelderModelDTO {
 
     private Long id;
     private String name;
-    private Long brandId;
+    private BrandDto brand;
     private Boolean mig;
     private Boolean mma;
     private Boolean tig;
     private Boolean plazma;
     private Boolean currentMeter;
     private Boolean voltageMeter;
-    private Double iMin;
-    private Double iMax;
-    private Double uMin;
-    private Double uMax;
+    private ParameterDto migParameter;
+    private ParameterDto mmaParameter;
+    private ParameterDto tigParameter;
+    private ParameterDto plazmaParameter;
     private LocalDateTime creationDate;
     private LocalDateTime modificationDate;
     private Long versionId;
@@ -38,14 +38,12 @@ public class WelderModelDTO {
         this.name = name;
     }
 
-
-    public Long getBrandId() {
-
-        return brandId;
+    public BrandDto getBrand() {
+        return brand;
     }
 
-    public void setBrandId(Long brandId) {
-        this.brandId = brandId;
+    public void setBrand(BrandDto brand) {
+        this.brand = brand;
     }
 
     public Boolean getMig() {
@@ -96,36 +94,36 @@ public class WelderModelDTO {
         this.voltageMeter = voltageMeter;
     }
 
-    public Double getiMin() {
-        return iMin;
+    public ParameterDto getMigParameter() {
+        return migParameter;
     }
 
-    public void setiMin(Double iMin) {
-        this.iMin = iMin;
+    public void setMigParameter(ParameterDto migParameter) {
+        this.migParameter = migParameter;
     }
 
-    public Double getiMax() {
-        return iMax;
+    public ParameterDto getMmaParameter() {
+        return mmaParameter;
     }
 
-    public void setiMax(Double iMax) {
-        this.iMax = iMax;
+    public void setMmaParameter(ParameterDto mmaParameter) {
+        this.mmaParameter = mmaParameter;
     }
 
-    public Double getuMin() {
-        return uMin;
+    public ParameterDto getTigParameter() {
+        return tigParameter;
     }
 
-    public void setuMin(Double uMin) {
-        this.uMin = uMin;
+    public void setTigParameter(ParameterDto tigParameter) {
+        this.tigParameter = tigParameter;
     }
 
-    public Double getuMax() {
-        return uMax;
+    public ParameterDto getPlazmaParameter() {
+        return plazmaParameter;
     }
 
-    public void setuMax(Double uMax) {
-        this.uMax = uMax;
+    public void setPlazmaParameter(ParameterDto plazmaParameter) {
+        this.plazmaParameter = plazmaParameter;
     }
 
     public LocalDateTime getCreationDate() {
@@ -159,17 +157,17 @@ public class WelderModelDTO {
         WelderModelDTO that = (WelderModelDTO) o;
         return Objects.equals(id, that.id) &&
                 Objects.equals(name, that.name) &&
-                Objects.equals(brandId, that.brandId) &&
+                Objects.equals(brand, that.brand) &&
                 Objects.equals(mig, that.mig) &&
                 Objects.equals(mma, that.mma) &&
                 Objects.equals(tig, that.tig) &&
                 Objects.equals(plazma, that.plazma) &&
                 Objects.equals(currentMeter, that.currentMeter) &&
                 Objects.equals(voltageMeter, that.voltageMeter) &&
-                Objects.equals(iMin, that.iMin) &&
-                Objects.equals(iMax, that.iMax) &&
-                Objects.equals(uMin, that.uMin) &&
-                Objects.equals(uMax, that.uMax) &&
+                Objects.equals(migParameter, that.migParameter) &&
+                Objects.equals(mmaParameter, that.mmaParameter) &&
+                Objects.equals(tigParameter, that.tigParameter) &&
+                Objects.equals(plazmaParameter, that.plazmaParameter) &&
                 Objects.equals(creationDate, that.creationDate) &&
                 Objects.equals(modificationDate, that.modificationDate) &&
                 Objects.equals(versionId, that.versionId);
@@ -178,7 +176,7 @@ public class WelderModelDTO {
     @Override
     public int hashCode() {
 
-        return Objects.hash(id, name, brandId, mig, mma, tig, plazma, currentMeter, voltageMeter, iMin, iMax, uMin, uMax, creationDate, modificationDate, versionId);
+        return Objects.hash(id, name, brand, mig, mma, tig, plazma, currentMeter, voltageMeter, migParameter, mmaParameter, tigParameter, plazmaParameter, creationDate, modificationDate, versionId);
     }
 
     @Override
@@ -186,17 +184,17 @@ public class WelderModelDTO {
         return "WelderModelDTO{" +
                 "id=" + id +
                 ", name='" + name + '\'' +
-                ", brandId=" + brandId +
+                ", brand=" + brand +
                 ", mig=" + mig +
                 ", mma=" + mma +
                 ", tig=" + tig +
                 ", plazma=" + plazma +
                 ", currentMeter=" + currentMeter +
                 ", voltageMeter=" + voltageMeter +
-                ", iMin=" + iMin +
-                ", iMax=" + iMax +
-                ", uMin=" + uMin +
-                ", uMax=" + uMax +
+                ", migParameter=" + migParameter +
+                ", mmaParameter=" + mmaParameter +
+                ", tigParameter=" + tigParameter +
+                ", plazmaParameter=" + plazmaParameter +
                 ", creationDate=" + creationDate +
                 ", modificationDate=" + modificationDate +
                 ", versionId=" + versionId +
