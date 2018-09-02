@@ -4,8 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import pl.coderslab.domain.entities.WelderModel;
-import pl.coderslab.domain.repositories.WelderModelRepository;
+import pl.coderslab.domain.dto.WelderModelDTO;
 import pl.coderslab.domain.services.WelderModelService;
 
 import java.util.List;
@@ -22,7 +21,7 @@ public class WelderModelRestController {
     }
 
     @GetMapping
-    public List<WelderModel> getAllModels(){
+    public List<WelderModelDTO> getAllModels(){
         return modelService.findAll();
     }
 }
