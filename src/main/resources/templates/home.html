@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Strona główna</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<th:block th:include="fragments/scripts :: css"></th:block>
+
+</head>
+<body>
+
+<div th:replace="fragments/dashboard :: topNav">
+</div>
+
+
+<div class="container-fluid">
+    <div class="row">
+
+        <th:block th:include="fragments/dashboard :: leftNav">
+        </th:block>
+
+        <main role="main" class="col-md-9 ml-sm-auto col-lg-10 px-4">
+
+            <h2>Section title</h2>
+            <div class="table-responsive">
+                <table class="table table-striped table-sm">
+                    <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Header</th>
+                        <th>Header</th>
+                        <th>Header</th>
+                        <th>Header</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr>
+                        <td>1,001</td>
+                        <td>Lorem</td>
+                        <td>ipsum</td>
+                        <td>dolor</td>
+                        <td>sit</td>
+                    </tr>
+
+                    </tbody>
+                </table>
+            </div>
+        </main>
+    </div>
+</div>
+
+<th:block th:include="fragments/scripts :: scripts">
+</th:block>
+
+</body>
+</html>
