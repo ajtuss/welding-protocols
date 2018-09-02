@@ -23,14 +23,8 @@
 
             <h2>Dodaj model:</h2>
 
-            <form th:method="post" th:object="${welderModel}">
-                Name:<input type="text" th:field="*{name}"><br>
-                <input type="submit" value="Dodaj">
-            </form>
-
-
             <div class="col-md-8">
-                <form class="needs-validation" th:object="${welderModel}">
+                <form class="needs-validation" method="post" th:object="${welderModel}">
                     <div class="row">
                         <div class="col-md-4 mb-3">
                             <label for="brand">Marka</label>
@@ -55,19 +49,19 @@
 
                     <div class="row mb-3">
                         <div class="custom-control custom-checkbox col-md-2 offset-2">
-                            <input type="checkbox" class="custom-control-input" id="mig">
+                            <input type="checkbox" class="custom-control-input" id="mig" th:field="*{mig}">
                             <label class="custom-control-label" for="mig">Mig/Mag</label>
                         </div>
                         <div class="custom-control custom-checkbox col-md-2">
-                            <input type="checkbox" class="custom-control-input" id="mma">
+                            <input type="checkbox" class="custom-control-input" id="mma" th:field="*{mma}">
                             <label class="custom-control-label" for="mma">MMA</label>
                         </div>
                         <div class="custom-control custom-checkbox col-md-2">
-                            <input type="checkbox" class="custom-control-input" id="tig">
+                            <input type="checkbox" class="custom-control-input" id="tig" th:field="*{tig}">
                             <label class="custom-control-label" for="tig">TIG</label>
                         </div>
                         <div class="custom-control custom-checkbox col-md-2">
-                            <input type="checkbox" class="custom-control-input" id="plazma">
+                            <input type="checkbox" class="custom-control-input" id="plazma" th:field="*{plazma}">
                             <label class="custom-control-label" for="plazma">Plazma</label>
                         </div>
                     </div>
@@ -77,11 +71,11 @@
 
                     <div class="row mb-3">
                         <div class="custom-control custom-checkbox col-md-2 offset-2">
-                            <input type="checkbox" class="custom-control-input" id="amp">
+                            <input type="checkbox" class="custom-control-input" id="amp" th:field="*{currentMeter}">
                             <label class="custom-control-label" for="amp">Amperomierz</label>
                         </div>
                         <div class="custom-control custom-checkbox col-md-2">
-                            <input type="checkbox" class="custom-control-input" id="wolt">
+                            <input type="checkbox" class="custom-control-input" id="wolt" th:field="*{voltageMeter}">
                             <label class="custom-control-label" for="wolt">Woltomierz</label>
                         </div>
                     </div>
@@ -96,7 +90,7 @@
                                 <div class="input-group-prepend">
                                     <span class="input-group-text">Imin</span>
                                 </div>
-                                <input type="number" class="form-control" id="Imin" placeholder="Imin" min="0" max="1000" required>
+                                <input type="number" class="form-control" id="Imin" placeholder="Imin" min="0" max="1000" th:field="*{iMin}">
                                 <div class="invalid-feedback" style="width: 100%;">
                                     Wpisz poprawną wartość.
                                 </div>
@@ -108,7 +102,7 @@
                                 <div class="input-group-prepend">
                                     <span class="input-group-text">Imax</span>
                                 </div>
-                                <input type="number" class="form-control" id="Imax" placeholder="Imax" min="0" max="1000" required>
+                                <input type="number" class="form-control" id="Imax" placeholder="Imax" min="0" max="1000" th:field="*{iMax}">
                                 <div class="invalid-feedback" style="width: 100%;">
                                     Wpisz poprawną wartość.
                                 </div>
@@ -120,7 +114,7 @@
                                 <div class="input-group-prepend">
                                     <span class="input-group-text">Umin</span>
                                 </div>
-                                <input type="number" class="form-control" id="Umin" placeholder="Umin" min="0" max="100" step="0.1" required>
+                                <input type="number" class="form-control" id="Umin" placeholder="Umin" min="0" max="100" step="0.1" th:field="*{uMin}">
                                 <div class="invalid-feedback" style="width: 100%;">
                                     Wpisz poprawną wartość.
                                 </div>
@@ -132,14 +126,14 @@
                                 <div class="input-group-prepend">
                                     <span class="input-group-text">Umax</span>
                                 </div>
-                                <input type="number" class="form-control" id="Umax" placeholder="Umax" min="0" max="100" step="0.1" required>
+                                <input type="number" class="form-control" id="Umax" placeholder="Umax" min="0" max="100" step="0.1" th:field="*{uMax}">
                                 <div class="invalid-feedback" style="width: 100%;">
                                     Wpisz poprawną wartość.
                                 </div>
                             </div>
                         </div>
                     </div>
-                    <button class="btn btn-primary btn-lg" type="submit">Continue to checkout</button>
+                    <button class="btn btn-primary btn-lg" type="submit">Dodaj model</button>
                 </form>
             </div>
 
@@ -149,6 +143,8 @@
 
 <th:block th:include="fragments/scripts :: scripts">
 </th:block>
+
+<script type="application/javascript" src="/js/addWelderModel.js"></script>
 
 </body>
 </html>
