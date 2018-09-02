@@ -6,7 +6,7 @@ import org.springframework.boot.autoconfigure.domain.EntityScan;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 
 @SpringBootApplication(scanBasePackages = "pl.coderslab")
-@EnableJpaRepositories(basePackages = "pl.coderslab.domain.repository")
+@EnableJpaRepositories(basePackages = "pl.coderslab.domain.repositories")
 @EntityScan("pl.coderslab.domain.entities")
 public class Application {
 
