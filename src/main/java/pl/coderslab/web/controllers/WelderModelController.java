@@ -5,13 +5,11 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import pl.coderslab.domain.entities.Brand;
-import pl.coderslab.domain.entities.WelderModel;
+import pl.coderslab.domain.dto.WelderModelDTO;
 import pl.coderslab.domain.services.BrandService;
 import pl.coderslab.domain.services.WelderModelService;
-
-import java.util.List;
 
 @Controller
 @RequestMapping("/weldmodels")
@@ -29,18 +27,20 @@ public class WelderModelController {
 
 
     @GetMapping
-    public String showModels(){
+    public String showModels() {
         return "weldModels";
     }
 
     @GetMapping("/add")
-    public String showAddModels(Model model){
-        model.addAttribute("welderModel", new WelderModel());
+    public String showAddModels(Model model) {
+        model.addAttribute("welderModel", new WelderModelDTO());
         return "forms/addWelderModel";
     }
 
-    @ModelAttribute("allBrands")
-    public List<Brand> getAllBrands(){
-        return brandService.findAll();
+    @PostMapping("/add")
+    public String addModel(@ModelAttribute WelderModelDTO welderModel) {
+        modelService.save(welderModel);
+        return "redirect:/weldmodels";
     }
+
 }
