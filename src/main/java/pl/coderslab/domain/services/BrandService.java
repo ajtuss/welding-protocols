@@ -10,7 +10,7 @@ public interface BrandService {
 
     void saveBrand(BrandDto brandDto);
 
-    List<Brand> findAll();
+    List<BrandDto> findAll();
 
     BrandDto findById(Long id);
 

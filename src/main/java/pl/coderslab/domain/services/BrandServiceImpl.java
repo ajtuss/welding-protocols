@@ -1,6 +1,7 @@
 package pl.coderslab.domain.services;
 
 import org.modelmapper.ModelMapper;
+import org.modelmapper.TypeToken;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import pl.coderslab.domain.dto.BrandDto;
@@ -8,6 +9,7 @@ import pl.coderslab.domain.entities.Brand;
 import pl.coderslab.domain.repositories.BrandRepository;
 
 import javax.transaction.Transactional;
+import java.lang.reflect.Type;
 import java.util.List;
 
 @Service
@@ -33,8 +35,10 @@ public class BrandServiceImpl implements BrandService {
     }
 
     @Override
-    public List<Brand> findAll() {
-        return brandRepository.findAll();
+    public List<BrandDto> findAll() {
+        List<Brand> brands = brandRepository.findAll();
+        Type resultType = new TypeToken<List<BrandDto>>() {}.getType();
+        return modelMapper.map(brands, resultType);
     }
 
     @Override
