@@ -24,6 +24,9 @@
             <h2>Dodaj markę:</h2>
 
             <form th:method="post" th:object="${brand}">
+                <input type="hidden" th:field="*{versionId}">
+                <input type="hidden" th:field="*{creationDate}">
+                <input type="hidden" th:field="*{modificationDate}">
                 Name:<input type="text" th:field="*{name}"><br>
                 <input type="submit" value="Dodaj">
             </form>

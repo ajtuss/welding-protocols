@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import pl.coderslab.domain.dto.BrandDto;
 import pl.coderslab.domain.entities.Brand;
 import pl.coderslab.domain.services.BrandService;
 
@@ -27,28 +28,27 @@ public class BrandController {
 
     @GetMapping("/add")
     public String showAddBrand(Model model) {
-        model.addAttribute(new Brand());
+        model.addAttribute("brand",new BrandDto());
         return "forms/addBrand";
     }
 
     @PostMapping("/add")
-    public String addBrand(@ModelAttribute Brand brand) {
-        brandService.saveBrand(brand);
-
+    public String addBrand(@ModelAttribute BrandDto brandDto) {
+        brandService.saveBrand(brandDto);
         return "redirect:/brands";
     }
 
     @GetMapping("/edit/{id:\\d+}")
     public String showEditBrand(@PathVariable Long id,
                                 Model model) {
-        model.addAttribute("brand", brandService.findById(id));
+        BrandDto brandDto = brandService.findById(id);
+        model.addAttribute("brand", brandDto);
         return "forms/editBrand";
     }
 
     @PostMapping("/edit/{id:\\d+}")
     public String editBrand(@PathVariable Long id,
-                            @ModelAttribute Brand brand) {
-
+                            @ModelAttribute BrandDto brand) {
         brandService.updateBrand(id,brand);
         return "redirect:/brands";
     }

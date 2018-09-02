@@ -1,7 +1,9 @@
 package pl.coderslab.domain.services;
 
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import pl.coderslab.domain.dto.BrandDto;
 import pl.coderslab.domain.entities.Brand;
 import pl.coderslab.domain.repositories.BrandRepository;
 
@@ -12,16 +14,21 @@ import java.util.List;
 @Transactional
 public class BrandServiceImpl implements BrandService {
 
+
+    private final ModelMapper modelMapper;
+
     private final BrandRepository brandRepository;
 
     @Autowired
-    public BrandServiceImpl(BrandRepository brandRepository) {
+    public BrandServiceImpl(BrandRepository brandRepository, ModelMapper modelMapper) {
         this.brandRepository = brandRepository;
+        this.modelMapper = modelMapper;
     }
 
 
     @Override
-    public void saveBrand(Brand brand) {
+    public void saveBrand(BrandDto brandDto) {
+        Brand brand = modelMapper.map(brandDto, Brand.class);
         brandRepository.save(brand);
     }
 
@@ -31,16 +38,17 @@ public class BrandServiceImpl implements BrandService {
     }
 
     @Override
-    public Brand findById(Long id) {
-        return brandRepository.findById(id).orElse(null);
+    public BrandDto findById(Long id) {
+        Brand brand = brandRepository.findById(id).orElse(null);
+
+        return modelMapper.map(brand, BrandDto.class);
     }
 
     @Override
-    public void updateBrand(Long id, Brand brand) {
-        Brand brand1 = brandRepository.findById(id).orElse(null);
-        if(brand != null){
-            brand1.setName(brand.getName());
-        }
+    public void updateBrand(Long id, BrandDto brandDto) {
+        Brand brandOld = brandRepository.findById(id).orElse(null);
+        Brand brand = modelMapper.map(brandDto, Brand.class);
+        brandOld.setName(brand.getName());
     }
 
 
