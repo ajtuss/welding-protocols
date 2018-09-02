@@ -25,17 +25,17 @@ public class WelderModel extends AbstractEntity {
 
     private Boolean voltageMeter;
 
-    @Column(precision = 4, scale = 1)
-    private Double iMin;
+    @OneToOne(cascade = CascadeType.REMOVE)
+    private Parameter migParameter;
 
-    @Column(precision = 4, scale = 1)
-    private Double iMax;
+    @OneToOne(cascade = CascadeType.REMOVE)
+    private Parameter mmaParameter;
 
-    @Column(precision = 5, scale = 2)
-    private Double uMin;
+    @OneToOne(cascade = CascadeType.REMOVE)
+    private Parameter tigParameter;
 
-    @Column(precision = 5, scale = 2)
-    private Double uMax;
+    @OneToOne(cascade = CascadeType.REMOVE)
+    private Parameter plazmaParameter;
 
     public String getName() {
         return name;
@@ -101,36 +101,36 @@ public class WelderModel extends AbstractEntity {
         this.voltageMeter = voltageMeter;
     }
 
-    public Double getiMin() {
-        return iMin;
+    public Parameter getMigParameter() {
+        return migParameter;
     }
 
-    public void setiMin(Double iMin) {
-        this.iMin = iMin;
+    public void setMigParameter(Parameter migParameter) {
+        this.migParameter = migParameter;
     }
 
-    public Double getiMax() {
-        return iMax;
+    public Parameter getMmaParameter() {
+        return mmaParameter;
     }
 
-    public void setiMax(Double iMax) {
-        this.iMax = iMax;
+    public void setMmaParameter(Parameter mmaParameter) {
+        this.mmaParameter = mmaParameter;
     }
 
-    public Double getuMin() {
-        return uMin;
+    public Parameter getTigParameter() {
+        return tigParameter;
     }
 
-    public void setuMin(Double uMin) {
-        this.uMin = uMin;
+    public void setTigParameter(Parameter tigParameter) {
+        this.tigParameter = tigParameter;
     }
 
-    public Double getuMax() {
-        return uMax;
+    public Parameter getPlazmaParameter() {
+        return plazmaParameter;
     }
 
-    public void setuMax(Double uMax) {
-        this.uMax = uMax;
+    public void setPlazmaParameter(Parameter plazmaParameter) {
+        this.plazmaParameter = plazmaParameter;
     }
 
     @Override
@@ -140,22 +140,23 @@ public class WelderModel extends AbstractEntity {
         if (!super.equals(o)) return false;
         WelderModel that = (WelderModel) o;
         return Objects.equals(name, that.name) &&
+                Objects.equals(brand, that.brand) &&
                 Objects.equals(mig, that.mig) &&
                 Objects.equals(mma, that.mma) &&
                 Objects.equals(tig, that.tig) &&
                 Objects.equals(plazma, that.plazma) &&
                 Objects.equals(currentMeter, that.currentMeter) &&
                 Objects.equals(voltageMeter, that.voltageMeter) &&
-                Objects.equals(iMin, that.iMin) &&
-                Objects.equals(iMax, that.iMax) &&
-                Objects.equals(uMin, that.uMin) &&
-                Objects.equals(uMax, that.uMax);
+                Objects.equals(migParameter, that.migParameter) &&
+                Objects.equals(mmaParameter, that.mmaParameter) &&
+                Objects.equals(tigParameter, that.tigParameter) &&
+                Objects.equals(plazmaParameter, that.plazmaParameter);
     }
 
     @Override
     public int hashCode() {
 
-        return Objects.hash(super.hashCode(), name, mig, mma, tig, plazma, currentMeter, voltageMeter, iMin, iMax, uMin, uMax);
+        return Objects.hash(super.hashCode(), name, brand, mig, mma, tig, plazma, currentMeter, voltageMeter, migParameter, mmaParameter, tigParameter, plazmaParameter);
     }
 
     @Override
@@ -169,10 +170,10 @@ public class WelderModel extends AbstractEntity {
                 ", plazma=" + plazma +
                 ", currentMeter=" + currentMeter +
                 ", voltageMeter=" + voltageMeter +
-                ", iMin=" + iMin +
-                ", iMax=" + iMax +
-                ", uMin=" + uMin +
-                ", uMax=" + uMax +
+                ", migParameter=" + migParameter +
+                ", mmaParameter=" + mmaParameter +
+                ", tigParameter=" + tigParameter +
+                ", plazmaParameter=" + plazmaParameter +
                 "} " + super.toString();
     }
 }
