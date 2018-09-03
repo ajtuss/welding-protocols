@@ -1,7 +1,11 @@
 $(document).ready(function () {
 
+    var checked = '<span data-feather="check-square"></span>';
+    var unChecked = '<span data-feather="square"></span>';
+
     var table = $('#table').DataTable({
         initComplete: function () {
+            feather.replace();
         },
 
         dom: 'Bfrtip',
@@ -18,14 +22,14 @@ $(document).ready(function () {
                 extend: 'selectedSingle',
                 text: 'Edytuj',
                 action: function (e, dt, button, config) {
-                    window.location.href = '/weldmodels/edit/'+dt.row({selected: true}).data().id;
+                    window.location.href = '/weldmodels/'+dt.row({selected: true}).data().id;
                 }
             },
             {
                 extend: 'selectedSingle',
                 text: 'Usuń',
                 action: function (e, dt, button, config) {
-                    window.location.href = '/weldmodels/delete/'+dt.row({selected: true}).data().id;
+                    window.location.href = '/weldmodels/'+dt.row({selected: true}).data().id+'/delete';
                 }
             }
         ],
@@ -44,8 +48,55 @@ $(document).ready(function () {
             // }
         },
         columns: [
-            {'data': 'id'},
-            {'data': 'name'}
+            {'data': 'id',
+            'width': '5%'},
+            {
+                'data': 'brand.name',
+                'width': '15%'
+            },
+            {'data': 'name'},
+            {
+                'data': 'mig',
+                'width': '7%',
+                "render": function (data, type, row) {
+                    return (data === true) ? checked : unChecked;
+                }
+            },
+            {
+                'data': 'mma',
+                'width': '7%',
+                "render": function (data, type, row) {
+                    return (data === true) ? checked : unChecked;
+                }
+            },
+            {
+                'data': 'tig',
+                'width': '7%',
+                "render": function (data, type, row) {
+                    return (data === true) ? checked : unChecked;
+                }
+            },
+            {
+                'data': 'plazma',
+                'width': '7%',
+                "render": function (data, type, row) {
+                    return (data === true) ? checked : unChecked;
+                }
+            },
+            {
+                'data': 'currentMeter',
+                'width': '7%',
+                "render": function (data, type, row) {
+                    return (data === true) ? checked : unChecked;
+                }
+            },
+            {
+                'data': 'voltageMeter',
+                'width': '7%',
+                "render": function (data, type, row) {
+                    return (data === true) ? checked : unChecked;
+                }
+            }
 
         ]
 

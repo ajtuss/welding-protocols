@@ -5,10 +5,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import pl.coderslab.domain.dto.BrandDto;
-import pl.coderslab.domain.entities.Brand;
 import pl.coderslab.domain.services.BrandService;
-
-import java.util.List;
 
 @Controller
 @RequestMapping("/brands")

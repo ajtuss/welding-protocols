@@ -1,13 +1,13 @@
 package pl.coderslab.domain.services;
 
-import pl.coderslab.domain.dto.WelderModelDTO;
+import pl.coderslab.domain.dto.WelderModelDto;
 
 import java.util.List;
 
 public interface WelderModelService {
 
-    WelderModelDTO findById(Long id);
-    List<WelderModelDTO> findAll();
-    void save(WelderModelDTO model);
-    void update(Long id, WelderModelDTO model);
+    WelderModelDto findById(Long id);
+    List<WelderModelDto> findAll();
+    void save(WelderModelDto model);
+    void update(Long id, WelderModelDto model);
 }

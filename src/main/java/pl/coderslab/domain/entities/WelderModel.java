@@ -25,17 +25,41 @@ public class WelderModel extends AbstractEntity {
 
     private Boolean voltageMeter;
 
-    @OneToOne(cascade = CascadeType.REMOVE)
-    private Parameter migParameter;
+    @Column(precision = 4, scale = 1)
+    private Double migImin;
 
-    @OneToOne(cascade = CascadeType.REMOVE)
-    private Parameter mmaParameter;
+    @Column(precision = 4, scale = 1)
+    private Double migImax;
 
-    @OneToOne(cascade = CascadeType.REMOVE)
-    private Parameter tigParameter;
+    @Column(precision = 5, scale = 2)
+    private Double migUmin;
 
-    @OneToOne(cascade = CascadeType.REMOVE)
-    private Parameter plazmaParameter;
+    @Column(precision = 5, scale = 2)
+    private Double migUmax;
+
+    @Column(precision = 4, scale = 1)
+    private Double mmaImin;
+
+    @Column(precision = 4, scale = 1)
+    private Double mmaImax;
+
+    @Column(precision = 5, scale = 2)
+    private Double mmaUmin;
+
+    @Column(precision = 5, scale = 2)
+    private Double mmaUmax;
+
+    @Column(precision = 4, scale = 1)
+    private Double tigImin;
+
+    @Column(precision = 4, scale = 1)
+    private Double tigImax;
+
+    @Column(precision = 5, scale = 2)
+    private Double tigUmin;
+
+    @Column(precision = 5, scale = 2)
+    private Double tigUmax;
 
     public String getName() {
         return name;
@@ -101,36 +125,100 @@ public class WelderModel extends AbstractEntity {
         this.voltageMeter = voltageMeter;
     }
 
-    public Parameter getMigParameter() {
-        return migParameter;
+    public Double getMigImin() {
+        return migImin;
     }
 
-    public void setMigParameter(Parameter migParameter) {
-        this.migParameter = migParameter;
+    public void setMigImin(Double migImin) {
+        this.migImin = migImin;
     }
 
-    public Parameter getMmaParameter() {
-        return mmaParameter;
+    public Double getMigImax() {
+        return migImax;
     }
 
-    public void setMmaParameter(Parameter mmaParameter) {
-        this.mmaParameter = mmaParameter;
+    public void setMigImax(Double migImax) {
+        this.migImax = migImax;
     }
 
-    public Parameter getTigParameter() {
-        return tigParameter;
+    public Double getMigUmin() {
+        return migUmin;
     }
 
-    public void setTigParameter(Parameter tigParameter) {
-        this.tigParameter = tigParameter;
+    public void setMigUmin(Double migUmin) {
+        this.migUmin = migUmin;
     }
 
-    public Parameter getPlazmaParameter() {
-        return plazmaParameter;
+    public Double getMigUmax() {
+        return migUmax;
     }
 
-    public void setPlazmaParameter(Parameter plazmaParameter) {
-        this.plazmaParameter = plazmaParameter;
+    public void setMigUmax(Double migUmax) {
+        this.migUmax = migUmax;
+    }
+
+    public Double getMmaImin() {
+        return mmaImin;
+    }
+
+    public void setMmaImin(Double mmaImin) {
+        this.mmaImin = mmaImin;
+    }
+
+    public Double getMmaImax() {
+        return mmaImax;
+    }
+
+    public void setMmaImax(Double mmaImax) {
+        this.mmaImax = mmaImax;
+    }
+
+    public Double getMmaUmin() {
+        return mmaUmin;
+    }
+
+    public void setMmaUmin(Double mmaUmin) {
+        this.mmaUmin = mmaUmin;
+    }
+
+    public Double getMmaUmax() {
+        return mmaUmax;
+    }
+
+    public void setMmaUmax(Double mmaUmax) {
+        this.mmaUmax = mmaUmax;
+    }
+
+    public Double getTigImin() {
+        return tigImin;
+    }
+
+    public void setTigImin(Double tigImin) {
+        this.tigImin = tigImin;
+    }
+
+    public Double getTigImax() {
+        return tigImax;
+    }
+
+    public void setTigImax(Double tigImax) {
+        this.tigImax = tigImax;
+    }
+
+    public Double getTigUmin() {
+        return tigUmin;
+    }
+
+    public void setTigUmin(Double tigUmin) {
+        this.tigUmin = tigUmin;
+    }
+
+    public Double getTigUmax() {
+        return tigUmax;
+    }
+
+    public void setTigUmax(Double tigUmax) {
+        this.tigUmax = tigUmax;
     }
 
     @Override
@@ -147,16 +235,24 @@ public class WelderModel extends AbstractEntity {
                 Objects.equals(plazma, that.plazma) &&
                 Objects.equals(currentMeter, that.currentMeter) &&
                 Objects.equals(voltageMeter, that.voltageMeter) &&
-                Objects.equals(migParameter, that.migParameter) &&
-                Objects.equals(mmaParameter, that.mmaParameter) &&
-                Objects.equals(tigParameter, that.tigParameter) &&
-                Objects.equals(plazmaParameter, that.plazmaParameter);
+                Objects.equals(migImin, that.migImin) &&
+                Objects.equals(migImax, that.migImax) &&
+                Objects.equals(migUmin, that.migUmin) &&
+                Objects.equals(migUmax, that.migUmax) &&
+                Objects.equals(mmaImin, that.mmaImin) &&
+                Objects.equals(mmaImax, that.mmaImax) &&
+                Objects.equals(mmaUmin, that.mmaUmin) &&
+                Objects.equals(mmaUmax, that.mmaUmax) &&
+                Objects.equals(tigImin, that.tigImin) &&
+                Objects.equals(tigImax, that.tigImax) &&
+                Objects.equals(tigUmin, that.tigUmin) &&
+                Objects.equals(tigUmax, that.tigUmax);
     }
 
     @Override
     public int hashCode() {
 
-        return Objects.hash(super.hashCode(), name, brand, mig, mma, tig, plazma, currentMeter, voltageMeter, migParameter, mmaParameter, tigParameter, plazmaParameter);
+        return Objects.hash(super.hashCode(), name, brand, mig, mma, tig, plazma, currentMeter, voltageMeter, migImin, migImax, migUmin, migUmax, mmaImin, mmaImax, mmaUmin, mmaUmax, tigImin, tigImax, tigUmin, tigUmax);
     }
 
     @Override
@@ -170,10 +266,18 @@ public class WelderModel extends AbstractEntity {
                 ", plazma=" + plazma +
                 ", currentMeter=" + currentMeter +
                 ", voltageMeter=" + voltageMeter +
-                ", migParameter=" + migParameter +
-                ", mmaParameter=" + mmaParameter +
-                ", tigParameter=" + tigParameter +
-                ", plazmaParameter=" + plazmaParameter +
+                ", migImin=" + migImin +
+                ", migImax=" + migImax +
+                ", migUmin=" + migUmin +
+                ", migUmax=" + migUmax +
+                ", mmaImin=" + mmaImin +
+                ", mmaImax=" + mmaImax +
+                ", mmaUmin=" + mmaUmin +
+                ", mmaUmax=" + mmaUmax +
+                ", tigImin=" + tigImin +
+                ", tigImax=" + tigImax +
+                ", tigUmin=" + tigUmin +
+                ", tigUmax=" + tigUmax +
                 "} " + super.toString();
     }
 }

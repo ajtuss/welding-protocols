@@ -4,7 +4,7 @@ import org.modelmapper.ModelMapper;
 import org.modelmapper.TypeToken;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import pl.coderslab.domain.dto.WelderModelDTO;
+import pl.coderslab.domain.dto.WelderModelDto;
 import pl.coderslab.domain.entities.WelderModel;
 import pl.coderslab.domain.repositories.BrandRepository;
 import pl.coderslab.domain.repositories.WelderModelRepository;
@@ -31,29 +31,30 @@ public class WelderModelServiceImpl implements WelderModelService {
     }
 
     @Override
-    public WelderModelDTO findById(Long id) {
+    public WelderModelDto findById(Long id) {
         WelderModel model = modelRepository.findById(id).orElse(null);
-        return modelMapper.map(model, WelderModelDTO.class);
+        return modelMapper.map(model, WelderModelDto.class);
     }
 
     @Override
-    public List<WelderModelDTO> findAll() {
+    public List<WelderModelDto> findAll() {
         List<WelderModel> models = modelRepository.findAll();
-        Type resultType = new TypeToken<List<WelderModelDTO>>() {}.getType();
+        Type resultType = new TypeToken<List<WelderModelDto>>() {}.getType();
         return modelMapper.map(models, resultType);
     }
 
     @Override
-    public void save(WelderModelDTO modelDTO) {
+    public void save(WelderModelDto modelDTO) {
         WelderModel welderModel = modelMapper.map(modelDTO, WelderModel.class);
         modelRepository.save(welderModel);
     }
 
     @Override
-    public void update(Long id, WelderModelDTO modelDTO) {
-        WelderModel modelOld = modelRepository.findById(id).orElse(null);
+    public void update(Long id, WelderModelDto modelDTO) {
         WelderModel model = modelMapper.map(modelDTO, WelderModel.class);
+        model.setId(id);
+        System.out.println(model);
+        modelRepository.save(model);
         //todo
-//        modelOld.setBrand();
     }
 }
