@@ -14,6 +14,7 @@ public class WelderModelDto {
     private Boolean plazma;
     private Boolean currentMeter;
     private Boolean voltageMeter;
+    private Boolean stepControl;
     private Double migImin;
     private Double migImax;
     private Double migUmin;
@@ -100,6 +101,14 @@ public class WelderModelDto {
 
     public void setVoltageMeter(Boolean voltageMeter) {
         this.voltageMeter = voltageMeter;
+    }
+
+    public Boolean getStepControl() {
+        return stepControl;
+    }
+
+    public void setStepControl(Boolean stepControl) {
+        this.stepControl = stepControl;
     }
 
     public Double getMigImin() {
