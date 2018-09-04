@@ -47,6 +47,8 @@ public class CustomerServiceImpl implements CustomerService {
 
     @Override
     public void updateCustomer(Long id, CustomerDto customerDto) {
-
+        Customer customer = modelMapper.map(customerDto, Customer.class);
+        customer.setId(id);
+        customerRepository.save(customer);
     }
 }
