@@ -8,9 +8,9 @@ public interface CustomerService {
 
     List<CustomerDto> findAll();
 
-    void saveCustomer(CustomerDto customerDto);
+    void save(CustomerDto customerDto);
 
     CustomerDto findById(Long id);
 
-    void updateCustomer(Long id, CustomerDto customerDto);
+    void update(Long id, CustomerDto customerDto);
 }

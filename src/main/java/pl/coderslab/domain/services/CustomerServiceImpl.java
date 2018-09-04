@@ -34,7 +34,7 @@ public class CustomerServiceImpl implements CustomerService {
     }
 
     @Override
-    public void saveCustomer(CustomerDto customerDto) {
+    public void save(CustomerDto customerDto) {
         Customer customer = modelMapper.map(customerDto, Customer.class);
         customerRepository.save(customer);
     }
@@ -46,7 +46,7 @@ public class CustomerServiceImpl implements CustomerService {
     }
 
     @Override
-    public void updateCustomer(Long id, CustomerDto customerDto) {
+    public void update(Long id, CustomerDto customerDto) {
         Customer customer = modelMapper.map(customerDto, Customer.class);
         customer.setId(id);
         customerRepository.save(customer);
