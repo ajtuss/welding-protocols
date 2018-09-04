@@ -10,7 +10,7 @@ import pl.coderslab.domain.services.BrandService;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/brand")
+@RequestMapping("/api/brands")
 public class BrandRestController {
 
     private final BrandService brandService;
