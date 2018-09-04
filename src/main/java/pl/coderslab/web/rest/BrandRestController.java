@@ -2,9 +2,11 @@ package pl.coderslab.web.rest;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import pl.coderslab.domain.dto.BrandDto;
+import pl.coderslab.domain.dto.WelderModelDto;
 import pl.coderslab.domain.services.BrandService;
 
 import java.util.List;
@@ -23,5 +25,16 @@ public class BrandRestController {
     @GetMapping
     public List<BrandDto> getAllBrands() {
         return brandService.findAll();
+    }
+
+    @GetMapping("{id:\\d}")
+    public BrandDto getBrandByBrandId(@PathVariable Long id){
+        return brandService.findById(id);
+    }
+
+
+    @GetMapping("{id:\\d}/models")
+    public List<WelderModelDto> getModelsByBrandId(@PathVariable Long id){
+        return brandService.findWelderModelsByBrandId(id);
     }
 }
