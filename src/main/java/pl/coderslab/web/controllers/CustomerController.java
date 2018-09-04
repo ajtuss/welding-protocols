@@ -3,10 +3,7 @@ package pl.coderslab.web.controllers;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 import pl.coderslab.domain.dto.CustomerDto;
 import pl.coderslab.domain.services.CustomerService;
 
@@ -36,6 +33,19 @@ public class CustomerController {
     @PostMapping("/add")
     public String addCustomer(@ModelAttribute CustomerDto customerDto){
         customerService.saveCustomer(customerDto);
+        return "redirect:/customers";
+    }
+
+    @GetMapping("/{id:\\d+}")
+    public String showEditCustomerForm(@PathVariable Long id, Model model){
+        CustomerDto customerDto = customerService.findById(id);
+        model.addAttribute("customer", customerDto);
+        return "forms/editCustomer";
+    }
+
+    @PostMapping("{id:\\d+}")
+    public String editCustomer(@PathVariable Long id, @ModelAttribute CustomerDto customerDto){
+        customerService.updateCustomer(id,customerDto);
         return "redirect:/customers";
     }
 }
