@@ -10,7 +10,7 @@ import pl.coderslab.domain.services.MachineService;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/machine")
+@RequestMapping("/api/machines")
 public class MachineRestController {
 
     private final MachineService machineService;
