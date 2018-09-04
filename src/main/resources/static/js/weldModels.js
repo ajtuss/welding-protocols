@@ -51,7 +51,7 @@ $(document).ready(function () {
             {'data': 'id',
             'width': '5%'},
             {
-                'data': 'brand.name',
+                'data': 'brandName',
                 'width': '15%'
             },
             {'data': 'name'},

@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Dodaj Model</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <th:block th:include="fragments/scripts :: css"></th:block>
+
+</head>
+<body>
+
+<div th:replace="fragments/dashboard :: topNav">
+</div>
+
+
+<div class="container-fluid">
+    <div class="row">
+
+        <th:block th:include="fragments/dashboard :: leftNav">
+        </th:block>
+
+        <main role="main" class="col-md-9 ml-sm-auto col-lg-10 px-4">
+
+            <h2>Dodaj model:</h2>
+
+            <div class="col-md-8">
+                <form class="needs-validation" method="post" th:object="${machine}">
+                    <input type="hidden" th:field="*{versionId}">
+                    <div class="row">
+                        <div class="col-md-5 mb-3">
+                            <label for="brand">Marka</label>
+                            <select class="custom-select d-block w-100" id="brand">
+                            </select>
+                            <div class="invalid-feedback">
+                                Wybierz markę urządzenia.
+                            </div>
+                        </div>
+                        <div class="col-md-7 mb-3">
+                            <label for="model">Model</label>
+                            <select class="custom-select d-block w-100" id="model" th:field="*{welderModel}" required>
+                            </select>
+                            <div class="invalid-feedback">
+                                Wybierz markę urządzenia.
+                            </div>
+                        </div>
+                    </div>
+                    <hr class="mb-3">
+
+
+
+
+
+                    <button class="btn btn-primary btn-lg offset-10" type="submit">Zapisz</button>
+                </form>
+            </div>
+
+        </main>
+    </div>
+</div>
+
+<th:block th:include="fragments/scripts :: scripts">
+</th:block>
+
+<script type="application/javascript" src="/js/addMachine.js"></script>
+
+</body>
+</html>
