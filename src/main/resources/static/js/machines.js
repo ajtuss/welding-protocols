@@ -36,7 +36,7 @@ $(document).ready(function () {
             style: 'single'
         },
         ajax: {
-            url: '/api/mechine',
+            url: '/api/machines',
             type: 'get', //typ połączenia
             // contentType: 'application/json', //gdy wysyłamy dane czasami chcemy ustawić ich typ
             // dataType: 'json', //typ danych jakich oczekujemy w odpowiedzi
@@ -50,30 +50,10 @@ $(document).ready(function () {
                 'data': 'id',
                 'width': '5%'
             },
-            {'data': 'shortName'},
-            {
-                'data': 'fullName'
-            },
-            {
-                'data': 'nip'
-            },
-            {
-                'data': 'zip',
-                'width': '7%'
-            },
-            {
-                'data': 'city',
-                'width': '7%'
-            },
-            {
-                'data': 'street',
-                'width': '7%'
-            },
-            {
-                'data': 'email',
-                'width': '7%'
-            }
-
+            {'data': 'welderModelBrandName'},
+            {'data': 'welderModelName'},
+            {'data': 'serialNumber'},
+            {'data': 'customerShortName'}
         ]
 
     });

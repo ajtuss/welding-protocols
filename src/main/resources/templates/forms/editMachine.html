@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
 <head>
-    <title>Dodaj Urządzenie</title>
+    <title>Edytuj Urządzenie</title>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <th:block th:include="fragments/scripts :: css"></th:block>
@@ -21,7 +21,7 @@
 
         <main role="main" class="col-md-9 ml-sm-auto col-lg-10 px-4">
 
-            <h2>Dodaj urządzenie:</h2>
+            <h2>Edytuj urządzenie:</h2>
 
             <div class="col-md-8">
                 <form class="needs-validation" method="post" th:object="${machine}">
@@ -29,7 +29,8 @@
                     <div class="row">
                         <div class="col-md-5 mb-3">
                             <label for="customer">Firma</label>
-                            <select class="custom-select d-block w-100" id="customer" th:field="*{customerId}">
+                            <select class="custom-select d-block w-100" id="customer" th:field="*{customerId}"
+                                    th:attr="data-id=${machine.customerId}">
                                 <option value="" disabled selected>Wybierz Firmę</option>
                             </select>
                             <div class="invalid-feedback">
@@ -40,7 +41,7 @@
                     <div class="row">
                         <div class="col-md-5 mb-3">
                             <label for="brand">Marka</label>
-                            <select class="custom-select d-block w-100" id="brand">
+                            <select th:attr="data-id=${machine.welderModelBrandId}" class="custom-select d-block w-100" id="brand" required>
                                 <option value="" disabled selected>Wybierz Markę</option>
                             </select>
                             <div class="invalid-feedback">
@@ -49,7 +50,8 @@
                         </div>
                         <div class="col-md-7 mb-3">
                             <label for="model">Model</label>
-                            <select class="custom-select d-block w-100" id="model" th:field="*{welderModelId}" required>
+                            <select class="custom-select d-block w-100" id="model" th:field="*{welderModelId}" required
+                                    th:attr="data-id=${machine.welderModelId}">
                             </select>
                             <div class="invalid-feedback">
                                 Wybierz markę urządzenia.
@@ -86,7 +88,7 @@
 <th:block th:include="fragments/scripts :: scripts">
 </th:block>
 
-<script type="application/javascript" src="/js/addMachine.js"></script>
+<script type="application/javascript" src="/js/editMachine.js"></script>
 
 </body>
 </html>
