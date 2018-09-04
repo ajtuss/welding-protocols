@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Dodaj Model</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <th:block th:include="fragments/scripts :: css"></th:block>
+
+</head>
+<body>
+
+<div th:replace="fragments/dashboard :: topNav">
+</div>
+
+
+<div class="container-fluid">
+    <div class="row">
+
+        <th:block th:include="fragments/dashboard :: leftNav">
+        </th:block>
+
+        <main role="main" class="col-md-9 ml-sm-auto col-lg-10 px-4">
+
+            <h2 class="mt-4 mb-4">Edytuj klienta:</h2>
+
+            <div class="col-md-8">
+                <form class="needs-validation" method="post" th:object="${customer}">
+                    <input type="hidden" th:field="*{versionId}">
+                    <div class="row">
+                        <div class="col-md-3 mb-3">
+                            <label for="short">Skrót</label>
+                            <input type="text" class="form-control" id="short" placeholder="Wpisz skrót..."
+                                   th:field="*{shortName}" required>
+                            <div class="invalid-feedback">
+                            </div>
+                        </div>
+                        <div class="col-md-9 mb-3">
+                            <label for="model">Nazwa firmy</label>
+                            <input type="text" class="form-control" id="model" placeholder="Wpisz pełna nazwę firmy..."
+                                   th:field="*{fullName}" required>
+                            <div class="invalid-feedback">
+                            </div>
+                        </div>
+                    </div>
+                    <hr class="mb-3">
+
+                    <h6 class="mb-3">Reszta danych</h6>
+
+
+
+
+                    <button class="btn btn-primary btn-lg offset-10" type="submit">Zapisz</button>
+                </form>
+            </div>
+
+        </main>
+    </div>
+</div>
+
+<th:block th:include="fragments/scripts :: scripts">
+</th:block>
+
+<script type="application/javascript" src="/js/addWelderModel.js"></script>
+
+</body>
+</html>
