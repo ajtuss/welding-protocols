@@ -7,7 +7,8 @@ public class WelderModelDto {
 
     private Long id;
     private String name;
-    private BrandDto brand;
+    private Long brandId;
+    private String brandName;
     private Boolean mig;
     private Boolean mma;
     private Boolean tig;
@@ -47,12 +48,20 @@ public class WelderModelDto {
         this.name = name;
     }
 
-    public BrandDto getBrand() {
-        return brand;
+    public Long getBrandId() {
+        return brandId;
     }
 
-    public void setBrand(BrandDto brand) {
-        this.brand = brand;
+    public void setBrandId(Long brandId) {
+        this.brandId = brandId;
+    }
+
+    public String getBrandName() {
+        return brandName;
+    }
+
+    public void setBrandName(String brandName) {
+        this.brandName = brandName;
     }
 
     public Boolean getMig() {
@@ -238,7 +247,6 @@ public class WelderModelDto {
         WelderModelDto that = (WelderModelDto) o;
         return Objects.equals(id, that.id) &&
                 Objects.equals(name, that.name) &&
-                Objects.equals(brand, that.brand) &&
                 Objects.equals(mig, that.mig) &&
                 Objects.equals(mma, that.mma) &&
                 Objects.equals(tig, that.tig) &&
@@ -265,6 +273,6 @@ public class WelderModelDto {
     @Override
     public int hashCode() {
 
-        return Objects.hash(id, name, brand, mig, mma, tig, plazma, currentMeter, voltageMeter, migImin, migImax, migUmin, migUmax, mmaImin, mmaImax, mmaUmin, mmaUmax, tigImin, tigImax, tigUmin, tigUmax, creationDate, modificationDate, versionId);
+        return Objects.hash(id, name, mig, mma, tig, plazma, currentMeter, voltageMeter, migImin, migImax, migUmin, migUmax, mmaImin, mmaImax, mmaUmin, mmaUmax, tigImin, tigImax, tigUmin, tigUmax, creationDate, modificationDate, versionId);
     }
 }
