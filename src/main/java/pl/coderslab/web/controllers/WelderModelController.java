@@ -43,7 +43,6 @@ public class WelderModelController {
     @GetMapping("/{id:\\d+}")
     public String showEditModel(@PathVariable Long id, Model model){
         WelderModelDto welderModelDto = modelService.findById(id);
-//        System.out.println(welderModelDTO);
         model.addAttribute("welderModel", welderModelDto);
         return "forms/editWelderModel";
     }
