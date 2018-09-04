@@ -1,17 +1,25 @@
 package pl.coderslab.domain.entities;
 
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 @Entity
-@Table(name = "weldermodels")
+@Table(name = "models")
 public class WelderModel extends AbstractEntity {
 
+    @Column(unique = true)
     private String name;
 
     @ManyToOne
     @JoinColumn(name = "brand_id")
     private Brand brand;
+
+    @OneToMany(mappedBy = "welderModel",
+            cascade = CascadeType.ALL,
+            orphanRemoval = true)
+    private List<Machine> machines = new ArrayList<>();
 
     private Boolean mig;
 
@@ -24,6 +32,8 @@ public class WelderModel extends AbstractEntity {
     private Boolean currentMeter;
 
     private Boolean voltageMeter;
+
+    private Boolean stepControl;
 
     @Column(precision = 4, scale = 1)
     private Double migImin;
@@ -60,6 +70,24 @@ public class WelderModel extends AbstractEntity {
 
     @Column(precision = 5, scale = 2)
     private Double tigUmax;
+
+    public void addMachine(Machine machine) {
+        machines.add(machine);
+        machine.setWelderModel(this);
+    }
+
+    public void removeMachine(Machine machine) {
+        machines.remove(machine);
+        machine.setWelderModel(null);
+    }
+
+    public List<Machine> getMachines() {
+        return machines;
+    }
+
+    public void setMachines(List<Machine> machines) {
+        this.machines = machines;
+    }
 
     public String getName() {
         return name;
@@ -123,6 +151,14 @@ public class WelderModel extends AbstractEntity {
 
     public void setVoltageMeter(Boolean voltageMeter) {
         this.voltageMeter = voltageMeter;
+    }
+
+    public Boolean getStepControl() {
+        return stepControl;
+    }
+
+    public void setStepControl(Boolean stepControl) {
+        this.stepControl = stepControl;
     }
 
     public Double getMigImin() {
