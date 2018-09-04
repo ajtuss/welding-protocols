@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
 <head>
-    <title>Dodaj Model</title>
+    <title>Dodaj Urządzenie</title>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <th:block th:include="fragments/scripts :: css"></th:block>
@@ -21,15 +21,27 @@
 
         <main role="main" class="col-md-9 ml-sm-auto col-lg-10 px-4">
 
-            <h2>Dodaj model:</h2>
+            <h2>Dodaj urządzenie:</h2>
 
             <div class="col-md-8">
                 <form class="needs-validation" method="post" th:object="${machine}">
                     <input type="hidden" th:field="*{versionId}">
                     <div class="row">
                         <div class="col-md-5 mb-3">
+                            <label for="customer">Firma</label>
+                            <select class="custom-select d-block w-100" id="customer">
+                                <option value="" disabled selected>Wybierz Firmę</option>
+                            </select>
+                            <div class="invalid-feedback">
+                                Wybierz markę urządzenia.
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-5 mb-3">
                             <label for="brand">Marka</label>
                             <select class="custom-select d-block w-100" id="brand">
+                                <option value="" disabled selected>Wybierz Markę</option>
                             </select>
                             <div class="invalid-feedback">
                                 Wybierz markę urządzenia.
@@ -44,10 +56,23 @@
                             </div>
                         </div>
                     </div>
+
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label for="sn">Nr seryjny</label>
+                            <input type="text" class="form-control" id="sn" placeholder="Wpisz numer seryjny"
+                                   th:field="*{serialNumber}">
+                            <div class="invalid-feedback">
+                            </div>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label for="inw">Nr inwentarzowy</label>
+                            <input type="text" class="form-control" id="inw" placeholder="Wpisz numer inwentarzowy">
+                            <div class="invalid-feedback">
+                            </div>
+                        </div>
+                    </div>
                     <hr class="mb-3">
-
-
-
 
 
                     <button class="btn btn-primary btn-lg offset-10" type="submit">Zapisz</button>
