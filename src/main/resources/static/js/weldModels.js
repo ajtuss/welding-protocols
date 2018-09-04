@@ -77,13 +77,6 @@ $(document).ready(function () {
                 }
             },
             {
-                'data': 'plazma',
-                'width': '7%',
-                "render": function (data, type, row) {
-                    return (data === true) ? checked : unChecked;
-                }
-            },
-            {
                 'data': 'currentMeter',
                 'width': '7%',
                 "render": function (data, type, row) {
