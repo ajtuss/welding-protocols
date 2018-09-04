@@ -53,8 +53,6 @@ public class WelderModelServiceImpl implements WelderModelService {
     public void update(Long id, WelderModelDto modelDTO) {
         WelderModel model = modelMapper.map(modelDTO, WelderModel.class);
         model.setId(id);
-        System.out.println(model);
         modelRepository.save(model);
-        //todo
     }
 }
