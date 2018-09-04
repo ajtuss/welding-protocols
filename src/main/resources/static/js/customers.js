@@ -14,7 +14,7 @@ $(document).ready(function () {
                 text: 'Dodaj',
                 className: '',
                 action: function (e, dt, button, config) {
-                    window.location.href = '/customer/add';
+                    window.location.href = '/customers/add';
                 }
 
             },
@@ -22,14 +22,14 @@ $(document).ready(function () {
                 extend: 'selectedSingle',
                 text: 'Edytuj',
                 action: function (e, dt, button, config) {
-                    window.location.href = '/customer/' + dt.row({selected: true}).data().id;
+                    window.location.href = '/customers/' + dt.row({selected: true}).data().id;
                 }
             },
             {
                 extend: 'selectedSingle',
                 text: 'Usuń',
                 action: function (e, dt, button, config) {
-                    window.location.href = '/customer/' + dt.row({selected: true}).data().id + '/delete';
+                    window.location.href = '/customers/' + dt.row({selected: true}).data().id + '/delete';
                 }
             }
         ],

@@ -232,12 +232,17 @@
                     </div>
                     <hr class="mb-3">
 
-                    <h6 class="mb-3">Typ urządzenia</h6>
+                    <h6 class="mb-3">Regulacja</h6>
 
                     <div class="row">
-
+                        <div class="custom-control custom-checkbox col-md-2 offset-2">
+                            <input type="checkbox" class="custom-control-input" id="stepControl" th:field="*{stepControl}">
+                            <label class="custom-control-label" for="stepControl">Regulacja skokowa</label>
+                        </div>
                     </div>
-                    <button class="btn btn-primary btn-lg" type="submit">Zapisz</button>
+                    <hr class="mb-3">
+
+                    <button class="btn btn-primary btn-lg offset-10" type="submit">Zapisz</button>
                 </form>
             </div>
 
