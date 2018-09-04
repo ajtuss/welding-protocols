@@ -38,7 +38,7 @@ $(document).ready(function () {
             style: 'single'
         },
         ajax: {
-            url: '/api/customer',
+            url: '/api/customers',
             type: 'get', //typ połączenia
             // contentType: 'application/json', //gdy wysyłamy dane czasami chcemy ustawić ich typ
             // dataType: 'json', //typ danych jakich oczekujemy w odpowiedzi

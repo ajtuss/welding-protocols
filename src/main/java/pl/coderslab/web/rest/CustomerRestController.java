@@ -10,7 +10,7 @@ import pl.coderslab.domain.services.CustomerService;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/customer")
+@RequestMapping("/api/customers")
 public class CustomerRestController {
 
     private final CustomerService customerService;
