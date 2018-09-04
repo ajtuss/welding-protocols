@@ -7,8 +7,12 @@ public class MachineDto {
 
     private Long id;
     private String serialNumber;
-    private WelderModelDto welderModel;
-    private CustomerDto customer;
+    private Long welderModelId;
+    private String welderModelName;
+    private Long welderModelBrandId;
+    private String welderModelBrandName;
+    private Long customerId;
+    private String customerShortName;
     private LocalDateTime creationDate;
     private LocalDateTime modificationDate;
     private Long versionId;
@@ -29,20 +33,52 @@ public class MachineDto {
         this.serialNumber = serialNumber;
     }
 
-    public WelderModelDto getWelderModel() {
-        return welderModel;
+    public Long getWelderModelId() {
+        return welderModelId;
     }
 
-    public void setWelderModel(WelderModelDto welderModel) {
-        this.welderModel = welderModel;
+    public void setWelderModelId(Long welderModelId) {
+        this.welderModelId = welderModelId;
     }
 
-    public CustomerDto getCustomer() {
-        return customer;
+    public String getWelderModelName() {
+        return welderModelName;
     }
 
-    public void setCustomer(CustomerDto customer) {
-        this.customer = customer;
+    public void setWelderModelName(String welderModelName) {
+        this.welderModelName = welderModelName;
+    }
+
+    public Long getWelderModelBrandId() {
+        return welderModelBrandId;
+    }
+
+    public void setWelderModelBrandId(Long welderModelBrandId) {
+        this.welderModelBrandId = welderModelBrandId;
+    }
+
+    public String getWelderModelBrandName() {
+        return welderModelBrandName;
+    }
+
+    public void setWelderModelBrandName(String welderModelBrandName) {
+        this.welderModelBrandName = welderModelBrandName;
+    }
+
+    public Long getCustomerId() {
+        return customerId;
+    }
+
+    public void setCustomerId(Long customerId) {
+        this.customerId = customerId;
+    }
+
+    public String getCustomerShortName() {
+        return customerShortName;
+    }
+
+    public void setCustomerShortName(String customerShortName) {
+        this.customerShortName = customerShortName;
     }
 
     public LocalDateTime getCreationDate() {
@@ -76,8 +112,12 @@ public class MachineDto {
         MachineDto that = (MachineDto) o;
         return Objects.equals(id, that.id) &&
                 Objects.equals(serialNumber, that.serialNumber) &&
-                Objects.equals(welderModel, that.welderModel) &&
-                Objects.equals(customer, that.customer) &&
+                Objects.equals(welderModelId, that.welderModelId) &&
+                Objects.equals(welderModelName, that.welderModelName) &&
+                Objects.equals(welderModelBrandId, that.welderModelBrandId) &&
+                Objects.equals(welderModelBrandName, that.welderModelBrandName) &&
+                Objects.equals(customerId, that.customerId) &&
+                Objects.equals(customerShortName, that.customerShortName) &&
                 Objects.equals(creationDate, that.creationDate) &&
                 Objects.equals(modificationDate, that.modificationDate) &&
                 Objects.equals(versionId, that.versionId);
@@ -86,7 +126,7 @@ public class MachineDto {
     @Override
     public int hashCode() {
 
-        return Objects.hash(id, serialNumber, welderModel, customer, creationDate, modificationDate, versionId);
+        return Objects.hash(id, serialNumber, welderModelId, welderModelName, welderModelBrandId, welderModelBrandName, customerId, customerShortName, creationDate, modificationDate, versionId);
     }
 
     @Override
@@ -94,8 +134,12 @@ public class MachineDto {
         return "MachineDto{" +
                 "id=" + id +
                 ", serialNumber='" + serialNumber + '\'' +
-                ", welderModel=" + welderModel +
-                ", customer=" + customer +
+                ", welderModelId=" + welderModelId +
+                ", welderModelName='" + welderModelName + '\'' +
+                ", welderModelBrandId=" + welderModelBrandId +
+                ", welderModelBrandName='" + welderModelBrandName + '\'' +
+                ", customerId=" + customerId +
+                ", customerShortName='" + customerShortName + '\'' +
                 ", creationDate=" + creationDate +
                 ", modificationDate=" + modificationDate +
                 ", versionId=" + versionId +
