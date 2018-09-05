@@ -12,7 +12,7 @@ public abstract class AbstractEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "creation_date")
+    @Column(name = "creation_date", updatable = false)
     private LocalDateTime creationDate;
 
     @Column(name = "modification_date")
