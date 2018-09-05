@@ -67,5 +67,11 @@ public class BrandServiceImpl implements BrandService {
         return modelMapper.map(welderModels,resultType);
     }
 
+    @Override
+    public void remove(Long id) {
+        Brand brand = brandRepository.findById(id).get();
+        brandRepository.delete(brand);
+    }
+
 
 }

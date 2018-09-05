@@ -19,4 +19,6 @@ public interface BrandService {
     void updateBrand(Long id, BrandDto brand);
 
     List<WelderModelDto> findWelderModelsByBrandId(Long id);
+
+    void remove(Long id);
 }
