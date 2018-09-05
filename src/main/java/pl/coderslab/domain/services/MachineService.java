@@ -15,4 +15,5 @@ public interface MachineService {
 
     void update(Long id, MachineDto machineDto);
 
+    void remove(Long id);
 }

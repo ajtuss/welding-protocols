@@ -63,6 +63,12 @@ public class MachineServiceImpl implements MachineService {
         machineRepository.save(machine);
     }
 
+    @Override
+    public void remove(Long id) {
+        Machine machine = machineRepository.findById(id).get();
+        machineRepository.delete(machine);
+    }
+
     private Machine getMachine(MachineDto machineDto) {
         Long modelId = machineDto.getWelderModelId();
         Long customerId = machineDto.getCustomerId();

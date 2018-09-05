@@ -1,9 +1,7 @@
 package pl.coderslab.web.rest;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import pl.coderslab.domain.dto.MachineDto;
 import pl.coderslab.domain.services.MachineService;
 
@@ -23,5 +21,10 @@ public class MachineRestController {
     @GetMapping
     public List<MachineDto> getAllMachines(){
         return machineService.findAll();
+    }
+
+    @DeleteMapping("{id:\\d+}")
+    public void deleteMachine(@PathVariable Long id){
+        machineService.remove(id);
     }
 }
