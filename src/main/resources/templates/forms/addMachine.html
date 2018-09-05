@@ -29,7 +29,8 @@
                     <div class="row">
                         <div class="col-md-5 mb-3">
                             <label for="customer">Firma</label>
-                            <select class="custom-select d-block w-100" id="customer" th:field="*{customerId}">
+                            <select class="custom-select d-block w-100" id="customer" th:field="*{customerId}"
+                                    required>
                                 <option value="" disabled selected>Wybierz Firmę</option>
                             </select>
                             <div class="invalid-feedback">
@@ -40,7 +41,7 @@
                     <div class="row">
                         <div class="col-md-5 mb-3">
                             <label for="brand">Marka</label>
-                            <select class="custom-select d-block w-100" id="brand">
+                            <select class="custom-select d-block w-100" id="brand" required>
                                 <option value="" disabled selected>Wybierz Markę</option>
                             </select>
                             <div class="invalid-feedback">
