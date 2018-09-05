@@ -1,9 +1,7 @@
 package pl.coderslab.web.rest;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import pl.coderslab.domain.dto.WelderModelDto;
 import pl.coderslab.domain.services.WelderModelService;
 
@@ -23,5 +21,10 @@ public class WelderModelRestController {
     @GetMapping
     public List<WelderModelDto> getAllModels(){
         return modelService.findAll();
+    }
+
+    @DeleteMapping("{id:\\d+}")
+    public void deleteModel(@PathVariable Long id){
+        modelService.remove(id);
     }
 }
