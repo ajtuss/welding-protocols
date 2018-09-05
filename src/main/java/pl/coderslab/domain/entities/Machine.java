@@ -13,6 +13,8 @@ public class Machine extends AbstractEntity{
     @NotNull
     private String serialNumber;
 
+    private String inwNumber;
+
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "model_id")
     private WelderModel welderModel;
@@ -42,6 +44,14 @@ public class Machine extends AbstractEntity{
 
     public void setSerialNumber(String serialNumber) {
         this.serialNumber = serialNumber;
+    }
+
+    public String getInwNumber() {
+        return inwNumber;
+    }
+
+    public void setInwNumber(String inwNumber) {
+        this.inwNumber = inwNumber;
     }
 
     public WelderModel getWelderModel() {

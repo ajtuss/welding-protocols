@@ -7,6 +7,7 @@ public class MachineDto {
 
     private Long id;
     private String serialNumber;
+    private String inwNumber;
     private Long welderModelId;
     private String welderModelName;
     private Long welderModelBrandId;
@@ -31,6 +32,14 @@ public class MachineDto {
 
     public void setSerialNumber(String serialNumber) {
         this.serialNumber = serialNumber;
+    }
+
+    public String getInwNumber() {
+        return inwNumber;
+    }
+
+    public void setInwNumber(String inwNumber) {
+        this.inwNumber = inwNumber;
     }
 
     public Long getWelderModelId() {
