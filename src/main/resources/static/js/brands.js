@@ -18,7 +18,7 @@ $(document).ready(function () {
                 extend: 'selectedSingle',
                 text: 'Edytuj',
                 action: function (e, dt, button, config) {
-                    window.location.href = '/brands/edit/'+dt.row({selected: true}).data().id;
+                    window.location.href = '/brands/'+dt.row({selected: true}).data().id;
                 }
             },
             {

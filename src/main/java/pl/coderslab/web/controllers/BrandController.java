@@ -35,7 +35,7 @@ public class BrandController {
         return "redirect:/brands";
     }
 
-    @GetMapping("/edit/{id:\\d+}")
+    @GetMapping("/{id:\\d+}")
     public String showEditBrand(@PathVariable Long id,
                                 Model model) {
         BrandDto brandDto = brandService.findById(id);
@@ -43,11 +43,12 @@ public class BrandController {
         return "forms/editBrand";
     }
 
-    @PostMapping("/edit/{id:\\d+}")
+    @PostMapping("/{id:\\d+}")
     public String editBrand(@PathVariable Long id,
                             @ModelAttribute BrandDto brand) {
         brandService.updateBrand(id,brand);
         return "redirect:/brands";
     }
+
 
 }
