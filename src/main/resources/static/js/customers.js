@@ -29,7 +29,23 @@ $(document).ready(function () {
                 extend: 'selectedSingle',
                 text: 'Usuń',
                 action: function (e, dt, button, config) {
-                    window.location.href = '/customers/' + dt.row({selected: true}).data().id + '/delete';
+                    $.ajax({
+                        type:'delete',
+                        url:'/api/customers/'+ dt.row({selected: true}).data().id,
+                        success: function(data)
+                        {
+                            location.reload();
+                        },
+                        statusCode: {
+                            404: function() {
+                                alert( "page not found" );
+                            },
+                            500: function() {
+                                alert( "error 500" );
+                            }
+                        }
+                    });
+                    // window.location.href = '/customers/' + dt.row({selected: true}).data().id + '/delete';
                 }
             }
         ],
