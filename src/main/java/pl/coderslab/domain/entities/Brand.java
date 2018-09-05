@@ -2,7 +2,10 @@ package pl.coderslab.domain.entities;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 @Entity
@@ -12,12 +15,23 @@ public class Brand extends AbstractEntity{
     @Column(unique = true)
     private String name;
 
+    @OneToMany(mappedBy = "brand")
+    List<WelderModel> welderModels = new ArrayList<>();
+
     public String getName() {
         return name;
     }
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public List<WelderModel> getWelderModels() {
+        return welderModels;
+    }
+
+    public void setWelderModels(List<WelderModel> welderModels) {
+        this.welderModels = welderModels;
     }
 
     @Override

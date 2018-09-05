@@ -16,9 +16,7 @@ public class WelderModel extends AbstractEntity {
     @JoinColumn(name = "brand_id")
     private Brand brand;
 
-    @OneToMany(mappedBy = "welderModel",
-            cascade = CascadeType.ALL,
-            orphanRemoval = true)
+    @OneToMany(mappedBy = "welderModel")
     private List<Machine> machines = new ArrayList<>();
 
     private Boolean mig;
