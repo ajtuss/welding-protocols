@@ -25,7 +25,24 @@ $(document).ready(function () {
                 extend: 'selectedSingle',
                 text: 'Usuń',
                 action: function (e, dt, button, config) {
-                    window.location.href = '/brands/delete/'+dt.row({selected: true}).data().id;
+                    $.ajax({
+                        type:'delete',
+                        url:'/api/brands/'+ dt.row({selected: true}).data().id,
+                        // data:'delete_id='+del_id,
+                        success: function(data)
+                        {
+                            location.reload();
+                        },
+                        statusCode: {
+                            404: function() {
+                                alert( "page not found" );
+                            },
+                            500: function() {
+                                alert( "page not found" );
+                            }
+                        }
+                    });
+                    // window.location.href = '/brands/delete/'+dt.row({selected: true}).data().id;
                 }
             }
         ],
