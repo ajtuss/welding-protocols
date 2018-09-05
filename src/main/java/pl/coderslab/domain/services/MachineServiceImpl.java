@@ -40,8 +40,6 @@ public class MachineServiceImpl implements MachineService {
         machineRepository.save(machine);
     }
 
-
-
     @Override
     public List<MachineDto> findAll() {
         List<Machine> machines = machineRepository.findAll();

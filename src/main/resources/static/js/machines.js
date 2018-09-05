@@ -28,18 +28,17 @@ $(document).ready(function () {
                 text: 'Usuń',
                 action: function (e, dt, button, config) {
                     $.ajax({
-                        type:'delete',
-                        url:'/api/machines/'+ dt.row({selected: true}).data().id,
-                        success: function(data)
-                        {
+                        type: 'delete',
+                        url: '/api/machines/' + dt.row({selected: true}).data().id,
+                        success: function (data) {
                             location.reload();
                         },
                         statusCode: {
-                            404: function() {
-                                alert( "page not found" );
+                            404: function () {
+                                alert("page not found");
                             },
-                            500: function() {
-                                alert( "error 500" );
+                            500: function () {
+                                alert("error 500");
                             }
                         }
                     });
@@ -72,5 +71,21 @@ $(document).ready(function () {
         ]
 
     });
+
+    new $.fn.dataTable.Buttons(table, {
+        buttons: [
+            {
+                extend: 'selectedSingle',
+                text: 'Dodaj walidację',
+                action: function (e, dt, node, conf) {
+                    window.location.href = '/validations/add?machineId=' + dt.row({selected: true}).data().id;
+                }
+            }
+        ]
+    });
+
+    table.buttons(1, null).container().appendTo(
+        table.table().container()
+    );
 
 });
