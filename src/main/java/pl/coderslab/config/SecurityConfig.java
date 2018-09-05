@@ -56,6 +56,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
             .antMatchers("/webjars/*").permitAll()
             .antMatchers("/register").anonymous()
             .antMatchers("/login").anonymous()
+//            .antMatchers("/brands").hasAuthority("USER") // example for role authorization
             .anyRequest().authenticated()
             .and()
             .formLogin()
