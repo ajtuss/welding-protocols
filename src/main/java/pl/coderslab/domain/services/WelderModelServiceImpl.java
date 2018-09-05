@@ -57,6 +57,12 @@ public class WelderModelServiceImpl implements WelderModelService {
         modelRepository.save(model);
     }
 
+    @Override
+    public void remove(Long id) {
+        WelderModel model = modelRepository.findById(id).get();
+        modelRepository.delete(model);
+    }
+
     private WelderModel getWelderModel(WelderModelDto modelDTO) {
         Long brandId = modelDTO.getBrandId();
         WelderModel model = modelMapper.map(modelDTO, WelderModel.class);

@@ -10,4 +10,6 @@ public interface WelderModelService {
     List<WelderModelDto> findAll();
     void save(WelderModelDto model);
     void update(Long id, WelderModelDto model);
+
+    void remove(Long id);
 }
