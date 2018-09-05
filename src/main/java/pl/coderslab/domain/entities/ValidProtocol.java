@@ -3,6 +3,7 @@ package pl.coderslab.domain.entities;
 import org.hibernate.annotations.NaturalId;
 
 import javax.persistence.*;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -11,6 +12,7 @@ import java.util.Objects;
 @Table(name = "validations")
 public class ValidProtocol extends AbstractEntity {
 
+    @GeneratedValue(strategy = GenerationType.SEQUENCE)
     @NaturalId
     private String protocolNumber;
 
@@ -26,6 +28,8 @@ public class ValidProtocol extends AbstractEntity {
 
     private Boolean result;
     private Boolean finalized;
+    private LocalDateTime dateValidation;
+    private LocalDateTime nextValidation;
 
     public void addMeasure(Measure measure){
         measures.add(measure);
@@ -75,6 +79,22 @@ public class ValidProtocol extends AbstractEntity {
 
     public void setFinalized(Boolean finalized) {
         this.finalized = finalized;
+    }
+
+    public LocalDateTime getDateValidation() {
+        return dateValidation;
+    }
+
+    public void setDateValidation(LocalDateTime dateValidation) {
+        this.dateValidation = dateValidation;
+    }
+
+    public LocalDateTime getNextValidation() {
+        return nextValidation;
+    }
+
+    public void setNextValidation(LocalDateTime nextValidation) {
+        this.nextValidation = nextValidation;
     }
 
     @Override
