@@ -28,7 +28,7 @@ $(document).ready(function () {
         var brandId = brandSelect.val();
         modelSelect.empty();
         if (brandId !== "") {
-            $.get('/api/brands/' + brandSelect.val() + '/models')
+            $.get('/api/brands/' + brandId + '/models')
                 .done(function (res) {
                     $(res).each(function (index, model) {
                         var select = $("<option>").val(model.id).text(model.name);
