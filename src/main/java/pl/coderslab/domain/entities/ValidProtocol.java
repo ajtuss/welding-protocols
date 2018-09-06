@@ -12,8 +12,7 @@ import java.util.Objects;
 @Table(name = "validations")
 public class ValidProtocol extends AbstractEntity {
 
-    @GeneratedValue(strategy = GenerationType.SEQUENCE)
-    @NaturalId
+    @Column(unique = true)
     private String protocolNumber;
 
     @ManyToOne(fetch = FetchType.LAZY)
