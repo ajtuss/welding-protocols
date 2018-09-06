@@ -23,6 +23,11 @@ public class WelderModelRestController {
         return modelService.findAll();
     }
 
+    @GetMapping("{id:\\d+}")
+    public WelderModelDto getModel(@PathVariable Long id){
+        return modelService.findById(id);
+    }
+
     @DeleteMapping("{id:\\d+}")
     public void deleteModel(@PathVariable Long id){
         modelService.remove(id);
