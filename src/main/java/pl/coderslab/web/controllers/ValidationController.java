@@ -32,7 +32,7 @@ public class ValidationController {
 
     @PostMapping("/add")
     public String addValidation(@ModelAttribute ValidProtocolDto protocolDto){
-        validProtocolService.save(protocolDto);
-        return "redirect:/validations";
+        Long protocolId = validProtocolService.save(protocolDto);
+        return "redirect:/validations/"+protocolId;
     }
 }

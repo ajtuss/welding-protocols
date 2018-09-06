@@ -39,10 +39,10 @@ public class ValidProtocolServiceImpl implements ValidProtocolService {
     }
 
     @Override
-    public void save(ValidProtocolDto validProtocolDto) {
+    public Long save(ValidProtocolDto validProtocolDto) {
         ValidProtocol protocol = getValidProtocol(validProtocolDto);
-        validProtocolRepository.save(protocol);
-
+        ValidProtocol savedProt = validProtocolRepository.save(protocol);
+        return savedProt.getId();
     }
 
     @Override
@@ -56,7 +56,6 @@ public class ValidProtocolServiceImpl implements ValidProtocolService {
         ValidProtocol validProtocol = getValidProtocol(validProtocolDto);
         validProtocol.setId(id);
         validProtocolRepository.save(validProtocol);
-
     }
 
     @Override

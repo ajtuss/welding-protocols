@@ -8,7 +8,7 @@ public interface ValidProtocolService {
 
     List<ValidProtocolDto> findAll();
 
-    void save(ValidProtocolDto validProtocolDto);
+    Long save(ValidProtocolDto validProtocolDto);
 
     ValidProtocolDto findById(Long id);
 
