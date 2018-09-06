@@ -1,5 +1,7 @@
 package pl.coderslab.domain.dto;
 
+import pl.coderslab.domain.entities.PowerType;
+
 import java.time.LocalDateTime;
 import java.util.Objects;
 
@@ -20,6 +22,7 @@ public class ValidProtocolDto {
     private LocalDateTime nextValidation;
     private Boolean result;
     private Boolean finalized;
+    private PowerType type;
     private LocalDateTime creationDate;
     private LocalDateTime modificationDate;
     private Long versionId;
@@ -142,6 +145,14 @@ public class ValidProtocolDto {
 
     public void setFinalized(Boolean finalized) {
         this.finalized = finalized;
+    }
+
+    public PowerType getType() {
+        return type;
+    }
+
+    public void setType(PowerType type) {
+        this.type = type;
     }
 
     public LocalDateTime getCreationDate() {

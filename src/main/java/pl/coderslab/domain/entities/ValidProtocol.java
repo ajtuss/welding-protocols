@@ -1,7 +1,5 @@
 package pl.coderslab.domain.entities;
 
-import org.hibernate.annotations.NaturalId;
-
 import javax.persistence.*;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -29,6 +27,10 @@ public class ValidProtocol extends AbstractEntity {
     private Boolean finalized;
     private LocalDateTime dateValidation;
     private LocalDateTime nextValidation;
+
+    @Enumerated(EnumType.STRING)
+    @Column(length = 3)
+    private PowerType type;
 
     public void addMeasure(Measure measure){
         measures.add(measure);
@@ -94,6 +96,14 @@ public class ValidProtocol extends AbstractEntity {
 
     public void setNextValidation(LocalDateTime nextValidation) {
         this.nextValidation = nextValidation;
+    }
+
+    public PowerType getType() {
+        return type;
+    }
+
+    public void setType(PowerType type) {
+        this.type = type;
     }
 
     @Override
