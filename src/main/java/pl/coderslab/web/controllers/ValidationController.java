@@ -28,14 +28,15 @@ public class ValidationController {
     }
 
     @GetMapping("/add")
-    public String showAddValidationForm(@RequestParam(required = false) Long machineId, Model model) {
+    public String showAddValidationForm(@RequestParam Long machineId, Model model) {
         ValidProtocolDto protocolDto = validProtocolService.getNewValidProtocol(machineId);
         model.addAttribute("validation", protocolDto);
         return "forms/addValidation";
     }
 
     @PostMapping("/add")
-    public String addValidation(@ModelAttribute ValidProtocolDto protocolDto) {
+    public String addValidation(@ModelAttribute ValidProtocolDto protocolDto, @RequestParam Long machineId) {
+        protocolDto.setMachineId(machineId);
         Long protocolId = validProtocolService.save(protocolDto);
         return "redirect:/validations/" + protocolId;
     }

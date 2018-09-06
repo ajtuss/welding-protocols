@@ -1,5 +1,6 @@
 package pl.coderslab.domain.services;
 
+import pl.coderslab.domain.dto.MeasureDto;
 import pl.coderslab.domain.dto.ValidProtocolDto;
 
 import java.util.List;
@@ -17,4 +18,6 @@ public interface ValidProtocolService {
     void remove(Long id);
 
     ValidProtocolDto getNewValidProtocol(Long machineId);
+
+    List<MeasureDto> findAllMeasures(Long id);
 }

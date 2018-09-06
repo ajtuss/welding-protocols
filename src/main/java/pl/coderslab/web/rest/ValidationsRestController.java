@@ -1,9 +1,8 @@
 package pl.coderslab.web.rest;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+import pl.coderslab.domain.dto.MeasureDto;
 import pl.coderslab.domain.dto.ValidProtocolDto;
 import pl.coderslab.domain.services.ValidProtocolService;
 
@@ -17,7 +16,23 @@ public class ValidationsRestController {
     private ValidProtocolService validProtocolService;
 
     @GetMapping
-    public List<ValidProtocolDto> getAllValidProtocols(){
+    public List<ValidProtocolDto> getAllValidProtocols() {
         return validProtocolService.findAll();
+    }
+
+    @GetMapping("/{id:\\d+}")
+    public ValidProtocolDto getValidProtocol(@PathVariable Long id){
+        return validProtocolService.findById(id);
+    }
+
+    @GetMapping("/{id:\\d+}/measures")
+    public List<MeasureDto> getAllMeasures(@PathVariable Long id){
+        return validProtocolService.findAllMeasures(id);
+    }
+
+
+    @DeleteMapping("{id:\\d+}")
+    public void deleteModel(@PathVariable Long id) {
+        validProtocolService.remove(id);
     }
 }

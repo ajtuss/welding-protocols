@@ -67,6 +67,7 @@ $(document).ready(function () {
             {'data': 'protocolNumber'},
             {'data': 'machineWelderModelBrandName'},
             {'data': 'machineWelderModelName'},
+            {'data': 'type'},
             {'data': 'machineSerialNumber'},
             {'data': 'machineCustomerShortName'},
             {'data': 'dateValidation'},

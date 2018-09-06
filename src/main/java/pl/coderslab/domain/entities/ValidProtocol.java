@@ -32,12 +32,12 @@ public class ValidProtocol extends AbstractEntity {
     @Column(length = 3)
     private PowerType type;
 
-    public void addMeasure(Measure measure){
+    public void addMeasure(Measure measure) {
         measures.add(measure);
         measure.setValidProtocol(this);
     }
 
-    public void removeMeasure(Measure measure){
+    public void removeMeasure(Measure measure) {
         measures.remove(measure);
         measure.setValidProtocol(null);
     }

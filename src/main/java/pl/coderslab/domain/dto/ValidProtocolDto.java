@@ -23,6 +23,7 @@ public class ValidProtocolDto {
     private Boolean result;
     private Boolean finalized;
     private PowerType type;
+    private Boolean auto;
     private LocalDateTime creationDate;
     private LocalDateTime modificationDate;
     private Long versionId;
@@ -179,6 +180,14 @@ public class ValidProtocolDto {
         this.versionId = versionId;
     }
 
+    public Boolean getAuto() {
+        return auto;
+    }
+
+    public void setAuto(Boolean auto) {
+        this.auto = auto;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -213,6 +222,7 @@ public class ValidProtocolDto {
     public String toString() {
         return "ValidProtocolDto{" +
                 "id=" + id +
+                ", machineId=" + machineId +
                 ", protocolNumber='" + protocolNumber + '\'' +
                 ", machineSerialNumber='" + machineSerialNumber + '\'' +
                 ", machineInwNumber='" + machineInwNumber + '\'' +
@@ -226,6 +236,8 @@ public class ValidProtocolDto {
                 ", nextValidation=" + nextValidation +
                 ", result=" + result +
                 ", finalized=" + finalized +
+                ", type=" + type +
+                ", auto=" + auto +
                 ", creationDate=" + creationDate +
                 ", modificationDate=" + modificationDate +
                 ", versionId=" + versionId +
