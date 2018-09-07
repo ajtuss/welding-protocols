@@ -2,6 +2,7 @@ package pl.coderslab.domain.entities;
 
 import javax.persistence.*;
 import java.util.HashSet;
+import java.util.Objects;
 import java.util.Set;
 
 @Entity
@@ -38,5 +39,30 @@ public class Role {
 
     public Set<User> getUsers() {
         return users;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Role role1 = (Role) o;
+        return id == role1.id &&
+                Objects.equals(role, role1.role) &&
+                Objects.equals(users, role1.users);
+    }
+
+    @Override
+    public int hashCode() {
+
+        return Objects.hash(id, role, users);
+    }
+
+    @Override
+    public String toString() {
+        return "Role{" +
+                "id=" + id +
+                ", role='" + role + '\'' +
+                ", users=" + users +
+                '}';
     }
 }
