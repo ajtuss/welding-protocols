@@ -5,7 +5,7 @@ import pl.coderslab.domain.entities.User;
 
 public interface UserRepository extends JpaRepository<User, Long> {
 
-	 User findByEmailIgnoreCase(String email);
-	 User findByUsernameIgnoreCase(String username);
+	 public abstract User findByEmailIgnoreCase(String email);
+	 public abstract User findByUsernameIgnoreCase(String username);
 
 }
