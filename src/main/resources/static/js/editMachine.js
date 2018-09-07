@@ -44,7 +44,6 @@ $(document).ready(function () {
     setCustomersToSelect();
 
     brandSelect.change( 'change',function () {
-        // brandSelect.find('[value=""]').remove();
         setModelsToSelect();
     });
 });

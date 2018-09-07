@@ -8,7 +8,6 @@ $(document).ready(function () {
         $.get('/api/weldmodels/' + modelId)
             .done(function (res) {
                 $(res).each(function (index, model) {
-                    console.log(model);
                     if (model.mig) {
                         methodSelect.append($("<option>").text('MIG'));
                     }
