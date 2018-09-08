@@ -83,17 +83,17 @@ $(document).ready(function () {
         console.log("The values for each cell in that row are: " + updatedRow.data());
     }
 
-    // table.MakeCellsEditable({
-    //     "onUpdate": myCallbackFunction,
-    //     "columns": [3, 4, 5, 6],
-    //     "inputTypes": [
-    //         {
-    //             "column": 3,
-    //             "type": "text",
-    //             "options": null
-    //         }
-    //     ]
-    // });
+    table.MakeCellsEditable({
+        "onUpdate": myCallbackFunction,
+        "columns": [3, 4, 5, 6],
+        "inputTypes": [
+            {
+                "column": 3,
+                "type": "text",
+                "options": null
+            }
+        ]
+    });
 
     // addRowsWithMesures();
 
