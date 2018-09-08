@@ -57,7 +57,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
             .antMatchers("/register").anonymous()
             .antMatchers("/login").anonymous()
 //            .antMatchers("/brands").hasAuthority("USER") // example for role authorization
-            .anyRequest().authenticated()
+//            .anyRequest().authenticated()
             .and()
             .formLogin()
             .loginPage("/login").failureUrl("/login?error=true")
