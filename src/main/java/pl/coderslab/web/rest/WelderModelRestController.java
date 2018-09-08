@@ -8,7 +8,7 @@ import pl.coderslab.domain.services.WelderModelService;
 import java.util.List;
 
 @RestController
-    @RequestMapping("/api/weldmodels")
+@RequestMapping("/api/weldmodels")
 public class WelderModelRestController {
 
     private final WelderModelService modelService;
@@ -19,17 +19,17 @@ public class WelderModelRestController {
     }
 
     @GetMapping
-    public List<WelderModelDto> getAllModels(){
+    public List<WelderModelDto> getAllModels() {
         return modelService.findAll();
     }
 
     @GetMapping("{id:\\d+}")
-    public WelderModelDto getModel(@PathVariable Long id){
+    public WelderModelDto getModel(@PathVariable Long id) {
         return modelService.findById(id);
     }
 
     @DeleteMapping("{id:\\d+}")
-    public void deleteModel(@PathVariable Long id){
+    public void deleteModel(@PathVariable Long id) {
         modelService.remove(id);
     }
 }

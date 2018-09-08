@@ -23,6 +23,11 @@ public class CustomerRestController {
         return customerService.findAll();
     }
 
+    @GetMapping("{id:\\d+}")
+    public CustomerDto getCustomerById(@PathVariable Long id){
+        return customerService.findById(id);
+    }
+
     @DeleteMapping("{id:\\d+}")
     public void deleteCustomer(@PathVariable Long id){
         customerService.remove(id);
