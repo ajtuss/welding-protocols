@@ -95,13 +95,15 @@ public class User extends AbstractEntity {
         if (o == null || getClass() != o.getClass()) return false;
         if (!super.equals(o)) return false;
         User user = (User) o;
-        return Objects.equals(username, user.username);
+        return Objects.equals(username, user.username) &&
+                Objects.equals(email, user.email) &&
+                Objects.equals(active, user.active);
     }
 
     @Override
     public int hashCode() {
 
-        return Objects.hash(super.hashCode(), username);
+        return Objects.hash(super.hashCode(), username, email, active);
     }
 
     @Override

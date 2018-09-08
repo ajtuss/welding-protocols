@@ -5,11 +5,10 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.context.junit4.SpringRunner;
-import pl.coderslab.config.Application;
+import pl.coderslab.domain.entities.Role;
 import pl.coderslab.domain.entities.User;
 
 import javax.persistence.EntityManager;
@@ -18,7 +17,6 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 @RunWith(SpringRunner.class)
-@SpringBootTest(classes = {Application.class})
 @DataJpaTest
 public class UserRepositoryTest {
 
@@ -30,8 +28,10 @@ public class UserRepositoryTest {
 
     private PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 
-    private User user1;
     private final String PASSWORD = "password";
+    private User user1;
+    private Role role1;
+    private Role role2;
 
     @Before
     public void setUp() {
@@ -40,7 +40,18 @@ public class UserRepositoryTest {
         user1.setEmail("user@user.com");
         user1.setPassword(passwordEncoder.encode(PASSWORD));
         user1.setActive(true);
+
+        role1 = new Role();
+        role1.setRole("role1");
+        role2 = new Role();
+        role2.setRole("role2");
+
+        user1.addRole(role1);
+        user1.addRole(role2);
+
         entityManager.persist(user1);
+        entityManager.persist(role1);
+        entityManager.persist(role2);
         entityManager.flush();
     }
 
@@ -57,7 +68,7 @@ public class UserRepositoryTest {
     }
 
     @Test
-    public void expectedTrueAfterMatchPassword(){
+    public void expectedTrueAfterMatchPassword() {
         User found = userRepository.findByUsernameIgnoreCase(user1.getUsername());
         assertTrue(passwordEncoder.matches(PASSWORD, found.getPassword()));
     }
