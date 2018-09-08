@@ -40,10 +40,11 @@ public class BrandServiceImpl implements BrandService {
 
     @Override
     public List<BrandDto> findAll() {
-        List<Brand> brands = brandRepository.findAll();
-        Type resultType = new TypeToken<List<BrandDto>>() {
-        }.getType();
-        return modelMapper.map(brands, resultType);
+//        List<Brand> brands = brandRepository.findAll();
+//        Type resultType = new TypeToken<List<BrandDto>>() {
+//        }.getType();
+//        return modelMapper.map(brands, resultType);
+        return null;
     }
 
     @Override

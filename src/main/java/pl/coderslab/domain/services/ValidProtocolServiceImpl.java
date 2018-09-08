@@ -86,8 +86,8 @@ public class ValidProtocolServiceImpl implements ValidProtocolService {
 
 
             Measure measure3 = new Measure();
-            measure3.setiAdjust(iMin);
-            measure3.setuAdjust(uMin);
+            measure3.setiAdjust((int) ((iMax-iMin)/2)+iMin);
+            measure3.setuAdjust((int) ((uMax - uMin)/2)+uMin);
 
 
             Measure measure4 = new Measure();
