@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import pl.coderslab.domain.dto.CustomerDto;
 import pl.coderslab.domain.entities.Customer;
+import pl.coderslab.domain.exceptions.CustomerNotFoundException;
 import pl.coderslab.domain.repositories.CustomerRepository;
 
 import javax.transaction.Transactional;
@@ -41,7 +42,7 @@ public class CustomerServiceImpl implements CustomerService {
 
     @Override
     public CustomerDto findById(Long id) {
-        Customer customer = customerRepository.findById(id).orElse(null);
+        Customer customer = customerRepository.findById(id).orElseThrow(CustomerNotFoundException::new);
         return modelMapper.map(customer,CustomerDto.class);
     }
 
@@ -54,7 +55,7 @@ public class CustomerServiceImpl implements CustomerService {
 
     @Override
     public void remove(Long id) {
-        Customer customer = customerRepository.findById(id).get();
+        Customer customer = customerRepository.findById(id).orElseThrow(CustomerNotFoundException::new);
         customerRepository.delete(customer);
     }
 }

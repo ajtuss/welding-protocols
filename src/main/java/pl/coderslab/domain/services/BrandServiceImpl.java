@@ -8,6 +8,7 @@ import pl.coderslab.domain.dto.BrandDto;
 import pl.coderslab.domain.dto.WelderModelDto;
 import pl.coderslab.domain.entities.Brand;
 import pl.coderslab.domain.entities.WelderModel;
+import pl.coderslab.domain.exceptions.BrandNotFoundException;
 import pl.coderslab.domain.repositories.BrandRepository;
 import pl.coderslab.domain.repositories.WelderModelRepository;
 
@@ -40,23 +41,21 @@ public class BrandServiceImpl implements BrandService {
 
     @Override
     public List<BrandDto> findAll() {
-//        List<Brand> brands = brandRepository.findAll();
-//        Type resultType = new TypeToken<List<BrandDto>>() {
-//        }.getType();
-//        return modelMapper.map(brands, resultType);
-        return null;
+        List<Brand> brands = brandRepository.findAll();
+        Type resultType = new TypeToken<List<BrandDto>>() {
+        }.getType();
+        return modelMapper.map(brands, resultType);
     }
 
     @Override
     public BrandDto findById(Long id) {
-        Brand brand = brandRepository.findById(id).orElse(null);
-
+        Brand brand = brandRepository.findById(id).orElseThrow(BrandNotFoundException::new);
         return modelMapper.map(brand, BrandDto.class);
     }
 
     @Override
     public void updateBrand(Long id, BrandDto brandDto) {
-        Brand brandOld = brandRepository.findById(id).orElse(null);
+        Brand brandOld = brandRepository.findById(id).orElseThrow(BrandNotFoundException::new);
         Brand brand = modelMapper.map(brandDto, Brand.class);
         brandOld.setName(brand.getName());
     }
@@ -70,7 +69,7 @@ public class BrandServiceImpl implements BrandService {
 
     @Override
     public void remove(Long id) {
-        Brand brand = brandRepository.findById(id).get();
+        Brand brand = brandRepository.findById(id).orElseThrow(BrandNotFoundException::new);
         brandRepository.delete(brand);
     }
 
