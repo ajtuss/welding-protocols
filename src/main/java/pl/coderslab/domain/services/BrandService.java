@@ -1,19 +1,21 @@
 package pl.coderslab.domain.services;
 
+import pl.coderslab.domain.dto.BrandCreationDTO;
 import pl.coderslab.domain.dto.BrandDTO;
+import pl.coderslab.domain.dto.BrandUpdateDTO;
 import pl.coderslab.domain.dto.WelderModelDTO;
 
 import java.util.List;
 
 public interface BrandService {
 
-    void saveBrand(BrandDTO brandDTO);
+    BrandDTO saveBrand(BrandCreationDTO brandCreationDTO);
 
     List<BrandDTO> findAll();
 
     BrandDTO findById(Long id);
 
-    void updateBrand(Long id, BrandDTO brand);
+    BrandDTO updateBrand(BrandUpdateDTO brandUpdateDTO);
 
     List<WelderModelDTO> findWelderModelsByBrandId(Long id);
 

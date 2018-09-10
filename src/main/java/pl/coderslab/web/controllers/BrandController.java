@@ -4,7 +4,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import pl.coderslab.domain.dto.BrandCreationDTO;
 import pl.coderslab.domain.dto.BrandDTO;
+import pl.coderslab.domain.dto.BrandUpdateDTO;
 import pl.coderslab.domain.services.BrandService;
 
 @Controller
@@ -30,8 +32,8 @@ public class BrandController {
     }
 
     @PostMapping("/add")
-    public String addBrand(@ModelAttribute BrandDTO brandDTO) {
-        brandService.saveBrand(brandDTO);
+    public String addBrand(@ModelAttribute BrandCreationDTO brandCreationDTO) {
+        brandService.saveBrand(brandCreationDTO);
         return "redirect:/brands";
     }
 
@@ -45,8 +47,9 @@ public class BrandController {
 
     @PostMapping("/{id:\\d+}")
     public String editBrand(@PathVariable Long id,
-                            @ModelAttribute BrandDTO brand) {
-        brandService.updateBrand(id,brand);
+                            @ModelAttribute BrandUpdateDTO brandUpdateDTO) {
+        brandUpdateDTO.setId(id);
+        brandService.updateBrand(brandUpdateDTO);
         return "redirect:/brands";
     }
 

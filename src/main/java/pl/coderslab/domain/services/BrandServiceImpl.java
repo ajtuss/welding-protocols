@@ -4,7 +4,9 @@ import org.modelmapper.ModelMapper;
 import org.modelmapper.TypeToken;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import pl.coderslab.domain.dto.BrandCreationDTO;
 import pl.coderslab.domain.dto.BrandDTO;
+import pl.coderslab.domain.dto.BrandUpdateDTO;
 import pl.coderslab.domain.dto.WelderModelDTO;
 import pl.coderslab.domain.entities.Brand;
 import pl.coderslab.domain.entities.WelderModel;
@@ -12,6 +14,7 @@ import pl.coderslab.domain.exceptions.BrandNotFoundException;
 import pl.coderslab.domain.repositories.BrandRepository;
 import pl.coderslab.domain.repositories.WelderModelRepository;
 
+import javax.persistence.EntityManager;
 import javax.transaction.Transactional;
 import java.lang.reflect.Type;
 import java.util.List;
@@ -24,19 +27,21 @@ public class BrandServiceImpl implements BrandService {
     private final ModelMapper modelMapper;
     private final BrandRepository brandRepository;
     private final WelderModelRepository modelRepository;
+    private final EntityManager entityManager;
 
     @Autowired
-    public BrandServiceImpl(BrandRepository brandRepository, ModelMapper modelMapper, WelderModelRepository modelRepository) {
+    public BrandServiceImpl(BrandRepository brandRepository, ModelMapper modelMapper, WelderModelRepository modelRepository, EntityManager entityManager) {
         this.brandRepository = brandRepository;
         this.modelMapper = modelMapper;
         this.modelRepository = modelRepository;
+        this.entityManager = entityManager;
     }
 
-
     @Override
-    public void saveBrand(BrandDTO brandDTO) {
-        Brand brand = modelMapper.map(brandDTO, Brand.class);
-        brandRepository.save(brand);
+    public BrandDTO saveBrand(BrandCreationDTO brandCreationDTO) {
+        Brand brand = modelMapper.map(brandCreationDTO, Brand.class);
+        Brand save = brandRepository.save(brand);
+        return modelMapper.map(save, BrandDTO.class);
     }
 
     @Override
@@ -54,11 +59,13 @@ public class BrandServiceImpl implements BrandService {
     }
 
     @Override
-    public void updateBrand(Long id, BrandDTO brandDTO) {
-        Brand brandOld = brandRepository.findById(id).orElseThrow(BrandNotFoundException::new);
-        Brand brand = modelMapper.map(brandDTO, Brand.class);
-        brandOld.setName(brand.getName());
+    public BrandDTO updateBrand(BrandUpdateDTO brandUpdateDTO) {
+        Brand brand = modelMapper.map(brandUpdateDTO, Brand.class);
+        Brand save = brandRepository.saveAndFlush(brand);
+        entityManager.refresh(save);
+        return modelMapper.map(save,BrandDTO.class);
     }
+
 
     @Override
     public List<WelderModelDTO> findWelderModelsByBrandId(Long id) {
