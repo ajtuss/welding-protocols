@@ -26,6 +26,7 @@ import java.util.Arrays;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.mockito.BDDMockito.given;
+import static org.mockito.Mockito.*;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.user;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
@@ -89,6 +90,8 @@ public class BrandRestControllerTest {
                .andExpect(jsonPath("$._embedded.brands[1]._links.models.href", is("http://localhost/api/brands/2/models")))
                .andExpect(jsonPath("$._links.self.href", is("http://localhost/api/brands")))
                .andReturn();
+        verify(brandService, times(1)).findAll();
+        verifyNoMoreInteractions(brandService);
     }
 
     @Test
@@ -111,6 +114,8 @@ public class BrandRestControllerTest {
                .andExpect(jsonPath("$._links.brands.href", is("http://localhost/api/brands")))
                .andExpect(jsonPath("$._links.models.href", is("http://localhost/api/brands/1/models")))
                .andReturn();
+        verify(brandService, times(1)).findById(1L);
+        verifyNoMoreInteractions(brandService);
     }
 
     @Test
@@ -142,6 +147,8 @@ public class BrandRestControllerTest {
                .andExpect(jsonPath("$._links.brands.href", is("http://localhost/api/brands")))
                .andExpect(jsonPath("$._links.models.href", is("http://localhost/api/brands/1/models")))
                .andReturn();
+        verify(brandService, times(1)).saveBrand(creationDTO);
+        verifyNoMoreInteractions(brandService);
     }
 
     @Test
@@ -169,6 +176,8 @@ public class BrandRestControllerTest {
                .andExpect(jsonPath("$._links.brands.href", is("http://localhost/api/brands")))
                .andExpect(jsonPath("$._links.models.href", is("http://localhost/api/brands/1/models")))
                .andReturn();
+        verify(brandService, times(1)).updateBrand(updateDTO);
+        verifyNoMoreInteractions(brandService);
     }
 
     @Test
