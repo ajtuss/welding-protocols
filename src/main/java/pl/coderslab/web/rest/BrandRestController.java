@@ -22,7 +22,7 @@ import static org.springframework.hateoas.mvc.ControllerLinkBuilder.linkTo;
 import static org.springframework.hateoas.mvc.ControllerLinkBuilder.methodOn;
 
 @RestController
-@RequestMapping("/api/brands")
+@RequestMapping(value = "/api/brands")
 public class BrandRestController {
 
     private final BrandService brandService;
@@ -55,14 +55,14 @@ public class BrandRestController {
         return brandService.findWelderModelsByBrandId(id); //todo add Response Entity
     }
 
-    @PostMapping
+    @PostMapping(consumes = MediaTypes.HAL_JSON_UTF8_VALUE)
     public ResponseEntity<Resource<BrandDTO>> addBrand(@RequestBody @Valid BrandCreationDTO brandCreationDTO) throws URISyntaxException {
         BrandDTO brandDTO = brandService.saveBrand(brandCreationDTO);
         Resource<BrandDTO> resource = assembler.toResource(brandDTO);
         return ResponseEntity.created(linkTo(methodOn(BrandRestController.class).getOne(brandDTO.getId())).toUri()).body(resource);
     }
 
-    @PutMapping("/{id:\\d+}")
+    @PutMapping(value = "/{id:\\d+}")
     public BrandDTO editBrand(@PathVariable Long id, @RequestBody @Valid BrandUpdateDTO brandUpdateDTO){
         return brandService.updateBrand(brandUpdateDTO);
     }

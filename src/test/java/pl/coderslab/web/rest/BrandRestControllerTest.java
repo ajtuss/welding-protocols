@@ -1,5 +1,6 @@
 package pl.coderslab.web.rest;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -13,7 +14,9 @@ import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
+import pl.coderslab.domain.dto.BrandCreationDTO;
 import pl.coderslab.domain.dto.BrandDTO;
+import pl.coderslab.domain.dto.BrandUpdateDTO;
 import pl.coderslab.domain.services.BrandService;
 import pl.coderslab.web.rest.assemblers.BrandResourceAssembler;
 
@@ -25,7 +28,7 @@ import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.mockito.BDDMockito.given;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.user;
 import static org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers.springSecurity;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
@@ -43,23 +46,24 @@ public class BrandRestControllerTest {
     @MockBean
     private BrandService brandService;
 
-    private LocalDateTime time = LocalDateTime.now();
+    private static final ObjectMapper mapper = new ObjectMapper();
+
+    private static final LocalDateTime DATE_TIME = LocalDateTime.now();
 
     @Before
-    public void setUpClass() {
-
-    }
-
-    @Test
-    public void getShouldFetchAllAHalDocument() throws Exception {
+    public void setUp() {
         mockMvc = MockMvcBuilders
                 .webAppContextSetup(context)
                 .apply(springSecurity())
                 .build();
+    }
+
+    @Test
+    public void getShouldFetchAllAHalDocument() throws Exception {
 
         given(brandService.findAll()).willReturn(
-                Arrays.asList(new BrandDTO(1L, "Kemppi", time, time, 1L),
-                        new BrandDTO(2L, "Fronius", time, time, 1L))
+                Arrays.asList(new BrandDTO(1L, "Kemppi", DATE_TIME, DATE_TIME, 1L),
+                        new BrandDTO(2L, "Fronius", DATE_TIME, DATE_TIME, 1L))
         );
 
         mockMvc.perform(get("/api/brands")
@@ -90,12 +94,8 @@ public class BrandRestControllerTest {
 
     @Test
     public void getShouldFetchAHalDocument() throws Exception {
-        mockMvc = MockMvcBuilders
-                .webAppContextSetup(context)
-                .apply(springSecurity())
-                .build();
 
-        given(brandService.findById(1L)).willReturn(new BrandDTO(1L, "Kemppi", time, time, 1L));
+        given(brandService.findById(1L)).willReturn(new BrandDTO(1L, "Kemppi", DATE_TIME, DATE_TIME, 1L));
 
         mockMvc.perform(get("/api/brands/1")
                 .with(user("user"))
@@ -116,17 +116,56 @@ public class BrandRestControllerTest {
 
     @Test
     public void getModelsByBrandId() {
+        //todo
     }
 
     @Test
-    public void addBrand() {
+    public void postShouldCreateNewBrandAndFetchAHalDocument() throws Exception {
+        BrandCreationDTO creationDTO = new BrandCreationDTO("Kemppi");
+        BrandDTO brandDTO = new BrandDTO(1L, "Kemppi", DATE_TIME, DATE_TIME, 1L);
+        String contentBody = mapper.writeValueAsString(creationDTO);
+
+        given(brandService.saveBrand(creationDTO)).willReturn(brandDTO);
+        mockMvc.perform(post("/api/brands").with(user("user"))
+                                           .contentType(MediaTypes.HAL_JSON_UTF8_VALUE)
+                                           .content(contentBody))
+               .andDo(print())
+               .andExpect(status().isCreated())
+               .andExpect(header().string(HttpHeaders.CONTENT_TYPE, MediaTypes.HAL_JSON_UTF8_VALUE))
+               .andExpect(jsonPath("$.id", is(1)))
+               .andExpect(jsonPath("$.name", is("Kemppi")))
+               .andExpect(jsonPath("$.creationDate", is(notNullValue())))
+               .andExpect(jsonPath("$.modificationDate", is(notNullValue())))
+               .andExpect(jsonPath("$.versionId", is(1)))
+               .andExpect(jsonPath("$._links.self.href", is("http://localhost/api/brands/1")))
+               .andExpect(jsonPath("$._links.brands.href", is("http://localhost/api/brands")))
+               .andExpect(jsonPath("$._links.models.href", is("http://localhost/api/brands/1/models")))
+               .andReturn();
     }
 
     @Test
-    public void editBrand() {
+    public void editBrand() throws Exception {
+        BrandUpdateDTO updateDTO = new BrandUpdateDTO(1L, "Kemppi", 1L);
+        BrandDTO brandDTO = new BrandDTO(1L, "Kemppi", DATE_TIME, DATE_TIME, 2L);
+
+        given(brandService.updateBrand(updateDTO)).willReturn(brandDTO);
+        mockMvc.perform(put("/api/brands/1").with(user("user")).contentType(MediaTypes.HAL_JSON_UTF8_VALUE))
+               .andDo(print())
+               .andExpect(status().isOk())
+               .andExpect(header().string(HttpHeaders.CONTENT_TYPE, MediaTypes.HAL_JSON_UTF8_VALUE))
+               .andExpect(jsonPath("$.id", is(1)))
+               .andExpect(jsonPath("$.name", is("Kemppi")))
+               .andExpect(jsonPath("$.creationDate", is(notNullValue())))
+               .andExpect(jsonPath("$.modificationDate", is(notNullValue())))
+               .andExpect(jsonPath("$.versionId", is(1)))
+               .andExpect(jsonPath("$._links.self.href", is("http://localhost/api/brands/1")))
+               .andExpect(jsonPath("$._links.brands.href", is("http://localhost/api/brands")))
+               .andExpect(jsonPath("$._links.models.href", is("http://localhost/api/brands/1/models")))
+               .andReturn();
     }
 
     @Test
     public void delete() {
+        //todo
     }
 }
