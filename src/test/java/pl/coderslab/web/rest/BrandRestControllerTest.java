@@ -152,7 +152,7 @@ public class BrandRestControllerTest {
     }
 
     @Test
-    public void editBrand() throws Exception {
+    public void putShouldUpdateAndFetchHalDocument() throws Exception {
         BrandUpdateDTO updateDTO = new BrandUpdateDTO(1L, "Kemppi", 1L);
         BrandDTO brandDTO = new BrandDTO(1L, "Kemppi", DATE_TIME, DATE_TIME, 2L);
         String contentBody = mapper.writeValueAsString(updateDTO);
@@ -181,7 +181,18 @@ public class BrandRestControllerTest {
     }
 
     @Test
-    public void delete() {
-        //todo
+    public void deleteShouldRemoveAndReturnOk() throws Exception {
+
+        doNothing().when(brandService).remove(1L);
+
+        mockMvc.perform(delete("/api/brands/1")
+                .with(user("user"))
+                .accept(MediaTypes.HAL_JSON_UTF8_VALUE)
+                .contentType(MediaTypes.HAL_JSON_UTF8_VALUE))
+               .andDo(print())
+               .andExpect(status().isNoContent())
+               .andReturn();
+        verify(brandService, times(1)).remove(1L);
+        verifyNoMoreInteractions(brandService);
     }
 }
