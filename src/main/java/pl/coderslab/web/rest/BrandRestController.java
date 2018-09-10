@@ -3,7 +3,7 @@ package pl.coderslab.web.rest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.hateoas.Resource;
 import org.springframework.hateoas.Resources;
-import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import pl.coderslab.domain.dto.BrandCreationDTO;
 import pl.coderslab.domain.dto.BrandDTO;
@@ -13,6 +13,8 @@ import pl.coderslab.domain.services.BrandService;
 import pl.coderslab.web.rest.assemblers.BrandResourceAssembler;
 
 import javax.validation.Valid;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -54,9 +56,9 @@ public class BrandRestController {
     }
 
     @PostMapping
-    @ResponseStatus(HttpStatus.CREATED)
-    public BrandDTO addBrand(@RequestBody @Valid BrandCreationDTO brandCreationDTO){
-        return brandService.saveBrand(brandCreationDTO);
+    public ResponseEntity<Resource<BrandDTO>> addBrand(@RequestBody @Valid BrandCreationDTO brandCreationDTO) throws URISyntaxException {
+        Resource<BrandDTO> resource = assembler.toResource(brandService.saveBrand(brandCreationDTO));
+        return ResponseEntity.created(new URI(resource.getId().expand().getHref())).body(resource);
     }
 
     @PutMapping("/{id:\\d+}")
