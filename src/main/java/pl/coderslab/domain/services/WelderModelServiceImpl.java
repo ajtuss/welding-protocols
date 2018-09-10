@@ -4,7 +4,7 @@ import org.modelmapper.ModelMapper;
 import org.modelmapper.TypeToken;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import pl.coderslab.domain.dto.WelderModelDto;
+import pl.coderslab.domain.dto.WelderModelDTO;
 import pl.coderslab.domain.entities.Brand;
 import pl.coderslab.domain.entities.WelderModel;
 import pl.coderslab.domain.repositories.BrandRepository;
@@ -32,26 +32,26 @@ public class WelderModelServiceImpl implements WelderModelService {
     }
 
     @Override
-    public WelderModelDto findById(Long id) {
+    public WelderModelDTO findById(Long id) {
         WelderModel model = modelRepository.findById(id).orElse(null);
-        return modelMapper.map(model, WelderModelDto.class);
+        return modelMapper.map(model, WelderModelDTO.class);
     }
 
     @Override
-    public List<WelderModelDto> findAll() {
+    public List<WelderModelDTO> findAll() {
         List<WelderModel> models = modelRepository.findAll();
-        Type resultType = new TypeToken<List<WelderModelDto>>() {}.getType();
+        Type resultType = new TypeToken<List<WelderModelDTO>>() {}.getType();
         return modelMapper.map(models, resultType);
     }
 
     @Override
-    public void save(WelderModelDto modelDTO) {
+    public void save(WelderModelDTO modelDTO) {
         WelderModel welderModel = getWelderModel(modelDTO);
         modelRepository.save(welderModel);
     }
 
     @Override
-    public void update(Long id, WelderModelDto modelDTO) {
+    public void update(Long id, WelderModelDTO modelDTO) {
         WelderModel model = getWelderModel(modelDTO);
         model.setId(id);
         modelRepository.save(model);
@@ -63,7 +63,7 @@ public class WelderModelServiceImpl implements WelderModelService {
         modelRepository.delete(model);
     }
 
-    private WelderModel getWelderModel(WelderModelDto modelDTO) {
+    private WelderModel getWelderModel(WelderModelDTO modelDTO) {
         Long brandId = modelDTO.getBrandId();
         WelderModel model = modelMapper.map(modelDTO, WelderModel.class);
         Brand brand = brandRepository.findById(brandId).orElse(null);

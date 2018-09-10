@@ -4,7 +4,7 @@ import org.modelmapper.ModelMapper;
 import org.modelmapper.TypeToken;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import pl.coderslab.domain.dto.CustomerDto;
+import pl.coderslab.domain.dto.CustomerDTO;
 import pl.coderslab.domain.entities.Customer;
 import pl.coderslab.domain.exceptions.CustomerNotFoundException;
 import pl.coderslab.domain.repositories.CustomerRepository;
@@ -28,27 +28,27 @@ public class CustomerServiceImpl implements CustomerService {
     }
 
     @Override
-    public List<CustomerDto> findAll() {
+    public List<CustomerDTO> findAll() {
         List<Customer> customers = customerRepository.findAll();
-        Type resultType = new TypeToken<List<CustomerDto>>() {}.getType();
+        Type resultType = new TypeToken<List<CustomerDTO>>() {}.getType();
         return modelMapper.map(customers, resultType);
     }
 
     @Override
-    public void save(CustomerDto customerDto) {
-        Customer customer = modelMapper.map(customerDto, Customer.class);
+    public void save(CustomerDTO customerDTO) {
+        Customer customer = modelMapper.map(customerDTO, Customer.class);
         customerRepository.save(customer);
     }
 
     @Override
-    public CustomerDto findById(Long id) {
+    public CustomerDTO findById(Long id) {
         Customer customer = customerRepository.findById(id).orElseThrow(CustomerNotFoundException::new);
-        return modelMapper.map(customer,CustomerDto.class);
+        return modelMapper.map(customer,CustomerDTO.class);
     }
 
     @Override
-    public void update(Long id, CustomerDto customerDto) {
-        Customer customer = modelMapper.map(customerDto, Customer.class);
+    public void update(Long id, CustomerDTO customerDTO) {
+        Customer customer = modelMapper.map(customerDTO, Customer.class);
         customer.setId(id);
         customerRepository.save(customer);
     }

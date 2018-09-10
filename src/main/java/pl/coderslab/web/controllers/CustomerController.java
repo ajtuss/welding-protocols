@@ -4,7 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-import pl.coderslab.domain.dto.CustomerDto;
+import pl.coderslab.domain.dto.CustomerDTO;
 import pl.coderslab.domain.services.CustomerService;
 
 @Controller
@@ -26,26 +26,26 @@ public class CustomerController {
 
     @GetMapping("/add")
     public String showAddCustomerForm(Model model){
-        model.addAttribute("customer", new CustomerDto());
+        model.addAttribute("customer", new CustomerDTO());
         return "forms/addCustomer";
     }
 
     @PostMapping("/add")
-    public String addCustomer(@ModelAttribute CustomerDto customerDto){
-        customerService.save(customerDto);
+    public String addCustomer(@ModelAttribute CustomerDTO customerDTO){
+        customerService.save(customerDTO);
         return "redirect:/customers";
     }
 
     @GetMapping("/{id:\\d+}")
     public String showEditCustomerForm(@PathVariable Long id, Model model){
-        CustomerDto customerDto = customerService.findById(id);
-        model.addAttribute("customer", customerDto);
+        CustomerDTO customerDTO = customerService.findById(id);
+        model.addAttribute("customer", customerDTO);
         return "forms/editCustomer";
     }
 
     @PostMapping("{id:\\d+}")
-    public String editCustomer(@PathVariable Long id, @ModelAttribute CustomerDto customerDto){
-        customerService.update(id,customerDto);
+    public String editCustomer(@PathVariable Long id, @ModelAttribute CustomerDTO customerDTO){
+        customerService.update(id, customerDTO);
         return "redirect:/customers";
     }
 }

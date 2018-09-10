@@ -4,7 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-import pl.coderslab.domain.dto.MachineDto;
+import pl.coderslab.domain.dto.MachineDTO;
 import pl.coderslab.domain.services.MachineService;
 
 @Controller
@@ -25,26 +25,26 @@ public class MachineController {
 
     @GetMapping("/add")
     public String showAddMachineForm(Model model){
-        model.addAttribute("machine", new MachineDto());
+        model.addAttribute("machine", new MachineDTO());
         return "forms/addMachine";
     }
 
     @PostMapping("/add")
-    public String addMachine(@ModelAttribute MachineDto machineDto){
-        machineService.save(machineDto);
+    public String addMachine(@ModelAttribute MachineDTO machineDTO){
+        machineService.save(machineDTO);
         return "redirect:/machines";
     }
 
     @GetMapping("{id:\\d+}")
     public String showEditMachineForm(@PathVariable Long id, Model model){
-        MachineDto machineDto = machineService.findById(id);
-        model.addAttribute("machine", machineDto);
+        MachineDTO machineDTO = machineService.findById(id);
+        model.addAttribute("machine", machineDTO);
         return "forms/editMachine";
     }
 
     @PostMapping("{id:\\d+}")
-    public String editMachine(@PathVariable Long id, @ModelAttribute MachineDto machineDto){
-        machineService.update(id, machineDto);
+    public String editMachine(@PathVariable Long id, @ModelAttribute MachineDTO machineDTO){
+        machineService.update(id, machineDTO);
         return "redirect:/machines";
     }
 }

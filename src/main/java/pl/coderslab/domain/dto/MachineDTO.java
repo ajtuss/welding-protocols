@@ -3,7 +3,7 @@ package pl.coderslab.domain.dto;
 import java.time.LocalDateTime;
 import java.util.Objects;
 
-public class MachineDto {
+public class MachineDTO {
 
     private Long id;
     private String serialNumber;
@@ -118,7 +118,7 @@ public class MachineDto {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        MachineDto that = (MachineDto) o;
+        MachineDTO that = (MachineDTO) o;
         return Objects.equals(id, that.id) &&
                 Objects.equals(serialNumber, that.serialNumber) &&
                 Objects.equals(welderModelId, that.welderModelId) &&
@@ -140,7 +140,7 @@ public class MachineDto {
 
     @Override
     public String toString() {
-        return "MachineDto{" +
+        return "MachineDTO{" +
                 "id=" + id +
                 ", serialNumber='" + serialNumber + '\'' +
                 ", welderModelId=" + welderModelId +

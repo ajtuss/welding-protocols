@@ -1,23 +1,23 @@
 package pl.coderslab.domain.services;
 
-import pl.coderslab.domain.dto.MeasureDto;
-import pl.coderslab.domain.dto.ValidProtocolDto;
+import pl.coderslab.domain.dto.MeasureDTO;
+import pl.coderslab.domain.dto.ValidProtocolDTO;
 
 import java.util.List;
 
 public interface ValidProtocolService {
 
-    List<ValidProtocolDto> findAll();
+    List<ValidProtocolDTO> findAll();
 
-    Long save(ValidProtocolDto validProtocolDto);
+    Long save(ValidProtocolDTO validProtocolDTO);
 
-    ValidProtocolDto findById(Long id);
+    ValidProtocolDTO findById(Long id);
 
-    void update(Long id, ValidProtocolDto validProtocolDto);
+    void update(Long id, ValidProtocolDTO validProtocolDTO);
 
     void remove(Long id);
 
-    ValidProtocolDto getNewValidProtocol(Long machineId);
+    ValidProtocolDTO getNewValidProtocol(Long machineId);
 
-    List<MeasureDto> findAllMeasures(Long id);
+    List<MeasureDTO> findAllMeasures(Long id);
 }

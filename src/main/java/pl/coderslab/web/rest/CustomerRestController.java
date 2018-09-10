@@ -2,7 +2,7 @@ package pl.coderslab.web.rest;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-import pl.coderslab.domain.dto.CustomerDto;
+import pl.coderslab.domain.dto.CustomerDTO;
 import pl.coderslab.domain.services.CustomerService;
 
 import java.util.List;
@@ -19,12 +19,12 @@ public class CustomerRestController {
     }
 
     @GetMapping
-    public List<CustomerDto> getAllCustomers(){
+    public List<CustomerDTO> getAllCustomers(){
         return customerService.findAll();
     }
 
     @GetMapping("{id:\\d+}")
-    public CustomerDto getCustomerById(@PathVariable Long id){
+    public CustomerDTO getCustomerById(@PathVariable Long id){
         return customerService.findById(id);
     }
 

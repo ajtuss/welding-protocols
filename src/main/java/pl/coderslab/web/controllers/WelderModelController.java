@@ -4,7 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-import pl.coderslab.domain.dto.WelderModelDto;
+import pl.coderslab.domain.dto.WelderModelDTO;
 import pl.coderslab.domain.services.BrandService;
 import pl.coderslab.domain.services.WelderModelService;
 
@@ -30,25 +30,25 @@ public class WelderModelController {
 
     @GetMapping("/add")
     public String showAddModel(Model model) {
-        model.addAttribute("welderModel", new WelderModelDto());
+        model.addAttribute("welderModel", new WelderModelDTO());
         return "forms/addWelderModel";
     }
 
     @PostMapping("/add")
-    public String addModel(@ModelAttribute WelderModelDto welderModel) {
+    public String addModel(@ModelAttribute WelderModelDTO welderModel) {
         modelService.save(welderModel);
         return "redirect:/weldmodels";
     }
 
     @GetMapping("/{id:\\d+}")
     public String showEditModel(@PathVariable Long id, Model model){
-        WelderModelDto welderModelDto = modelService.findById(id);
-        model.addAttribute("welderModel", welderModelDto);
+        WelderModelDTO welderModelDTO = modelService.findById(id);
+        model.addAttribute("welderModel", welderModelDTO);
         return "forms/editWelderModel";
     }
 
     @PostMapping("/{id:\\d+}")
-    public String editModel(@PathVariable Long id, @ModelAttribute WelderModelDto welderModelDTO){
+    public String editModel(@PathVariable Long id, @ModelAttribute WelderModelDTO welderModelDTO){
         modelService.update(id,welderModelDTO);
         return "redirect:/weldmodels";
     }

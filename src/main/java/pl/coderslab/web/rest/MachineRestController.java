@@ -2,12 +2,10 @@ package pl.coderslab.web.rest;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-import pl.coderslab.domain.dto.BrandDto;
-import pl.coderslab.domain.dto.CustomerDto;
-import pl.coderslab.domain.dto.MachineDto;
-import pl.coderslab.domain.dto.WelderModelDto;
-import pl.coderslab.domain.entities.Brand;
-import pl.coderslab.domain.entities.WelderModel;
+import pl.coderslab.domain.dto.BrandDTO;
+import pl.coderslab.domain.dto.CustomerDTO;
+import pl.coderslab.domain.dto.MachineDTO;
+import pl.coderslab.domain.dto.WelderModelDTO;
 import pl.coderslab.domain.services.MachineService;
 
 import java.util.List;
@@ -24,12 +22,12 @@ public class MachineRestController {
     }
 
     @GetMapping
-    public List<MachineDto> getAllMachines() {
+    public List<MachineDTO> getAllMachines() {
         return machineService.findAll();
     }
 
     @GetMapping("{id:\\d+}")
-    public MachineDto getMachine(@PathVariable Long id) {
+    public MachineDTO getMachine(@PathVariable Long id) {
         return machineService.findById(id);
     }
 
@@ -39,19 +37,19 @@ public class MachineRestController {
     }
 
     @GetMapping("/customers")
-    public List<CustomerDto> getAllCustomersWithMachines() {
+    public List<CustomerDTO> getAllCustomersWithMachines() {
         return machineService.findAllCustomers();
     }
 
     @GetMapping("/weldmodels")
-    public List<WelderModelDto> getAllModels(@RequestParam Long customerId,
+    public List<WelderModelDTO> getAllModels(@RequestParam Long customerId,
                                              @RequestParam Long brandId) {
 
             return machineService.findAllMachines(customerId, brandId);
     }
 
     @GetMapping("/brands")
-    public List<BrandDto> getAllBrands(@RequestParam(required = false) Long customerId) {
+    public List<BrandDTO> getAllBrands(@RequestParam(required = false) Long customerId) {
         if (customerId != null) {
             return machineService.findAllBrands(customerId);
         } else {

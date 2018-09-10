@@ -4,8 +4,8 @@ import org.modelmapper.ModelMapper;
 import org.modelmapper.TypeToken;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import pl.coderslab.domain.dto.BrandDto;
-import pl.coderslab.domain.dto.WelderModelDto;
+import pl.coderslab.domain.dto.BrandDTO;
+import pl.coderslab.domain.dto.WelderModelDTO;
 import pl.coderslab.domain.entities.Brand;
 import pl.coderslab.domain.entities.WelderModel;
 import pl.coderslab.domain.exceptions.BrandNotFoundException;
@@ -34,36 +34,36 @@ public class BrandServiceImpl implements BrandService {
 
 
     @Override
-    public void saveBrand(BrandDto brandDto) {
-        Brand brand = modelMapper.map(brandDto, Brand.class);
+    public void saveBrand(BrandDTO brandDTO) {
+        Brand brand = modelMapper.map(brandDTO, Brand.class);
         brandRepository.save(brand);
     }
 
     @Override
-    public List<BrandDto> findAll() {
+    public List<BrandDTO> findAll() {
         List<Brand> brands = brandRepository.findAll();
-        Type resultType = new TypeToken<List<BrandDto>>() {
+        Type resultType = new TypeToken<List<BrandDTO>>() {
         }.getType();
         return modelMapper.map(brands, resultType);
     }
 
     @Override
-    public BrandDto findById(Long id) {
+    public BrandDTO findById(Long id) {
         Brand brand = brandRepository.findById(id).orElseThrow(BrandNotFoundException::new);
-        return modelMapper.map(brand, BrandDto.class);
+        return modelMapper.map(brand, BrandDTO.class);
     }
 
     @Override
-    public void updateBrand(Long id, BrandDto brandDto) {
+    public void updateBrand(Long id, BrandDTO brandDTO) {
         Brand brandOld = brandRepository.findById(id).orElseThrow(BrandNotFoundException::new);
-        Brand brand = modelMapper.map(brandDto, Brand.class);
+        Brand brand = modelMapper.map(brandDTO, Brand.class);
         brandOld.setName(brand.getName());
     }
 
     @Override
-    public List<WelderModelDto> findWelderModelsByBrandId(Long id) {
+    public List<WelderModelDTO> findWelderModelsByBrandId(Long id) {
         List<WelderModel> welderModels = modelRepository.findAllByBrandId(id);
-        Type resultType = new TypeToken<List<WelderModelDto>>() {}.getType();
+        Type resultType = new TypeToken<List<WelderModelDTO>>() {}.getType();
         return modelMapper.map(welderModels,resultType);
     }
 

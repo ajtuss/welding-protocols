@@ -4,8 +4,8 @@ import org.modelmapper.ModelMapper;
 import org.modelmapper.TypeToken;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import pl.coderslab.domain.dto.MeasureDto;
-import pl.coderslab.domain.dto.ValidProtocolDto;
+import pl.coderslab.domain.dto.MeasureDTO;
+import pl.coderslab.domain.dto.ValidProtocolDTO;
 import pl.coderslab.domain.entities.*;
 import pl.coderslab.domain.repositories.MachineRepository;
 import pl.coderslab.domain.repositories.MeasureRepository;
@@ -37,18 +37,18 @@ public class ValidProtocolServiceImpl implements ValidProtocolService {
 
 
     @Override
-    public List<ValidProtocolDto> findAll() {
+    public List<ValidProtocolDTO> findAll() {
         List<ValidProtocol> protocols = validProtocolRepository.findAll();
-        Type resultType = new TypeToken<List<ValidProtocolDto>>() {
+        Type resultType = new TypeToken<List<ValidProtocolDTO>>() {
         }.getType();
         return modelMapper.map(protocols, resultType);
     }
 
     @Override
-    public Long save(ValidProtocolDto validProtocolDto) {
-        System.out.println(validProtocolDto.getMachineId());
-        Boolean auto = validProtocolDto.getAuto();
-        ValidProtocol protocol = getValidProtocol(validProtocolDto);
+    public Long save(ValidProtocolDTO validProtocolDTO) {
+        System.out.println(validProtocolDTO.getMachineId());
+        Boolean auto = validProtocolDTO.getAuto();
+        ValidProtocol protocol = getValidProtocol(validProtocolDTO);
         if (auto) {
             WelderModel welderModel = protocol.getMachine().getWelderModel();
             Double iMin = null;
@@ -110,14 +110,14 @@ public class ValidProtocolServiceImpl implements ValidProtocolService {
     }
 
     @Override
-    public ValidProtocolDto findById(Long id) {
+    public ValidProtocolDTO findById(Long id) {
         ValidProtocol protocol = validProtocolRepository.findById(id).get();
-        return modelMapper.map(protocol, ValidProtocolDto.class);
+        return modelMapper.map(protocol, ValidProtocolDTO.class);
     }
 
     @Override
-    public void update(Long id, ValidProtocolDto validProtocolDto) {
-        ValidProtocol validProtocol = getValidProtocol(validProtocolDto);
+    public void update(Long id, ValidProtocolDTO validProtocolDTO) {
+        ValidProtocol validProtocol = getValidProtocol(validProtocolDTO);
         validProtocol.setId(id);
         validProtocolRepository.save(validProtocol);
     }
@@ -129,23 +129,23 @@ public class ValidProtocolServiceImpl implements ValidProtocolService {
     }
 
     @Override
-    public ValidProtocolDto getNewValidProtocol(Long machineId) {
+    public ValidProtocolDTO getNewValidProtocol(Long machineId) {
         Machine machine = machineRepository.findById(machineId).get();
         ValidProtocol validProtocol = new ValidProtocol();
         validProtocol.setMachine(machine);
-        return modelMapper.map(validProtocol, ValidProtocolDto.class);
+        return modelMapper.map(validProtocol, ValidProtocolDTO.class);
     }
 
     @Override
-    public List<MeasureDto> findAllMeasures(Long protocolId) {
+    public List<MeasureDTO> findAllMeasures(Long protocolId) {
         List<Measure> measures = measureRepository.findByValidProtocolId(protocolId);
         measures.forEach(System.out::println);
-        Type resultType = new TypeToken<List<MeasureDto>>() {
+        Type resultType = new TypeToken<List<MeasureDTO>>() {
         }.getType();
         return modelMapper.map(measures, resultType);
     }
 
-    private ValidProtocol getValidProtocol(ValidProtocolDto validDto) {
+    private ValidProtocol getValidProtocol(ValidProtocolDTO validDto) {
         Long machineId = validDto.getMachineId();
         ValidProtocol protocol = modelMapper.map(validDto, ValidProtocol.class);
         Machine machine = machineRepository.findById(machineId).orElse(null);
