@@ -1,6 +1,7 @@
 package pl.coderslab.web.rest;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.hateoas.MediaTypes;
 import org.springframework.hateoas.Resource;
 import org.springframework.hateoas.Resources;
 import org.springframework.http.ResponseEntity;
@@ -33,7 +34,7 @@ public class BrandRestController {
         this.assembler = assembler;
     }
 
-    @GetMapping
+    @GetMapping(consumes = MediaTypes.HAL_JSON_UTF8_VALUE)
     public Resources<Resource<BrandDTO>> getAll() {
         List<Resource<BrandDTO>> brands = brandService.findAll().stream()
                                                       .map(assembler::toResource)
@@ -42,16 +43,16 @@ public class BrandRestController {
                 linkTo(methodOn(BrandRestController.class).getAll()).withSelfRel());
     }
 
-    @GetMapping("/{id:\\d+}")
+    @GetMapping(value = "/{id:\\d+}", consumes = MediaTypes.HAL_JSON_UTF8_VALUE)
     public Resource<BrandDTO> getOne(@PathVariable Long id){
         BrandDTO brandDTO = brandService.findById(id);
         return assembler.toResource(brandDTO);
     }
 
 
-    @GetMapping("/{id:\\d+}/models")
+    @GetMapping(value = "/{id:\\d+}/models", consumes = MediaTypes.HAL_JSON_UTF8_VALUE)
     public List<WelderModelDTO> getModelsByBrandId(@PathVariable Long id){
-        return brandService.findWelderModelsByBrandId(id);
+        return brandService.findWelderModelsByBrandId(id); //todo add Response Entity
     }
 
     @PostMapping
