@@ -6,10 +6,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 @ResponseStatus(HttpStatus.NOT_FOUND)
 public class BrandNotFoundException extends RuntimeException {
 
-    public BrandNotFoundException() {
-    }
-
-    public BrandNotFoundException(String message) {
-        super(message);
+    public BrandNotFoundException(Long id) {
+        super("Brand with id " + id + " not found");
     }
 }
