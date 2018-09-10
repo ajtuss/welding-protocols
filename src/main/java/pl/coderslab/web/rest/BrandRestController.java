@@ -13,7 +13,6 @@ import pl.coderslab.domain.services.BrandService;
 import pl.coderslab.web.rest.assemblers.BrandResourceAssembler;
 
 import javax.validation.Valid;
-import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -57,8 +56,9 @@ public class BrandRestController {
 
     @PostMapping
     public ResponseEntity<Resource<BrandDTO>> addBrand(@RequestBody @Valid BrandCreationDTO brandCreationDTO) throws URISyntaxException {
-        Resource<BrandDTO> resource = assembler.toResource(brandService.saveBrand(brandCreationDTO));
-        return ResponseEntity.created(new URI(resource.getId().expand().getHref())).body(resource);
+        BrandDTO brandDTO = brandService.saveBrand(brandCreationDTO);
+        Resource<BrandDTO> resource = assembler.toResource(brandDTO);
+        return ResponseEntity.created(linkTo(methodOn(BrandRestController.class).getOne(brandDTO.getId())).toUri()).body(resource);
     }
 
     @PutMapping("/{id:\\d+}")
@@ -66,9 +66,10 @@ public class BrandRestController {
         return brandService.updateBrand(brandUpdateDTO);
     }
 
-    @DeleteMapping("/{id:\\d}")
-    public void deleteBrand(@PathVariable Long id){
+    @DeleteMapping("/{id:\\d+}")
+    public ResponseEntity<?> delete(@PathVariable Long id){
         brandService.remove(id);
+        return ResponseEntity.noContent().build();
     }
 
 
