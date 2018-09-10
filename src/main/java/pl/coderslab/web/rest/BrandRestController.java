@@ -1,6 +1,8 @@
 package pl.coderslab.web.rest;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.hateoas.Resource;
+import org.springframework.hateoas.Resources;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import pl.coderslab.domain.dto.BrandCreationDTO;
@@ -11,6 +13,10 @@ import pl.coderslab.domain.services.BrandService;
 
 import javax.validation.Valid;
 import java.util.List;
+import java.util.stream.Collectors;
+
+import static org.springframework.hateoas.mvc.ControllerLinkBuilder.linkTo;
+import static org.springframework.hateoas.mvc.ControllerLinkBuilder.methodOn;
 
 @RestController
 @RequestMapping("/api/brands")
@@ -24,13 +30,25 @@ public class BrandRestController {
     }
 
     @GetMapping
-    public List<BrandDTO> getAllBrands() {
-        return brandService.findAll();
+    public Resources<Resource<BrandDTO>> getAll() {
+        List<Resource<BrandDTO>> brands = brandService.findAll().stream()
+                                                      .map(this::getBrandDTOResource)
+                                                      .collect(Collectors.toList());
+        return new Resources<>(brands,
+                linkTo(methodOn(BrandRestController.class).getAll()).withSelfRel());
     }
 
     @GetMapping("/{id:\\d+}")
-    public BrandDTO getBrandByBrandId(@PathVariable Long id){
-        return brandService.findById(id);
+    public Resource<BrandDTO> getOne(@PathVariable Long id){
+        BrandDTO brandDTO = brandService.findById(id);
+        return getBrandDTOResource(brandDTO);
+    }
+
+    private Resource<BrandDTO> getBrandDTOResource(BrandDTO brandDTO) {
+        return new Resource<>(brandDTO,
+                linkTo(methodOn(BrandRestController.class).getOne(brandDTO.getId())).withSelfRel(),
+                linkTo(methodOn(BrandRestController.class).getAll()).withRel("brands"),
+                linkTo(methodOn(BrandRestController.class).getModelsByBrandId(brandDTO.getId())).withRel("models"));
     }
 
 
