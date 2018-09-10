@@ -12,7 +12,7 @@ import java.util.Objects;
 @Table(name = "brands")
 public class Brand extends AbstractEntity{
 
-    @Column(unique = true)
+    @Column(unique = true, nullable = false)
     private String name;
 
     @OneToMany(mappedBy = "brand")

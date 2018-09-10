@@ -2,8 +2,8 @@ package pl.coderslab.web.rest;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-import pl.coderslab.domain.dto.MeasureDto;
-import pl.coderslab.domain.dto.ValidProtocolDto;
+import pl.coderslab.domain.dto.MeasureDTO;
+import pl.coderslab.domain.dto.ValidProtocolDTO;
 import pl.coderslab.domain.services.ValidProtocolService;
 
 import java.util.List;
@@ -16,17 +16,17 @@ public class ValidationsRestController {
     private ValidProtocolService validProtocolService;
 
     @GetMapping
-    public List<ValidProtocolDto> getAllValidProtocols() {
+    public List<ValidProtocolDTO> getAllValidProtocols() {
         return validProtocolService.findAll();
     }
 
     @GetMapping("/{id:\\d+}")
-    public ValidProtocolDto getValidProtocol(@PathVariable Long id){
+    public ValidProtocolDTO getValidProtocol(@PathVariable Long id){
         return validProtocolService.findById(id);
     }
 
     @GetMapping("/{id:\\d+}/measures")
-    public List<MeasureDto> getAllMeasures(@PathVariable Long id){
+    public List<MeasureDTO> getAllMeasures(@PathVariable Long id){
         return validProtocolService.findAllMeasures(id);
     }
 

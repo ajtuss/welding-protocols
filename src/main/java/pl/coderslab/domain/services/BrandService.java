@@ -1,24 +1,23 @@
 package pl.coderslab.domain.services;
 
-import pl.coderslab.domain.dto.BrandDto;
-import pl.coderslab.domain.dto.WelderModelDto;
-import pl.coderslab.domain.entities.Brand;
-import pl.coderslab.domain.entities.WelderModel;
+import pl.coderslab.domain.dto.BrandCreationDTO;
+import pl.coderslab.domain.dto.BrandDTO;
+import pl.coderslab.domain.dto.BrandUpdateDTO;
+import pl.coderslab.domain.dto.WelderModelDTO;
 
-import javax.transaction.Transactional;
 import java.util.List;
 
 public interface BrandService {
 
-    void saveBrand(BrandDto brandDto);
+    BrandDTO saveBrand(BrandCreationDTO brandCreationDTO);
 
-    List<BrandDto> findAll();
+    List<BrandDTO> findAll();
 
-    BrandDto findById(Long id);
+    BrandDTO findById(Long id);
 
-    void updateBrand(Long id, BrandDto brand);
+    BrandDTO updateBrand(BrandUpdateDTO brandUpdateDTO);
 
-    List<WelderModelDto> findWelderModelsByBrandId(Long id);
+    List<WelderModelDTO> findWelderModelsByBrandId(Long id);
 
     void remove(Long id);
 }

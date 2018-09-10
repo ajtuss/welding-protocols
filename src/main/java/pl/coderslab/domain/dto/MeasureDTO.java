@@ -1,11 +1,9 @@
 package pl.coderslab.domain.dto;
 
-import pl.coderslab.domain.entities.ValidProtocol;
-
 import java.time.LocalDateTime;
 import java.util.Objects;
 
-public class MeasureDto {
+public class MeasureDTO {
 
 
     private Long id;
@@ -112,7 +110,7 @@ public class MeasureDto {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        MeasureDto that = (MeasureDto) o;
+        MeasureDTO that = (MeasureDTO) o;
         return Objects.equals(id, that.id) &&
                 Objects.equals(validProtocolId, that.validProtocolId) &&
                 Objects.equals(iAdjust, that.iAdjust) &&
@@ -134,7 +132,7 @@ public class MeasureDto {
 
     @Override
     public String toString() {
-        return "MeasureDto{" +
+        return "MeasureDTO{" +
                 "id=" + id +
                 ", validProtocolId=" + validProtocolId +
                 ", iAdjust=" + iAdjust +

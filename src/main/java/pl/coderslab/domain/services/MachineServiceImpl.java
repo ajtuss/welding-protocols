@@ -4,10 +4,10 @@ import org.modelmapper.ModelMapper;
 import org.modelmapper.TypeToken;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import pl.coderslab.domain.dto.BrandDto;
-import pl.coderslab.domain.dto.CustomerDto;
-import pl.coderslab.domain.dto.MachineDto;
-import pl.coderslab.domain.dto.WelderModelDto;
+import pl.coderslab.domain.dto.BrandDTO;
+import pl.coderslab.domain.dto.CustomerDTO;
+import pl.coderslab.domain.dto.MachineDTO;
+import pl.coderslab.domain.dto.WelderModelDTO;
 import pl.coderslab.domain.entities.Brand;
 import pl.coderslab.domain.entities.Customer;
 import pl.coderslab.domain.entities.Machine;
@@ -39,28 +39,28 @@ public class MachineServiceImpl implements MachineService {
 
 
     @Override
-    public void save(MachineDto machineDto) {
-        Machine machine = getMachine(machineDto);
+    public void save(MachineDTO machineDTO) {
+        Machine machine = getMachine(machineDTO);
         machineRepository.save(machine);
     }
 
     @Override
-    public List<MachineDto> findAll() {
+    public List<MachineDTO> findAll() {
         List<Machine> machines = machineRepository.findAll();
-        Type resultType = new TypeToken<List<MachineDto>>() {
+        Type resultType = new TypeToken<List<MachineDTO>>() {
         }.getType();
         return modelMapper.map(machines, resultType);
     }
 
     @Override
-    public MachineDto findById(Long id) {
+    public MachineDTO findById(Long id) {
         Machine machine = machineRepository.findById(id).orElse(null);
-        return modelMapper.map(machine, MachineDto.class);
+        return modelMapper.map(machine, MachineDTO.class);
     }
 
     @Override
-    public void update(Long id, MachineDto machineDto) {
-        Machine machine = getMachine(machineDto);
+    public void update(Long id, MachineDTO machineDTO) {
+        Machine machine = getMachine(machineDTO);
         machine.setId(id);
         machineRepository.save(machine);
     }
@@ -72,39 +72,39 @@ public class MachineServiceImpl implements MachineService {
     }
 
     @Override
-    public List<CustomerDto> findAllCustomers() {
+    public List<CustomerDTO> findAllCustomers() {
         List<Customer> customers = machineRepository.findAllCustomers();
-        Type resultType = new TypeToken<List<CustomerDto>>() {
+        Type resultType = new TypeToken<List<CustomerDTO>>() {
         }.getType();
         return modelMapper.map(customers, resultType);
     }
 
     @Override
-    public List<BrandDto> findAllBrands() {
+    public List<BrandDTO> findAllBrands() {
         List<Brand> brands = machineRepository.findAllBrands();
-        Type resultType = new TypeToken<List<BrandDto>>() {
+        Type resultType = new TypeToken<List<BrandDTO>>() {
         }.getType();
         return modelMapper.map(brands, resultType);
     }
 
     @Override
-    public List<BrandDto> findAllBrands(Long customerId) {
+    public List<BrandDTO> findAllBrands(Long customerId) {
         List<Brand> brands = machineRepository.findAllBrandsWhereCustomer(customerId);
-        Type resultType = new TypeToken<List<BrandDto>>() {
+        Type resultType = new TypeToken<List<BrandDTO>>() {
         }.getType();
         return modelMapper.map(brands, resultType);    }
 
     @Override
-    public List<WelderModelDto> findAllMachines(Long customerId, Long brandId) {
+    public List<WelderModelDTO> findAllMachines(Long customerId, Long brandId) {
         List<WelderModel> models = machineRepository.findAllModels(customerId, brandId);
-        Type resultType = new TypeToken<List<WelderModelDto>>() {
+        Type resultType = new TypeToken<List<WelderModelDTO>>() {
         }.getType();
         return modelMapper.map(models, resultType);    }
 
-    private Machine getMachine(MachineDto machineDto) {
-        Long modelId = machineDto.getWelderModelId();
-        Long customerId = machineDto.getCustomerId();
-        Machine machine = modelMapper.map(machineDto, Machine.class);
+    private Machine getMachine(MachineDTO machineDTO) {
+        Long modelId = machineDTO.getWelderModelId();
+        Long customerId = machineDTO.getCustomerId();
+        Machine machine = modelMapper.map(machineDTO, Machine.class);
         WelderModel welderModel = modelRepository.findById(modelId).orElse(null);
         Customer customer = customerRepository.findById(customerId).orElse(null);
         machine.setWelderModel(welderModel);

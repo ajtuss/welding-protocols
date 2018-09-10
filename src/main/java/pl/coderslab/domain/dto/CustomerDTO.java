@@ -3,7 +3,7 @@ package pl.coderslab.domain.dto;
 import java.time.LocalDateTime;
 import java.util.Objects;
 
-public class CustomerDto {
+public class CustomerDTO {
 
     private Long id;
     private String shortName;
@@ -109,7 +109,7 @@ public class CustomerDto {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        CustomerDto that = (CustomerDto) o;
+        CustomerDTO that = (CustomerDTO) o;
         return Objects.equals(id, that.id) &&
                 Objects.equals(shortName, that.shortName) &&
                 Objects.equals(fullName, that.fullName) &&
@@ -131,7 +131,7 @@ public class CustomerDto {
 
     @Override
     public String toString() {
-        return "CustomerDto{" +
+        return "CustomerDTO{" +
                 "id=" + id +
                 ", shortName='" + shortName + '\'' +
                 ", fullName='" + fullName + '\'' +

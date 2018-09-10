@@ -1,30 +1,30 @@
 package pl.coderslab.domain.services;
 
-import pl.coderslab.domain.dto.BrandDto;
-import pl.coderslab.domain.dto.CustomerDto;
-import pl.coderslab.domain.dto.MachineDto;
-import pl.coderslab.domain.dto.WelderModelDto;
+import pl.coderslab.domain.dto.BrandDTO;
+import pl.coderslab.domain.dto.CustomerDTO;
+import pl.coderslab.domain.dto.MachineDTO;
+import pl.coderslab.domain.dto.WelderModelDTO;
 
 import java.util.List;
 
 
 public interface MachineService {
 
-    void save(MachineDto machineDto);
+    void save(MachineDTO machineDTO);
 
-    List<MachineDto> findAll();
+    List<MachineDTO> findAll();
 
-    MachineDto findById(Long id);
+    MachineDTO findById(Long id);
 
-    void update(Long id, MachineDto machineDto);
+    void update(Long id, MachineDTO machineDTO);
 
     void remove(Long id);
 
-    List<CustomerDto> findAllCustomers();
+    List<CustomerDTO> findAllCustomers();
 
-    List<BrandDto> findAllBrands();
+    List<BrandDTO> findAllBrands();
 
-    List<BrandDto> findAllBrands(Long customerId);
+    List<BrandDTO> findAllBrands(Long customerId);
 
-    List<WelderModelDto> findAllMachines(Long customerId, Long brandId);
+    List<WelderModelDTO> findAllMachines(Long customerId, Long brandId);
 }

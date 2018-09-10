@@ -4,8 +4,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-import pl.coderslab.domain.dto.ValidProtocolDto;
-import pl.coderslab.domain.dto.WelderModelDto;
+import pl.coderslab.domain.dto.ValidProtocolDTO;
+import pl.coderslab.domain.dto.WelderModelDTO;
 import pl.coderslab.domain.services.ValidProtocolService;
 import pl.coderslab.domain.services.WelderModelService;
 
@@ -29,13 +29,13 @@ public class ValidationController {
 
     @GetMapping("/add")
     public String showAddValidationForm(@RequestParam Long machineId, Model model) {
-        ValidProtocolDto protocolDto = validProtocolService.getNewValidProtocol(machineId);
+        ValidProtocolDTO protocolDto = validProtocolService.getNewValidProtocol(machineId);
         model.addAttribute("validation", protocolDto);
         return "forms/addValidation";
     }
 
     @PostMapping("/add")
-    public String addValidation(@ModelAttribute ValidProtocolDto protocolDto, @RequestParam Long machineId) {
+    public String addValidation(@ModelAttribute ValidProtocolDTO protocolDto, @RequestParam Long machineId) {
         protocolDto.setMachineId(machineId);
         Long protocolId = validProtocolService.save(protocolDto);
         return "redirect:/validations/" + protocolId;
@@ -43,8 +43,8 @@ public class ValidationController {
 
     @GetMapping("/{id:\\d+}")
     public String showEditValidationForm(@PathVariable Long id, Model model) {
-        ValidProtocolDto protocolDto = validProtocolService.findById(id);
-        WelderModelDto modelDto = modelService.findById(protocolDto.getMachineWelderModelId());
+        ValidProtocolDTO protocolDto = validProtocolService.findById(id);
+        WelderModelDTO modelDto = modelService.findById(protocolDto.getMachineWelderModelId());
 
         model.addAttribute("validation", protocolDto);
         model.addAttribute("model", modelDto);

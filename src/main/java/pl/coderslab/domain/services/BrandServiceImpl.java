@@ -4,13 +4,17 @@ import org.modelmapper.ModelMapper;
 import org.modelmapper.TypeToken;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import pl.coderslab.domain.dto.BrandDto;
-import pl.coderslab.domain.dto.WelderModelDto;
+import pl.coderslab.domain.dto.BrandCreationDTO;
+import pl.coderslab.domain.dto.BrandDTO;
+import pl.coderslab.domain.dto.BrandUpdateDTO;
+import pl.coderslab.domain.dto.WelderModelDTO;
 import pl.coderslab.domain.entities.Brand;
 import pl.coderslab.domain.entities.WelderModel;
+import pl.coderslab.domain.exceptions.BrandNotFoundException;
 import pl.coderslab.domain.repositories.BrandRepository;
 import pl.coderslab.domain.repositories.WelderModelRepository;
 
+import javax.persistence.EntityManager;
 import javax.transaction.Transactional;
 import java.lang.reflect.Type;
 import java.util.List;
@@ -23,54 +27,56 @@ public class BrandServiceImpl implements BrandService {
     private final ModelMapper modelMapper;
     private final BrandRepository brandRepository;
     private final WelderModelRepository modelRepository;
+    private final EntityManager entityManager;
 
     @Autowired
-    public BrandServiceImpl(BrandRepository brandRepository, ModelMapper modelMapper, WelderModelRepository modelRepository) {
+    public BrandServiceImpl(BrandRepository brandRepository, ModelMapper modelMapper, WelderModelRepository modelRepository, EntityManager entityManager) {
         this.brandRepository = brandRepository;
         this.modelMapper = modelMapper;
         this.modelRepository = modelRepository;
+        this.entityManager = entityManager;
+    }
+
+    @Override
+    public BrandDTO saveBrand(BrandCreationDTO brandCreationDTO) {
+        Brand brand = modelMapper.map(brandCreationDTO, Brand.class);
+        Brand save = brandRepository.save(brand);
+        return modelMapper.map(save, BrandDTO.class);
+    }
+
+    @Override
+    public List<BrandDTO> findAll() {
+        List<Brand> brands = brandRepository.findAll();
+        Type resultType = new TypeToken<List<BrandDTO>>() {
+        }.getType();
+        return modelMapper.map(brands, resultType);
+    }
+
+    @Override
+    public BrandDTO findById(Long id) {
+        Brand brand = brandRepository.findById(id).orElseThrow(() -> new BrandNotFoundException(id));
+        return modelMapper.map(brand, BrandDTO.class);
+    }
+
+    @Override
+    public BrandDTO updateBrand(BrandUpdateDTO brandUpdateDTO) {
+        Brand brand = modelMapper.map(brandUpdateDTO, Brand.class);
+        Brand save = brandRepository.saveAndFlush(brand);
+        entityManager.refresh(save);
+        return modelMapper.map(save,BrandDTO.class);
     }
 
 
     @Override
-    public void saveBrand(BrandDto brandDto) {
-        Brand brand = modelMapper.map(brandDto, Brand.class);
-        brandRepository.save(brand);
-    }
-
-    @Override
-    public List<BrandDto> findAll() {
-//        List<Brand> brands = brandRepository.findAll();
-//        Type resultType = new TypeToken<List<BrandDto>>() {
-//        }.getType();
-//        return modelMapper.map(brands, resultType);
-        return null;
-    }
-
-    @Override
-    public BrandDto findById(Long id) {
-        Brand brand = brandRepository.findById(id).orElse(null);
-
-        return modelMapper.map(brand, BrandDto.class);
-    }
-
-    @Override
-    public void updateBrand(Long id, BrandDto brandDto) {
-        Brand brandOld = brandRepository.findById(id).orElse(null);
-        Brand brand = modelMapper.map(brandDto, Brand.class);
-        brandOld.setName(brand.getName());
-    }
-
-    @Override
-    public List<WelderModelDto> findWelderModelsByBrandId(Long id) {
+    public List<WelderModelDTO> findWelderModelsByBrandId(Long id) {
         List<WelderModel> welderModels = modelRepository.findAllByBrandId(id);
-        Type resultType = new TypeToken<List<WelderModelDto>>() {}.getType();
+        Type resultType = new TypeToken<List<WelderModelDTO>>() {}.getType();
         return modelMapper.map(welderModels,resultType);
     }
 
     @Override
     public void remove(Long id) {
-        Brand brand = brandRepository.findById(id).get();
+        Brand brand = brandRepository.findById(id).orElseThrow(() -> new BrandNotFoundException(id));
         brandRepository.delete(brand);
     }
 

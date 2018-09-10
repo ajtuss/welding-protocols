@@ -5,7 +5,7 @@ import pl.coderslab.domain.entities.PowerType;
 import java.time.LocalDateTime;
 import java.util.Objects;
 
-public class ValidProtocolDto {
+public class ValidProtocolDTO {
 
     private Long id;
     private Long machineId;
@@ -192,7 +192,7 @@ public class ValidProtocolDto {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        ValidProtocolDto that = (ValidProtocolDto) o;
+        ValidProtocolDTO that = (ValidProtocolDTO) o;
         return Objects.equals(id, that.id) &&
                 Objects.equals(protocolNumber, that.protocolNumber) &&
                 Objects.equals(machineSerialNumber, that.machineSerialNumber) &&
@@ -220,7 +220,7 @@ public class ValidProtocolDto {
 
     @Override
     public String toString() {
-        return "ValidProtocolDto{" +
+        return "ValidProtocolDTO{" +
                 "id=" + id +
                 ", machineId=" + machineId +
                 ", protocolNumber='" + protocolNumber + '\'' +

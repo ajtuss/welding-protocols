@@ -1,18 +1,18 @@
 package pl.coderslab.domain.services;
 
-import pl.coderslab.domain.dto.CustomerDto;
+import pl.coderslab.domain.dto.CustomerDTO;
 
 import java.util.List;
 
 public interface CustomerService {
 
-    List<CustomerDto> findAll();
+    List<CustomerDTO> findAll();
 
-    void save(CustomerDto customerDto);
+    void save(CustomerDTO customerDTO);
 
-    CustomerDto findById(Long id);
+    CustomerDTO findById(Long id);
 
-    void update(Long id, CustomerDto customerDto);
+    void update(Long id, CustomerDTO customerDTO);
 
     void remove(Long id);
 }
