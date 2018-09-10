@@ -62,7 +62,7 @@ public class BrandRestController {
         return ResponseEntity.created(linkTo(methodOn(BrandRestController.class).getOne(brandDTO.getId())).toUri()).body(resource);
     }
 
-    @PutMapping(value = "/{id:\\d+}")
+    @PutMapping(value = "/{id:\\d+}", consumes = MediaTypes.HAL_JSON_UTF8_VALUE, produces = MediaTypes.HAL_JSON_UTF8_VALUE)
     public BrandDTO editBrand(@PathVariable Long id, @RequestBody @Valid BrandUpdateDTO brandUpdateDTO){
         return brandService.updateBrand(brandUpdateDTO);
     }

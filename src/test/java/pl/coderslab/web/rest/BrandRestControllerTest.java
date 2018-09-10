@@ -27,14 +27,13 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.mockito.BDDMockito.given;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.user;
-import static org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers.springSecurity;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 
 @RunWith(SpringRunner.class)
-@WebMvcTest(value = BrandRestController.class)
+@WebMvcTest(value = BrandRestController.class, secure = false)
 @Import({BrandResourceAssembler.class})
 public class BrandRestControllerTest {
 
@@ -54,7 +53,7 @@ public class BrandRestControllerTest {
     public void setUp() {
         mockMvc = MockMvcBuilders
                 .webAppContextSetup(context)
-                .apply(springSecurity())
+//                .apply(springSecurity())
                 .build();
     }
 
@@ -126,9 +125,11 @@ public class BrandRestControllerTest {
         String contentBody = mapper.writeValueAsString(creationDTO);
 
         given(brandService.saveBrand(creationDTO)).willReturn(brandDTO);
-        mockMvc.perform(post("/api/brands").with(user("user"))
-                                           .contentType(MediaTypes.HAL_JSON_UTF8_VALUE)
-                                           .content(contentBody))
+        mockMvc.perform(post("/api/brands")
+                .with(user("user"))
+                .accept(MediaTypes.HAL_JSON_UTF8_VALUE)
+                .contentType(MediaTypes.HAL_JSON_UTF8_VALUE)
+                .content(contentBody))
                .andDo(print())
                .andExpect(status().isCreated())
                .andExpect(header().string(HttpHeaders.CONTENT_TYPE, MediaTypes.HAL_JSON_UTF8_VALUE))
@@ -147,9 +148,15 @@ public class BrandRestControllerTest {
     public void editBrand() throws Exception {
         BrandUpdateDTO updateDTO = new BrandUpdateDTO(1L, "Kemppi", 1L);
         BrandDTO brandDTO = new BrandDTO(1L, "Kemppi", DATE_TIME, DATE_TIME, 2L);
+        String contentBody = mapper.writeValueAsString(updateDTO);
+
 
         given(brandService.updateBrand(updateDTO)).willReturn(brandDTO);
-        mockMvc.perform(put("/api/brands/1").with(user("user")).contentType(MediaTypes.HAL_JSON_UTF8_VALUE))
+        mockMvc.perform(put("/api/brands/1")
+                .with(user("user"))
+                .accept(MediaTypes.HAL_JSON_UTF8_VALUE)
+                .contentType(MediaTypes.HAL_JSON_UTF8_VALUE)
+                .content(contentBody))
                .andDo(print())
                .andExpect(status().isOk())
                .andExpect(header().string(HttpHeaders.CONTENT_TYPE, MediaTypes.HAL_JSON_UTF8_VALUE))
@@ -157,7 +164,7 @@ public class BrandRestControllerTest {
                .andExpect(jsonPath("$.name", is("Kemppi")))
                .andExpect(jsonPath("$.creationDate", is(notNullValue())))
                .andExpect(jsonPath("$.modificationDate", is(notNullValue())))
-               .andExpect(jsonPath("$.versionId", is(1)))
+               .andExpect(jsonPath("$.versionId", is(2)))
                .andExpect(jsonPath("$._links.self.href", is("http://localhost/api/brands/1")))
                .andExpect(jsonPath("$._links.brands.href", is("http://localhost/api/brands")))
                .andExpect(jsonPath("$._links.models.href", is("http://localhost/api/brands/1/models")))
