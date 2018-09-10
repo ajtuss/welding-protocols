@@ -10,6 +10,7 @@ import pl.coderslab.domain.dto.BrandDTO;
 import pl.coderslab.domain.dto.BrandUpdateDTO;
 import pl.coderslab.domain.dto.WelderModelDTO;
 import pl.coderslab.domain.services.BrandService;
+import pl.coderslab.web.rest.assemblers.BrandResourceAssembler;
 
 import javax.validation.Valid;
 import java.util.List;
@@ -23,16 +24,18 @@ import static org.springframework.hateoas.mvc.ControllerLinkBuilder.methodOn;
 public class BrandRestController {
 
     private final BrandService brandService;
+    private final BrandResourceAssembler assembler;
 
     @Autowired
-    public BrandRestController(BrandService brandService) {
+    public BrandRestController(BrandService brandService, BrandResourceAssembler assembler) {
         this.brandService = brandService;
+        this.assembler = assembler;
     }
 
     @GetMapping
     public Resources<Resource<BrandDTO>> getAll() {
         List<Resource<BrandDTO>> brands = brandService.findAll().stream()
-                                                      .map(this::getBrandDTOResource)
+                                                      .map(assembler::toResource)
                                                       .collect(Collectors.toList());
         return new Resources<>(brands,
                 linkTo(methodOn(BrandRestController.class).getAll()).withSelfRel());
@@ -41,14 +44,7 @@ public class BrandRestController {
     @GetMapping("/{id:\\d+}")
     public Resource<BrandDTO> getOne(@PathVariable Long id){
         BrandDTO brandDTO = brandService.findById(id);
-        return getBrandDTOResource(brandDTO);
-    }
-
-    private Resource<BrandDTO> getBrandDTOResource(BrandDTO brandDTO) {
-        return new Resource<>(brandDTO,
-                linkTo(methodOn(BrandRestController.class).getOne(brandDTO.getId())).withSelfRel(),
-                linkTo(methodOn(BrandRestController.class).getAll()).withRel("brands"),
-                linkTo(methodOn(BrandRestController.class).getModelsByBrandId(brandDTO.getId())).withRel("models"));
+        return assembler.toResource(brandDTO);
     }
 
 
