@@ -8,4 +8,5 @@ import java.util.List;
 public interface WelderModelRepository extends JpaRepository<WelderModel, Long> {
 
     List<WelderModel> findAllByBrandId(Long id);
+
 }
