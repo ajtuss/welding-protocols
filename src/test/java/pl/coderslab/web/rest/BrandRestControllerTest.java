@@ -1,7 +1,6 @@
 package pl.coderslab.web.rest;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,8 +11,6 @@ import org.springframework.hateoas.MediaTypes;
 import org.springframework.http.HttpHeaders;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.setup.MockMvcBuilders;
-import org.springframework.web.context.WebApplicationContext;
 import pl.coderslab.domain.dto.BrandCreationDTO;
 import pl.coderslab.domain.dto.BrandDTO;
 import pl.coderslab.domain.dto.BrandUpdateDTO;
@@ -38,10 +35,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @Import({BrandResourceAssembler.class})
 public class BrandRestControllerTest {
 
-    private MockMvc mockMvc;
-
     @Autowired
-    private WebApplicationContext context;
+    private MockMvc mockMvc;
 
     @MockBean
     private BrandService brandService;
@@ -49,13 +44,6 @@ public class BrandRestControllerTest {
     private static final ObjectMapper mapper = new ObjectMapper();
 
     private static final LocalDateTime DATE_TIME = LocalDateTime.now();
-
-    @Before
-    public void setUp() {
-        mockMvc = MockMvcBuilders
-                .webAppContextSetup(context)
-                .build();
-    }
 
     @Test
     public void getShouldFetchAllAHalDocument() throws Exception {
