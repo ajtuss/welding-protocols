@@ -35,7 +35,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @Import({BrandResourceAssembler.class})
 public class BrandRestControllerTest {
 
-    public static final BrandUpdateDTO BRAND_UPDATE_1 = new BrandUpdateDTO(1L, "Kemppi", 1L);
     @Autowired
     private MockMvc mockMvc;
 
@@ -48,6 +47,7 @@ public class BrandRestControllerTest {
     private static final BrandDTO BRAND_1 = new BrandDTO(1L, "Kemppi", DATE_TIME, DATE_TIME, 1L);
     private static final BrandDTO BRAND_2 = new BrandDTO(2L, "Fronius", DATE_TIME, DATE_TIME, 1L);
     private static final BrandDTO BRAND_1_AFTER_UPDATE = new BrandDTO(1L, "Kemppi", DATE_TIME, DATE_TIME, 2L);
+    private static final BrandUpdateDTO BRAND_UPDATE_1 = new BrandUpdateDTO(1L, "Kemppi", 1L);
 
     @Test
     public void getShouldFetchAllAHalDocument() throws Exception {
