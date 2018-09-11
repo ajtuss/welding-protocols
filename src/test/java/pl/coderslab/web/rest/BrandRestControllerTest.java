@@ -171,6 +171,24 @@ public class BrandRestControllerTest {
     }
 
     @Test
+    public void putWithInvalidIdShouldReturnHttpStatus400() throws Exception {
+        BrandUpdateDTO updateDTO = new BrandUpdateDTO(1L, "Kemppi", 1L);
+        BrandDTO brandDTO = new BrandDTO(1L, "Kemppi", DATE_TIME, DATE_TIME, 2L);
+        String contentBody = mapper.writeValueAsString(updateDTO);
+
+
+        given(brandService.updateBrand(updateDTO)).willReturn(brandDTO);
+        mockMvc.perform(put("/api/brands/2")
+                .accept(MediaTypes.HAL_JSON_UTF8_VALUE)
+                .contentType(MediaTypes.HAL_JSON_UTF8_VALUE)
+                .content(contentBody))
+               .andDo(print())
+               .andExpect(status().isBadRequest())
+               .andReturn();
+        verifyNoMoreInteractions(brandService);
+    }
+
+    @Test
     public void deleteShouldRemoveAndReturnOk() throws Exception {
 
         doNothing().when(brandService).remove(1L);
