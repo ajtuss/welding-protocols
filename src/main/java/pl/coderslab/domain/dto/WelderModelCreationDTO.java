@@ -9,9 +9,8 @@ import java.time.LocalDateTime;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class WelderModelDTO {
+public class WelderModelCreationDTO {
 
-    private Long id;
     private String name;
     private Long brandId;
     private String brandName;
@@ -34,8 +33,5 @@ public class WelderModelDTO {
     private Double tigImax;
     private Double tigUmin;
     private Double tigUmax;
-    private LocalDateTime creationDate;
-    private LocalDateTime modificationDate;
-    private Long versionId;
 
 }
