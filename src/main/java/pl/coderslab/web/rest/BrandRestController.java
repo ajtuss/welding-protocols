@@ -23,7 +23,7 @@ import static org.springframework.hateoas.mvc.ControllerLinkBuilder.linkTo;
 import static org.springframework.hateoas.mvc.ControllerLinkBuilder.methodOn;
 
 @RestController
-@RequestMapping(value = "/api/brands")
+@RequestMapping(value = "/api/brands", consumes = MediaTypes.HAL_JSON_UTF8_VALUE, produces = MediaTypes.HAL_JSON_UTF8_VALUE)
 public class BrandRestController {
 
     private final BrandService brandService;
@@ -35,7 +35,7 @@ public class BrandRestController {
         this.assembler = assembler;
     }
 
-    @GetMapping(consumes = MediaTypes.HAL_JSON_UTF8_VALUE)
+    @GetMapping
     public Resources<Resource<BrandDTO>> getAll() {
         List<Resource<BrandDTO>> brands = brandService.findAll().stream()
                                                       .map(assembler::toResource)
@@ -44,19 +44,19 @@ public class BrandRestController {
                 linkTo(methodOn(BrandRestController.class).getAll()).withSelfRel());
     }
 
-    @GetMapping(value = "/{id:\\d+}", consumes = MediaTypes.HAL_JSON_UTF8_VALUE)
+    @GetMapping(value = "/{id:\\d+}")
     public Resource<BrandDTO> getOne(@PathVariable Long id) {
         BrandDTO brandDTO = brandService.findById(id);
         return assembler.toResource(brandDTO);
     }
 
 
-    @GetMapping(value = "/{id:\\d+}/models", consumes = MediaTypes.HAL_JSON_UTF8_VALUE)
+    @GetMapping(value = "/{id:\\d+}/models")
     public List<WelderModelDTO> getModelsByBrandId(@PathVariable Long id) {
         return brandService.findWelderModelsByBrandId(id); //todo add Response Entity
     }
 
-    @PostMapping(consumes = MediaTypes.HAL_JSON_UTF8_VALUE)
+    @PostMapping
     public ResponseEntity<Resource<BrandDTO>> addBrand(@RequestBody @Valid BrandCreationDTO brandCreationDTO) {
         BrandDTO brandDTO = brandService.saveBrand(brandCreationDTO);
         Resource<BrandDTO> resource = assembler.toResource(brandDTO);
@@ -64,7 +64,7 @@ public class BrandRestController {
                              .body(resource);
     }
 
-    @PutMapping(value = "/{id:\\d+}", consumes = MediaTypes.HAL_JSON_UTF8_VALUE, produces = MediaTypes.HAL_JSON_UTF8_VALUE)
+    @PutMapping(value = "/{id:\\d+}")
     public Resource<BrandDTO> editBrand(@PathVariable Long id, @RequestBody @Valid BrandUpdateDTO brandUpdateDTO) {
         if (!id.equals(brandUpdateDTO.getId())) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Id from URL and field must be the same");
