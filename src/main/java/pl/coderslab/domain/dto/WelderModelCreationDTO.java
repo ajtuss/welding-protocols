@@ -17,21 +17,11 @@ public class WelderModelCreationDTO {
     private Boolean mig;
     private Boolean mma;
     private Boolean tig;
-    private Boolean plazma;
     private Boolean currentMeter;
     private Boolean voltageMeter;
     private Boolean stepControl;
-    private Double migImin;
-    private Double migImax;
-    private Double migUmin;
-    private Double migUmax;
-    private Double mmaImin;
-    private Double mmaImax;
-    private Double mmaUmin;
-    private Double mmaUmax;
-    private Double tigImin;
-    private Double tigImax;
-    private Double tigUmin;
-    private Double tigUmax;
+    private RangeCreationDTO migRange;
+    private RangeCreationDTO mmaRange;
+    private RangeCreationDTO tigRange;
 
 }

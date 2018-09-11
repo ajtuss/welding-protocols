@@ -31,8 +31,6 @@ public class WelderModel extends AbstractEntity {
 
     private Boolean tig;
 
-    private Boolean plazma;
-
     private Boolean currentMeter;
 
     private Boolean voltageMeter;
@@ -73,7 +71,6 @@ public class WelderModel extends AbstractEntity {
                 Objects.equals(mig, that.mig) &&
                 Objects.equals(mma, that.mma) &&
                 Objects.equals(tig, that.tig) &&
-                Objects.equals(plazma, that.plazma) &&
                 Objects.equals(currentMeter, that.currentMeter) &&
                 Objects.equals(voltageMeter, that.voltageMeter) &&
                 Objects.equals(stepControl, that.stepControl);
@@ -82,7 +79,7 @@ public class WelderModel extends AbstractEntity {
     @Override
     public int hashCode() {
 
-        return Objects.hash(super.hashCode(), name, brand, mig, mma, tig, plazma, currentMeter, voltageMeter, stepControl);
+        return Objects.hash(super.hashCode(), name, brand, mig, mma, tig, currentMeter, voltageMeter, stepControl);
     }
 
     @Override
@@ -93,7 +90,6 @@ public class WelderModel extends AbstractEntity {
                 ", mig=" + mig +
                 ", mma=" + mma +
                 ", tig=" + tig +
-                ", plazma=" + plazma +
                 ", currentMeter=" + currentMeter +
                 ", voltageMeter=" + voltageMeter +
                 ", stepControl=" + stepControl +
