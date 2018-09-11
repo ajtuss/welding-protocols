@@ -23,6 +23,9 @@ public class WelderModelRepositoryTest {
     @Autowired
     private WelderModelRepository modelRepository;
 
+    @Autowired
+    private RangeRepository rangeRepository;
+
     private WelderModel model;
     private Range migRange;
     private Range mmaRange;
@@ -51,6 +54,19 @@ public class WelderModelRepositoryTest {
         assertEquals(migRange, found.getMigRange());
         assertEquals(mmaRange, found.getMmaRange());
         assertEquals(tigRange, found.getTigRange());
+    }
+
+    @Test
+    public void expectedTrueAfterRemoveRange(){
+        WelderModel model = modelRepository.getOne(1L);
+        Long migRangeId = model.getMigRange().getId();
+        model.setMigRange(null);
+        modelRepository.saveAndFlush(model);
+
+        Range found = rangeRepository.findById(migRangeId).orElse(null);
+
+        assertNull(found);
+
     }
 
 }
