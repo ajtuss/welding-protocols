@@ -54,7 +54,6 @@ public class BrandRestControllerTest {
     public void setUp() {
         mockMvc = MockMvcBuilders
                 .webAppContextSetup(context)
-//                .apply(springSecurity())
                 .build();
     }
 
@@ -67,7 +66,6 @@ public class BrandRestControllerTest {
         );
 
         mockMvc.perform(get("/api/brands")
-                .with(user("user"))
                 .contentType(MediaTypes.HAL_JSON_UTF8_VALUE))
                .andDo(print())
                .andExpect(status().isOk())
@@ -100,7 +98,6 @@ public class BrandRestControllerTest {
         given(brandService.findById(1L)).willReturn(new BrandDTO(1L, "Kemppi", DATE_TIME, DATE_TIME, 1L));
 
         mockMvc.perform(get("/api/brands/1")
-                .with(user("user"))
                 .contentType(MediaTypes.HAL_JSON_UTF8_VALUE))
                .andDo(print())
                .andExpect(status().isOk())
@@ -119,11 +116,6 @@ public class BrandRestControllerTest {
     }
 
     @Test
-    public void getModelsByBrandId() {
-        //todo
-    }
-
-    @Test
     public void postShouldCreateNewBrandAndFetchAHalDocument() throws Exception {
         BrandCreationDTO creationDTO = new BrandCreationDTO("Kemppi");
         BrandDTO brandDTO = new BrandDTO(1L, "Kemppi", DATE_TIME, DATE_TIME, 1L);
@@ -131,7 +123,6 @@ public class BrandRestControllerTest {
 
         given(brandService.saveBrand(creationDTO)).willReturn(brandDTO);
         mockMvc.perform(post("/api/brands")
-                .with(user("user"))
                 .accept(MediaTypes.HAL_JSON_UTF8_VALUE)
                 .contentType(MediaTypes.HAL_JSON_UTF8_VALUE)
                 .content(contentBody))
@@ -152,7 +143,7 @@ public class BrandRestControllerTest {
     }
 
     @Test
-    public void putShouldUpdateAndFetchHalDocument() throws Exception {
+    public void putShouldUpdateBrandAndFetchHalDocument() throws Exception {
         BrandUpdateDTO updateDTO = new BrandUpdateDTO(1L, "Kemppi", 1L);
         BrandDTO brandDTO = new BrandDTO(1L, "Kemppi", DATE_TIME, DATE_TIME, 2L);
         String contentBody = mapper.writeValueAsString(updateDTO);
@@ -160,7 +151,6 @@ public class BrandRestControllerTest {
 
         given(brandService.updateBrand(updateDTO)).willReturn(brandDTO);
         mockMvc.perform(put("/api/brands/1")
-                .with(user("user"))
                 .accept(MediaTypes.HAL_JSON_UTF8_VALUE)
                 .contentType(MediaTypes.HAL_JSON_UTF8_VALUE)
                 .content(contentBody))
@@ -194,5 +184,11 @@ public class BrandRestControllerTest {
                .andReturn();
         verify(brandService, times(1)).remove(1L);
         verifyNoMoreInteractions(brandService);
+    }
+
+
+    @Test
+    public void getModelsByBrandId() {
+        //todo
     }
 }
