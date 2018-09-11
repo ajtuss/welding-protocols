@@ -8,7 +8,7 @@ import pl.coderslab.domain.services.WelderModelService;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/weldmodels")
+@RequestMapping("/api/models")
 public class WelderModelRestController {
 
     private final WelderModelService modelService;

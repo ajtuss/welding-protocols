@@ -57,7 +57,7 @@ public class WelderModelRepositoryTest {
     }
 
     @Test
-    public void expectedTrueAfterRemoveRange(){
+    public void expectedTrueAfterRemoveRange() {
         WelderModel model = modelRepository.getOne(1L);
         Long migRangeId = model.getMigRange().getId();
         model.setMigRange(null);
@@ -66,7 +66,6 @@ public class WelderModelRepositoryTest {
         Range found = rangeRepository.findById(migRangeId).orElse(null);
 
         assertNull(found);
-
     }
 
 }
