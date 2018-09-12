@@ -186,12 +186,11 @@ public class BrandRestControllerTest {
     }
 
     @Test
-    public void deleteShouldRemoveAndReturnOk() throws Exception {
+    public void deleteShouldRemoveAndReturnNoContent() throws Exception {
 
         doNothing().when(brandService).remove(1L);
 
         mockMvc.perform(delete("/api/brands/1")
-                .with(user("user"))
                 .accept(MediaTypes.HAL_JSON_UTF8_VALUE)
                 .contentType(MediaTypes.HAL_JSON_UTF8_VALUE))
                .andDo(print())

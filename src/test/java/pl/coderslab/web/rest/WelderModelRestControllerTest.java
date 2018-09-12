@@ -14,6 +14,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import pl.coderslab.domain.dto.BrandDTO;
 import pl.coderslab.domain.dto.RangeDTO;
 import pl.coderslab.domain.dto.WelderModelDTO;
+import pl.coderslab.domain.dto.WelderModelUpdateDTO;
 import pl.coderslab.domain.services.WelderModelService;
 import pl.coderslab.web.rest.assemblers.WelderModelResourceAssembler;
 
@@ -24,7 +25,10 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.*;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.user;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
@@ -52,6 +56,13 @@ public class WelderModelRestControllerTest {
     private static final WelderModelDTO MODEL_2 = new WelderModelDTO(2L, "ProEvolution 4200", 1L,
             "Kemppi", true, true, true, true, true, false,
             RANGE_MIG, RANGE_MMA, RANGE_TIG, DATE_TIME, DATE_TIME, 1L);
+    private static final WelderModelUpdateDTO MODEL_UPDATE_1 = new WelderModelUpdateDTO(1L, "Mastertig 3000", 1L,
+            "Kemppi", true, true, true, true, true, false,
+            RANGE_MIG, RANGE_MMA, RANGE_TIG, 1L);
+    private static final WelderModelDTO MODEL_AFTER_UPDATE_1 = new WelderModelDTO(1L, "Mastertig 4000", 1L,
+            "Kemppi", true, true, true, true, true, false,
+            RANGE_MIG, RANGE_MMA, RANGE_TIG, DATE_TIME, DATE_TIME, 2L);
+
     @Test
     public void getShouldFetchAllAHalDocument() throws Exception {
         given(modelService.findAll()).willReturn(Arrays.asList(MODEL_1, MODEL_2));
@@ -136,7 +147,70 @@ public class WelderModelRestControllerTest {
         verifyNoMoreInteractions(modelService);
     }
 
+
     @Test
-    public void deleteModel() {
+    public void putShouldUpdateModelAndFetchHalDocument() throws Exception {
+        String contentBody = mapper.writeValueAsString(MODEL_UPDATE_1);
+
+
+        given(modelService.update(MODEL_UPDATE_1)).willReturn(MODEL_AFTER_UPDATE_1);
+        mockMvc.perform(put("/api/brands/1")
+                .accept(MediaTypes.HAL_JSON_UTF8_VALUE)
+                .contentType(MediaTypes.HAL_JSON_UTF8_VALUE)
+                .content(contentBody))
+               .andDo(print())
+               .andExpect(status().isOk())
+               .andExpect(jsonPath("$.id", is(MODEL_AFTER_UPDATE_1.getId().intValue())))
+               .andExpect(jsonPath("$.name", is(MODEL_AFTER_UPDATE_1.getName())))
+               .andExpect(jsonPath("$.brandId", is(MODEL_AFTER_UPDATE_1.getBrandId().intValue())))
+               .andExpect(jsonPath("$.brandName", is(MODEL_AFTER_UPDATE_1.getBrandName())))
+               .andExpect(jsonPath("$.mig", is(MODEL_AFTER_UPDATE_1.getMig())))
+               .andExpect(jsonPath("$.mma", is(MODEL_AFTER_UPDATE_1.getMma())))
+               .andExpect(jsonPath("$.tig", is(MODEL_AFTER_UPDATE_1.getTig())))
+               .andExpect(jsonPath("$.currentMeter", is(MODEL_AFTER_UPDATE_1.getCurrentMeter())))
+               .andExpect(jsonPath("$.voltageMeter", is(MODEL_AFTER_UPDATE_1.getVoltageMeter())))
+               .andExpect(jsonPath("$.stepControl", is(MODEL_AFTER_UPDATE_1.getStepControl())))
+               .andExpect(jsonPath("$.stepControl", is(MODEL_AFTER_UPDATE_1.getStepControl())))
+               .andExpect(jsonPath("$.creationDate", is(notNullValue())))
+               .andExpect(jsonPath("$.modificationDate", is(notNullValue())))
+               .andExpect(jsonPath("$.versionId", is(MODEL_AFTER_UPDATE_1.getVersionId().intValue())))
+               .andExpect(jsonPath("$._links.self.href", is("http://localhost/api/models/1")))
+               .andExpect(jsonPath("$._links.models.href", is("http://localhost/api/models")))
+               .andExpect(jsonPath("$._links.brands.href", is("http://localhost/api/models/1/brands")))
+               .andExpect(jsonPath("$._links.machines.href", is("http://localhost/api/models/1/machines")))
+               .andReturn();
+        verify(modelService, times(1)).update(MODEL_UPDATE_1);
+        verifyNoMoreInteractions(modelService);
+    }
+
+    @Test
+    public void putWithInvalidIdShouldReturnHttpStatus400() throws Exception {
+        String contentBody = mapper.writeValueAsString(MODEL_UPDATE_1);
+
+
+        given(modelService.update(MODEL_UPDATE_1)).willReturn(MODEL_AFTER_UPDATE_1);
+        mockMvc.perform(put("/api/models/2")
+                .accept(MediaTypes.HAL_JSON_UTF8_VALUE)
+                .contentType(MediaTypes.HAL_JSON_UTF8_VALUE)
+                .content(contentBody))
+               .andDo(print())
+               .andExpect(status().isBadRequest())
+               .andReturn();
+        verifyNoMoreInteractions(modelService);
+    }
+
+    @Test
+    public void deleteShouldRemoveAndReturnNoContent() throws Exception {
+
+        doNothing().when(modelService).remove(1L);
+
+        mockMvc.perform(delete("/api/models/1")
+                .accept(MediaTypes.HAL_JSON_UTF8_VALUE)
+                .contentType(MediaTypes.HAL_JSON_UTF8_VALUE))
+               .andDo(print())
+               .andExpect(status().isNoContent())
+               .andReturn();
+        verify(modelService, times(1)).remove(1L);
+        verifyNoMoreInteractions(modelService);
     }
 }

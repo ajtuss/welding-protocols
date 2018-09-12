@@ -21,9 +21,9 @@ public class WelderModelUpdateDTO {
     private Boolean currentMeter;
     private Boolean voltageMeter;
     private Boolean stepControl;
-    private RangeUpdateDTO migRange;
-    private RangeUpdateDTO mmaRange;
-    private RangeUpdateDTO tigRange;
+    private RangeDTO migRange;
+    private RangeDTO mmaRange;
+    private RangeDTO tigRange;
     private Long versionId;
 
 }

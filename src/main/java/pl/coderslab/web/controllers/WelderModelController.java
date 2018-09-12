@@ -49,7 +49,7 @@ public class WelderModelController {
 
     @PostMapping("/{id:\\d+}")
     public String editModel(@PathVariable Long id, @ModelAttribute WelderModelDTO welderModelDTO){
-        modelService.update(id,welderModelDTO);
+//        modelService.update(welderModelDTO);
         return "redirect:/weldmodels";
     }
 }

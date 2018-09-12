@@ -5,6 +5,7 @@ import org.modelmapper.TypeToken;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import pl.coderslab.domain.dto.WelderModelDTO;
+import pl.coderslab.domain.dto.WelderModelUpdateDTO;
 import pl.coderslab.domain.entities.Brand;
 import pl.coderslab.domain.entities.WelderModel;
 import pl.coderslab.domain.repositories.BrandRepository;
@@ -51,10 +52,10 @@ public class WelderModelServiceImpl implements WelderModelService {
     }
 
     @Override
-    public void update(Long id, WelderModelDTO modelDTO) {
-        WelderModel model = getWelderModel(modelDTO);
-        model.setId(id);
-        modelRepository.save(model);
+    public WelderModelDTO update(WelderModelUpdateDTO modelDTO) {
+//        WelderModel model = getWelderModel(modelDTO);
+//        modelRepository.save(model);
+        return null;
     }
 
     @Override
