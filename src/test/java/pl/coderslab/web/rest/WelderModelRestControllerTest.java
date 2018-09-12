@@ -18,6 +18,7 @@ import pl.coderslab.domain.services.WelderModelService;
 import pl.coderslab.web.rest.assemblers.WelderModelResourceAssembler;
 
 import java.time.LocalDateTime;
+import java.util.Arrays;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.notNullValue;
@@ -42,18 +43,64 @@ public class WelderModelRestControllerTest {
 
     private static final LocalDateTime DATE_TIME = LocalDateTime.now();
     private static final BrandDTO BRAND_1 = new BrandDTO(1L, "Kemppi", DATE_TIME, DATE_TIME, 1L);
-    private static final RangeDTO RANGE_MIG = new RangeDTO(1L, 1.,
-            100., 10., 100., DATE_TIME, DATE_TIME, 1L);
-    private static final RangeDTO RANGE_MMA = new RangeDTO(2L, 2.,
-            200., 20., 200., DATE_TIME, DATE_TIME, 1L);
-    private static final RangeDTO RANGE_TIG = new RangeDTO(3L, 3.,
-            300., 30., 300., DATE_TIME, DATE_TIME, 1L);
+    private static final RangeDTO RANGE_MIG = new RangeDTO(1., 100., 10., 100.);
+    private static final RangeDTO RANGE_MMA = new RangeDTO(2., 200., 20., 200.);
+    private static final RangeDTO RANGE_TIG = new RangeDTO(3., 300., 30., 300.);
     private static final WelderModelDTO MODEL_1 = new WelderModelDTO(1L, "Mastertig 3000", 1L,
             "Kemppi", true, true, true, true, true, false,
             RANGE_MIG, RANGE_MMA, RANGE_TIG, DATE_TIME, DATE_TIME, 1L);
-
+    private static final WelderModelDTO MODEL_2 = new WelderModelDTO(2L, "ProEvolution 4200", 1L,
+            "Kemppi", true, true, true, true, true, false,
+            RANGE_MIG, RANGE_MMA, RANGE_TIG, DATE_TIME, DATE_TIME, 1L);
     @Test
-    public void getAllModels() {
+    public void getShouldFetchAllAHalDocument() throws Exception {
+        given(modelService.findAll()).willReturn(Arrays.asList(MODEL_1, MODEL_2));
+
+        mockMvc.perform(get("/api/models")
+                .contentType(MediaTypes.HAL_JSON_UTF8_VALUE))
+               .andDo(print())
+               .andExpect(status().isOk())
+               .andExpect(header().string(HttpHeaders.CONTENT_TYPE, MediaTypes.HAL_JSON_UTF8_VALUE))
+               .andExpect(jsonPath("$._embedded.models[0].id", is(MODEL_1.getId().intValue())))
+               .andExpect(jsonPath("$._embedded.models[0].name", is(MODEL_1.getName())))
+               .andExpect(jsonPath("$._embedded.models[0].brandId", is(MODEL_1.getBrandId().intValue())))
+               .andExpect(jsonPath("$._embedded.models[0].brandName", is(MODEL_1.getBrandName())))
+               .andExpect(jsonPath("$._embedded.models[0].mig", is(MODEL_1.getMig())))
+               .andExpect(jsonPath("$._embedded.models[0].mma", is(MODEL_1.getMma())))
+               .andExpect(jsonPath("$._embedded.models[0].tig", is(MODEL_1.getTig())))
+               .andExpect(jsonPath("$._embedded.models[0].currentMeter", is(MODEL_1.getCurrentMeter())))
+               .andExpect(jsonPath("$._embedded.models[0].voltageMeter", is(MODEL_1.getVoltageMeter())))
+               .andExpect(jsonPath("$._embedded.models[0].stepControl", is(MODEL_1.getStepControl())))
+               .andExpect(jsonPath("$._embedded.models[0].stepControl", is(MODEL_1.getStepControl())))
+               .andExpect(jsonPath("$._embedded.models[0].creationDate", is(notNullValue())))
+               .andExpect(jsonPath("$._embedded.models[0].modificationDate", is(notNullValue())))
+               .andExpect(jsonPath("$._embedded.models[0].versionId", is(MODEL_1.getVersionId().intValue())))
+               .andExpect(jsonPath("$._embedded.models[0]._links.self.href", is("http://localhost/api/models/1")))
+               .andExpect(jsonPath("$._embedded.models[0]._links.models.href", is("http://localhost/api/models")))
+               .andExpect(jsonPath("$._embedded.models[0]._links.brands.href", is("http://localhost/api/models/1/brands")))
+               .andExpect(jsonPath("$._embedded.models[0]._links.machines.href", is("http://localhost/api/models/1/machines")))
+               .andExpect(jsonPath("$._embedded.models[1].id", is(MODEL_2.getId().intValue())))
+               .andExpect(jsonPath("$._embedded.models[1].name", is(MODEL_2.getName())))
+               .andExpect(jsonPath("$._embedded.models[1].brandId", is(MODEL_2.getBrandId().intValue())))
+               .andExpect(jsonPath("$._embedded.models[1].brandName", is(MODEL_2.getBrandName())))
+               .andExpect(jsonPath("$._embedded.models[1].mig", is(MODEL_2.getMig())))
+               .andExpect(jsonPath("$._embedded.models[1].mma", is(MODEL_2.getMma())))
+               .andExpect(jsonPath("$._embedded.models[1].tig", is(MODEL_2.getTig())))
+               .andExpect(jsonPath("$._embedded.models[1].currentMeter", is(MODEL_2.getCurrentMeter())))
+               .andExpect(jsonPath("$._embedded.models[1].voltageMeter", is(MODEL_2.getVoltageMeter())))
+               .andExpect(jsonPath("$._embedded.models[1].stepControl", is(MODEL_2.getStepControl())))
+               .andExpect(jsonPath("$._embedded.models[1].stepControl", is(MODEL_2.getStepControl())))
+               .andExpect(jsonPath("$._embedded.models[1].creationDate", is(notNullValue())))
+               .andExpect(jsonPath("$._embedded.models[1].modificationDate", is(notNullValue())))
+               .andExpect(jsonPath("$._embedded.models[1].versionId", is(MODEL_2.getVersionId().intValue())))
+               .andExpect(jsonPath("$._embedded.models[1]._links.self.href", is("http://localhost/api/models/2")))
+               .andExpect(jsonPath("$._embedded.models[1]._links.models.href", is("http://localhost/api/models")))
+               .andExpect(jsonPath("$._embedded.models[1]._links.brands.href", is("http://localhost/api/models/2/brands")))
+               .andExpect(jsonPath("$._embedded.models[1]._links.machines.href", is("http://localhost/api/models/2/machines")))
+               .andExpect(jsonPath("$._links.self.href", is("http://localhost/api/models")))
+               .andReturn();
+        verify(modelService, times(1)).findAll();
+        verifyNoMoreInteractions(modelService);
     }
 
     @Test
