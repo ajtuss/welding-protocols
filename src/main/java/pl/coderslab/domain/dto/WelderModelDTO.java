@@ -3,12 +3,14 @@ package pl.coderslab.domain.dto;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.hateoas.core.Relation;
 
 import java.time.LocalDateTime;
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+@Relation(value = "model", collectionRelation = "models")
 public class WelderModelDTO {
 
     private Long id;

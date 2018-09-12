@@ -12,6 +12,10 @@ import pl.coderslab.domain.services.WelderModelService;
 import pl.coderslab.web.rest.assemblers.WelderModelResourceAssembler;
 
 import java.util.List;
+import java.util.stream.Collectors;
+
+import static org.springframework.hateoas.mvc.ControllerLinkBuilder.linkTo;
+import static org.springframework.hateoas.mvc.ControllerLinkBuilder.methodOn;
 
 @RestController
 @RequestMapping(value = "/api/models", consumes = MediaTypes.HAL_JSON_UTF8_VALUE, produces = MediaTypes.HAL_JSON_UTF8_VALUE)
@@ -28,8 +32,12 @@ public class WelderModelRestController {
     }
 
     @GetMapping
-    public List<WelderModelDTO> getAll() {
-        return modelService.findAll();
+    public Resources<Resource<WelderModelDTO>> getAll() {
+        List<Resource<WelderModelDTO>> models = modelService.findAll()
+                                                            .stream()
+                                                            .map(assembler::toResource)
+                                                            .collect(Collectors.toList());
+        return new Resources<>(models, linkTo(methodOn(WelderModelRestController.class).getAll()).withSelfRel());
     }
 
     @GetMapping("{id:\\d+}")
@@ -44,12 +52,12 @@ public class WelderModelRestController {
     }
 
     @GetMapping("{id:\\d+}/brands")
-    public Resource<BrandDTO> getBrandByModelId(@PathVariable Long id){
+    public Resource<BrandDTO> getBrandByModelId(@PathVariable Long id) {
         return null;
     }
 
     @GetMapping("{id:\\d+}/machines")
-    public Resources<Resource<MachineDTO>> getMachinesByModelId(@PathVariable Long id){
+    public Resources<Resource<MachineDTO>> getMachinesByModelId(@PathVariable Long id) {
         return null;
     }
 }
