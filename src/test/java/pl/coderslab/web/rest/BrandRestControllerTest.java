@@ -14,6 +14,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import pl.coderslab.domain.dto.*;
 import pl.coderslab.domain.services.BrandService;
 import pl.coderslab.web.rest.assemblers.BrandResourceAssembler;
+import pl.coderslab.web.rest.assemblers.WelderModelResourceAssembler;
 
 import java.time.LocalDateTime;
 import java.util.Arrays;
@@ -30,7 +31,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @RunWith(SpringRunner.class)
 @WebMvcTest(value = BrandRestController.class, secure = false)
-@Import({BrandResourceAssembler.class})
+@Import({BrandResourceAssembler.class, WelderModelResourceAssembler.class})
 public class BrandRestControllerTest {
 
     @Autowired

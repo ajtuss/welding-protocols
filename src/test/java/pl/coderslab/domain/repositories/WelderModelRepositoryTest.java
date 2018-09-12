@@ -36,9 +36,9 @@ public class WelderModelRepositoryTest {
         model = new WelderModel();
         model.setName("Test model");
 
-        migRange = new Range(1L, 1.0, 100.0, 10.0, 100.0);
-        mmaRange = new Range(2L, 2.0, 200.0, 20.0, 200.0);
-        tigRange = new Range(3L, 3.0, 300.0, 30.0, 300.0);
+        migRange = new Range(null, 1.0, 100.0, 10.0, 100.0);
+        mmaRange = new Range(null, 2.0, 200.0, 20.0, 200.0);
+        tigRange = new Range(null, 3.0, 300.0, 30.0, 300.0);
 
         model.setMigRange(migRange);
         model.setMmaRange(mmaRange);
