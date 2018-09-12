@@ -12,8 +12,6 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 public class RangeDTO {
 
-    private Long id;
-
     @Column(precision = 4, scale = 1)
     private Double iMin;
 
@@ -25,9 +23,5 @@ public class RangeDTO {
 
     @Column(precision = 5, scale = 2)
     private Double uMax;
-
-    private LocalDateTime creationDate;
-    private LocalDateTime modificationDate;
-    private Long versionId;
 
 }
