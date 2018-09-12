@@ -49,7 +49,7 @@ public class WelderModelRepositoryTest {
 
     @Test
     public void expectedTrueAfterGetModel() {
-        WelderModel found = modelRepository.getOne(1L);
+        WelderModel found = modelRepository.getOne(model.getId());
         assertEquals(model, found);
         assertEquals(migRange, found.getMigRange());
         assertEquals(mmaRange, found.getMmaRange());
@@ -58,10 +58,10 @@ public class WelderModelRepositoryTest {
 
     @Test
     public void expectedTrueAfterRemoveRange() {
-        WelderModel model = modelRepository.getOne(1L);
-        Long migRangeId = model.getMigRange().getId();
-        model.setMigRange(null);
-        modelRepository.saveAndFlush(model);
+        WelderModel welderModel = modelRepository.getOne(model.getId());
+        Long migRangeId = welderModel.getMigRange().getId();
+        welderModel.setMigRange(null);
+        modelRepository.saveAndFlush(welderModel);
 
         Range found = rangeRepository.findById(migRangeId).orElse(null);
 
