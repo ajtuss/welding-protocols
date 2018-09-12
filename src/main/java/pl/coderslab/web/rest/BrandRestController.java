@@ -14,6 +14,7 @@ import pl.coderslab.domain.dto.BrandUpdateDTO;
 import pl.coderslab.domain.dto.WelderModelDTO;
 import pl.coderslab.domain.services.BrandService;
 import pl.coderslab.web.rest.assemblers.BrandResourceAssembler;
+import pl.coderslab.web.rest.assemblers.WelderModelResourceAssembler;
 
 import javax.validation.Valid;
 import java.util.List;
@@ -28,11 +29,13 @@ public class BrandRestController {
 
     private final BrandService brandService;
     private final BrandResourceAssembler assembler;
+    private final WelderModelResourceAssembler modelAssembler;
 
     @Autowired
-    public BrandRestController(BrandService brandService, BrandResourceAssembler assembler) {
+    public BrandRestController(BrandService brandService, BrandResourceAssembler assembler, WelderModelResourceAssembler modelAssembler) {
         this.brandService = brandService;
         this.assembler = assembler;
+        this.modelAssembler = modelAssembler;
     }
 
     @GetMapping
@@ -52,8 +55,12 @@ public class BrandRestController {
 
 
     @GetMapping(value = "/{id:\\d+}/models")
-    public List<WelderModelDTO> getModelsByBrandId(@PathVariable Long id) {
-        return brandService.findWelderModelsByBrandId(id); //todo add Response Entity
+    public Resources<Resource<WelderModelDTO>> getModelsByBrandId(@PathVariable Long id) {
+        List<Resource<WelderModelDTO>> models = brandService.findWelderModelsByBrandId(id)
+                .stream()
+                .map(modelAssembler::toResource)
+                .collect(Collectors.toList());
+        return new Resources<>(models, linkTo(methodOn(BrandRestController.class).getModelsByBrandId(id)).withSelfRel());
     }
 
     @PostMapping
