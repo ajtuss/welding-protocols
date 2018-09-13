@@ -4,10 +4,7 @@ import org.modelmapper.ModelMapper;
 import org.modelmapper.TypeToken;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import pl.coderslab.domain.dto.BrandDTO;
-import pl.coderslab.domain.dto.CustomerDTO;
-import pl.coderslab.domain.dto.MachineDTO;
-import pl.coderslab.domain.dto.WelderModelDTO;
+import pl.coderslab.domain.dto.*;
 import pl.coderslab.domain.entities.Brand;
 import pl.coderslab.domain.entities.Customer;
 import pl.coderslab.domain.entities.Machine;
@@ -39,9 +36,10 @@ public class MachineServiceImpl implements MachineService {
 
 
     @Override
-    public void save(MachineDTO machineDTO) {
-        Machine machine = getMachine(machineDTO);
-        machineRepository.save(machine);
+    public MachineDTO save(MachineCreationDTO machineDTO) {
+//        Machine machine = getMachine(machineDTO);
+//        machineRepository.save(machine);
+        return null; //todo
     }
 
     @Override
@@ -59,10 +57,11 @@ public class MachineServiceImpl implements MachineService {
     }
 
     @Override
-    public void update(Long id, MachineDTO machineDTO) {
-        Machine machine = getMachine(machineDTO);
-        machine.setId(id);
-        machineRepository.save(machine);
+    public MachineDTO update(MachineUpdateDTO machineUpdateDTO) {
+//        Machine machine = getMachine(machineDTO);
+//        machine.setId(id);
+//        machineRepository.save(machine);
+        return null; //todo
     }
 
     @Override
@@ -100,6 +99,16 @@ public class MachineServiceImpl implements MachineService {
         Type resultType = new TypeToken<List<WelderModelDTO>>() {
         }.getType();
         return modelMapper.map(models, resultType);    }
+
+    @Override
+    public WelderModelDTO findModelByMachineId(long id) {
+        return null; //todo
+    }
+
+    @Override
+    public CustomerDTO findCustomerByMachineId(long id) {
+        return null; //todo
+    }
 
     private Machine getMachine(MachineDTO machineDTO) {
         Long modelId = machineDTO.getWelderModelId();

@@ -224,4 +224,9 @@ public class CustomerRestControllerTest {
         verifyNoMoreInteractions(customerService);
     }
 
+    @Test
+    public void getMachinesShouldFetchHalDocument() throws Exception {
+        assert false;
+        //todo
+    }
 }

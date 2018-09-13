@@ -31,8 +31,8 @@ public class MachineController {
 
     @PostMapping("/add")
     public String addMachine(@ModelAttribute MachineDTO machineDTO){
-        machineService.save(machineDTO);
-        return "redirect:/machines";
+//        machineService.save(machineDTO);
+        return "redirect:/machines"; //todo
     }
 
     @GetMapping("{id:\\d+}")
@@ -44,7 +44,7 @@ public class MachineController {
 
     @PostMapping("{id:\\d+}")
     public String editMachine(@PathVariable Long id, @ModelAttribute MachineDTO machineDTO){
-        machineService.update(id, machineDTO);
-        return "redirect:/machines";
+//        machineService.update(id, machineDTO);
+        return "redirect:/machines"; //todo
     }
 }

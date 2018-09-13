@@ -330,6 +330,7 @@ public class WelderModelRestControllerTest {
 
     @Test
     public void getMachinesShouldFetchAHalDocument() throws Exception {
+        assert false;
         //todo
     }
 }
