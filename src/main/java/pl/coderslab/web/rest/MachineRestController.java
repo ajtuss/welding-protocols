@@ -10,6 +10,10 @@ import pl.coderslab.domain.services.MachineService;
 import pl.coderslab.web.rest.assemblers.MachineResourceAssembler;
 
 import java.util.List;
+import java.util.stream.Collectors;
+
+import static org.springframework.hateoas.mvc.ControllerLinkBuilder.linkTo;
+import static org.springframework.hateoas.mvc.ControllerLinkBuilder.methodOn;
 
 @RestController
 @RequestMapping(value = "/api/machines", consumes = MediaTypes.HAL_JSON_UTF8_VALUE, produces = MediaTypes.HAL_JSON_UTF8_VALUE)
@@ -25,8 +29,13 @@ public class MachineRestController {
     }
 
     @GetMapping
-    public List<MachineDTO> getAll() {
-        return machineService.findAll();
+    public Resources<Resource<MachineDTO>> getAll() {
+        List<Resource<MachineDTO>> resources = machineService.findAll()
+                                                           .stream()
+                                                           .map(assembler::toResource)
+                                                           .collect(Collectors.toList());
+        return new Resources<>(resources,
+                linkTo(methodOn(MachineRestController.class).getAll()).withSelfRel());
     }
 
     @GetMapping("{id:\\d+}")
