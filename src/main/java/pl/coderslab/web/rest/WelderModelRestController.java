@@ -4,11 +4,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.hateoas.MediaTypes;
 import org.springframework.hateoas.Resource;
 import org.springframework.hateoas.Resources;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.server.ResponseStatusException;
 import pl.coderslab.domain.dto.*;
+import pl.coderslab.domain.exceptions.InvalidIdException;
 import pl.coderslab.domain.services.WelderModelService;
 import pl.coderslab.web.rest.assemblers.BrandResourceAssembler;
 import pl.coderslab.web.rest.assemblers.WelderModelResourceAssembler;
@@ -69,7 +68,7 @@ public class WelderModelRestController {
     @PutMapping("{id:\\d+}")
     public Resource<WelderModelDTO> editModel(@PathVariable Long id, @RequestBody @Valid WelderModelUpdateDTO modelUpdateDTO) {
         if (!id.equals(modelUpdateDTO.getId())) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Id from URL and field must be the same");
+            throw new InvalidIdException();
         }
         WelderModelDTO modelDTO = modelService.update(modelUpdateDTO);
         return assembler.toResource(modelDTO);

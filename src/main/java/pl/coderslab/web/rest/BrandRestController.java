@@ -4,14 +4,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.hateoas.MediaTypes;
 import org.springframework.hateoas.Resource;
 import org.springframework.hateoas.Resources;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.server.ResponseStatusException;
 import pl.coderslab.domain.dto.BrandCreationDTO;
 import pl.coderslab.domain.dto.BrandDTO;
 import pl.coderslab.domain.dto.BrandUpdateDTO;
 import pl.coderslab.domain.dto.WelderModelDTO;
+import pl.coderslab.domain.exceptions.InvalidIdException;
 import pl.coderslab.domain.services.BrandService;
 import pl.coderslab.web.rest.assemblers.BrandResourceAssembler;
 import pl.coderslab.web.rest.assemblers.WelderModelResourceAssembler;
@@ -74,7 +73,7 @@ public class BrandRestController {
     @PutMapping(value = "/{id:\\d+}")
     public Resource<BrandDTO> editBrand(@PathVariable Long id, @RequestBody @Valid BrandUpdateDTO brandUpdateDTO) {
         if (!id.equals(brandUpdateDTO.getId())) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Id from URL and field must be the same");
+            throw new InvalidIdException();
         }
         BrandDTO brandDTO = brandService.updateBrand(brandUpdateDTO);
         return assembler.toResource(brandDTO);
