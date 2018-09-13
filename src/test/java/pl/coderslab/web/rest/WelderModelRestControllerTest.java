@@ -52,13 +52,13 @@ public class WelderModelRestControllerTest {
             "Kemppi", true, true, true, true, true, false,
             RANGE_MIG, RANGE_MMA, RANGE_TIG, DATE_TIME, DATE_TIME, 1L);
     private static final WelderModelUpdateDTO MODEL_UPDATE_1 = new WelderModelUpdateDTO(1L, "Mastertig 3000", 1L,
-            "Kemppi", true, true, true, true, true, false,
+            true, true, true, true, true, false,
             RANGE_MIG, RANGE_MMA, RANGE_TIG, 1L);
     private static final WelderModelDTO MODEL_AFTER_UPDATE_1 = new WelderModelDTO(1L, "Mastertig 4000", 1L,
             "Kemppi", true, true, true, true, true, false,
             RANGE_MIG, RANGE_MMA, RANGE_TIG, DATE_TIME, DATE_TIME, 2L);
     private static final WelderModelCreationDTO MODEL_CREATION_1 = new WelderModelCreationDTO("Mastertig 3000", 1L,
-            "Kemppi", true, true, true, true, true, false,
+            true, true, true, true, true, false,
             RANGE_MIG, RANGE_MMA, RANGE_TIG);
 
     @Test
@@ -329,7 +329,7 @@ public class WelderModelRestControllerTest {
     }
 
     @Test
-    public void getMachinesShouldFetchAHalDocument() throws Exception{
+    public void getMachinesShouldFetchAHalDocument() throws Exception {
         //todo
     }
 }

@@ -4,8 +4,6 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.time.LocalDateTime;
-
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -14,7 +12,6 @@ public class WelderModelUpdateDTO {
     private Long id;
     private String name;
     private Long brandId;
-    private String brandName;
     private Boolean mig;
     private Boolean mma;
     private Boolean tig;
