@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 import pl.coderslab.domain.dto.CustomerCreationDTO;
 import pl.coderslab.domain.dto.CustomerDTO;
 import pl.coderslab.domain.dto.CustomerUpdateDTO;
+import pl.coderslab.domain.dto.MachineDTO;
 import pl.coderslab.domain.entities.Customer;
 import pl.coderslab.domain.exceptions.CustomerNotFoundException;
 import pl.coderslab.domain.repositories.CustomerRepository;
@@ -61,5 +62,10 @@ public class CustomerServiceImpl implements CustomerService {
     public void remove(Long id) {
         Customer customer = customerRepository.findById(id).orElseThrow(CustomerNotFoundException::new);
         customerRepository.delete(customer);
+    }
+
+    @Override
+    public List<MachineDTO> findAllMachines(Long id) {
+        return null; //todo
     }
 }

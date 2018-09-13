@@ -13,6 +13,7 @@ import pl.coderslab.domain.dto.MachineDTO;
 import pl.coderslab.domain.exceptions.InvalidIdException;
 import pl.coderslab.domain.services.CustomerService;
 import pl.coderslab.web.rest.assemblers.CustomerResourceAssembler;
+import pl.coderslab.web.rest.assemblers.MachineResourceAssembler;
 
 import javax.validation.Valid;
 import java.util.List;
@@ -27,11 +28,13 @@ public class CustomerRestController {
 
     private final CustomerService customerService;
     private final CustomerResourceAssembler assembler;
+    private final MachineResourceAssembler machineAssembler;
 
     @Autowired
-    public CustomerRestController(CustomerService customerService, CustomerResourceAssembler assembler) {
+    public CustomerRestController(CustomerService customerService, CustomerResourceAssembler assembler, MachineResourceAssembler machineAssembler) {
         this.customerService = customerService;
         this.assembler = assembler;
+        this.machineAssembler = machineAssembler;
     }
 
     @GetMapping
@@ -75,7 +78,12 @@ public class CustomerRestController {
     }
 
     @GetMapping("/{id:\\d+}/machines")
-    public Resource<MachineDTO> getMachineByCustomerId(@PathVariable Long id) {
-        return null; //todo
+    public Resources<Resource<MachineDTO>> getMachineByCustomerId(@PathVariable Long id) {
+        List<Resource<MachineDTO>> resources = customerService.findAllMachines(id)
+                                                            .stream()
+                                                            .map(machineAssembler::toResource)
+                                                            .collect(Collectors.toList());
+        return new Resources<>(resources,
+                linkTo(methodOn(CustomerRestController.class).getMachineByCustomerId(id)).withSelfRel());
     }
 }
