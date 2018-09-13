@@ -36,7 +36,7 @@ public class WelderModelController {
 
     @PostMapping("/add")
     public String addModel(@ModelAttribute WelderModelDTO welderModel) {
-        modelService.save(welderModel);
+//        modelService.save(welderModel);
         return "redirect:/weldmodels";
     }
 

@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.hateoas.MediaTypes;
 import org.springframework.hateoas.Resource;
 import org.springframework.hateoas.Resources;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import pl.coderslab.domain.dto.BrandDTO;
 import pl.coderslab.domain.dto.MachineDTO;
@@ -47,8 +48,10 @@ public class WelderModelRestController {
     }
 
     @DeleteMapping("{id:\\d+}")
-    public void deleteModel(@PathVariable Long id) {
+    public ResponseEntity<?> deleteModel(@PathVariable Long id) {
         modelService.remove(id);
+        return ResponseEntity.noContent().build();
+
     }
 
     @GetMapping("{id:\\d+}/brands")
