@@ -233,7 +233,7 @@ public class WelderModelRestControllerTest {
 
 
         given(modelService.update(MODEL_UPDATE_1)).willReturn(MODEL_AFTER_UPDATE_1);
-        mockMvc.perform(put("/api/brands/1")
+        mockMvc.perform(put("/api/models/1")
                 .accept(MediaTypes.HAL_JSON_UTF8_VALUE)
                 .contentType(MediaTypes.HAL_JSON_UTF8_VALUE)
                 .content(contentBody))
