@@ -22,10 +22,7 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.*;
-import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.user;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
@@ -189,23 +186,23 @@ public class WelderModelRestControllerTest {
 
 
         given(modelService.save(MODEL_CREATION_1)).willReturn(MODEL_1);
-        mockMvc.perform(put("/api/brands/1")
+        mockMvc.perform(post("/api/models")
                 .accept(MediaTypes.HAL_JSON_UTF8_VALUE)
                 .contentType(MediaTypes.HAL_JSON_UTF8_VALUE)
                 .content(contentBody))
                .andDo(print())
-               .andExpect(status().isOk())
-               .andExpect(jsonPath("$.id", is(MODEL_AFTER_UPDATE_1.getId().intValue())))
-               .andExpect(jsonPath("$.name", is(MODEL_AFTER_UPDATE_1.getName())))
-               .andExpect(jsonPath("$.brandId", is(MODEL_AFTER_UPDATE_1.getBrandId().intValue())))
-               .andExpect(jsonPath("$.brandName", is(MODEL_AFTER_UPDATE_1.getBrandName())))
-               .andExpect(jsonPath("$.mig", is(MODEL_AFTER_UPDATE_1.getMig())))
-               .andExpect(jsonPath("$.mma", is(MODEL_AFTER_UPDATE_1.getMma())))
-               .andExpect(jsonPath("$.tig", is(MODEL_AFTER_UPDATE_1.getTig())))
-               .andExpect(jsonPath("$.currentMeter", is(MODEL_AFTER_UPDATE_1.getCurrentMeter())))
-               .andExpect(jsonPath("$.voltageMeter", is(MODEL_AFTER_UPDATE_1.getVoltageMeter())))
-               .andExpect(jsonPath("$.stepControl", is(MODEL_AFTER_UPDATE_1.getStepControl())))
-               .andExpect(jsonPath("$.stepControl", is(MODEL_AFTER_UPDATE_1.getStepControl())))
+               .andExpect(status().isCreated())
+               .andExpect(jsonPath("$.id", is(MODEL_1.getId().intValue())))
+               .andExpect(jsonPath("$.name", is(MODEL_1.getName())))
+               .andExpect(jsonPath("$.brandId", is(MODEL_1.getBrandId().intValue())))
+               .andExpect(jsonPath("$.brandName", is(MODEL_1.getBrandName())))
+               .andExpect(jsonPath("$.mig", is(MODEL_1.getMig())))
+               .andExpect(jsonPath("$.mma", is(MODEL_1.getMma())))
+               .andExpect(jsonPath("$.tig", is(MODEL_1.getTig())))
+               .andExpect(jsonPath("$.currentMeter", is(MODEL_1.getCurrentMeter())))
+               .andExpect(jsonPath("$.voltageMeter", is(MODEL_1.getVoltageMeter())))
+               .andExpect(jsonPath("$.stepControl", is(MODEL_1.getStepControl())))
+               .andExpect(jsonPath("$.stepControl", is(MODEL_1.getStepControl())))
                .andExpect(jsonPath("$.migRange.imin", is(RANGE_MIG.getIMin())))
                .andExpect(jsonPath("$.migRange.imax", is(RANGE_MIG.getIMax())))
                .andExpect(jsonPath("$.migRange.umin", is(RANGE_MIG.getUMin())))
@@ -220,7 +217,7 @@ public class WelderModelRestControllerTest {
                .andExpect(jsonPath("$.mmaRange.umax", is(RANGE_MMA.getUMax())))
                .andExpect(jsonPath("$.creationDate", is(notNullValue())))
                .andExpect(jsonPath("$.modificationDate", is(notNullValue())))
-               .andExpect(jsonPath("$.versionId", is(MODEL_AFTER_UPDATE_1.getVersionId().intValue())))
+               .andExpect(jsonPath("$.versionId", is(MODEL_1.getVersionId().intValue())))
                .andExpect(jsonPath("$._links.self.href", is("http://localhost/api/models/1")))
                .andExpect(jsonPath("$._links.models.href", is("http://localhost/api/models")))
                .andExpect(jsonPath("$._links.brands.href", is("http://localhost/api/models/1/brands")))
