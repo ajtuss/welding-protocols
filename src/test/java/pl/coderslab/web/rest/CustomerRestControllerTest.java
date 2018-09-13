@@ -15,6 +15,7 @@ import pl.coderslab.domain.dto.CustomerCreationDTO;
 import pl.coderslab.domain.dto.CustomerDTO;
 import pl.coderslab.domain.dto.CustomerUpdateDTO;
 import pl.coderslab.domain.services.CustomerService;
+import pl.coderslab.web.rest.assemblers.CustomerResourceAssembler;
 
 import java.time.LocalDateTime;
 import java.util.Arrays;
@@ -29,8 +30,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 
 @RunWith(SpringRunner.class)
-@WebMvcTest(value = BrandRestController.class, secure = false)
-@Import({})
+@WebMvcTest(value = CustomerRestController.class, secure = false)
+@Import({CustomerResourceAssembler.class})
 public class CustomerRestControllerTest {
 
     @Autowired
