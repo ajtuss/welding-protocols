@@ -13,6 +13,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import pl.coderslab.domain.dto.*;
 import pl.coderslab.domain.services.WelderModelService;
+import pl.coderslab.web.rest.assemblers.BrandResourceAssembler;
 import pl.coderslab.web.rest.assemblers.WelderModelResourceAssembler;
 
 import java.time.LocalDateTime;
@@ -28,7 +29,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @RunWith(SpringRunner.class)
 @WebMvcTest(value = WelderModelRestController.class, secure = false)
-@Import({WelderModelResourceAssembler.class})
+@Import({WelderModelResourceAssembler.class, BrandResourceAssembler.class})
 public class WelderModelRestControllerTest {
 
     @Autowired
@@ -303,5 +304,32 @@ public class WelderModelRestControllerTest {
                .andReturn();
         verify(modelService, times(1)).remove(1L);
         verifyNoMoreInteractions(modelService);
+    }
+
+    @Test
+    public void getBrandShouldFetchHalDocument() throws Exception {
+        given(modelService.findBrandByModelId(1L)).willReturn(BRAND_1);
+
+        mockMvc.perform(get("/api/models/1/brands")
+                .contentType(MediaTypes.HAL_JSON_UTF8_VALUE))
+               .andDo(print())
+               .andExpect(status().isOk())
+               .andExpect(header().string(HttpHeaders.CONTENT_TYPE, MediaTypes.HAL_JSON_UTF8_VALUE))
+               .andExpect(jsonPath("$.id", is(BRAND_1.getId().intValue())))
+               .andExpect(jsonPath("$.name", is(BRAND_1.getName())))
+               .andExpect(jsonPath("$.creationDate", is(notNullValue())))
+               .andExpect(jsonPath("$.modificationDate", is(notNullValue())))
+               .andExpect(jsonPath("$.versionId", is(BRAND_1.getVersionId().intValue())))
+               .andExpect(jsonPath("$._links.self.href", is("http://localhost/api/brands/1")))
+               .andExpect(jsonPath("$._links.brands.href", is("http://localhost/api/brands")))
+               .andExpect(jsonPath("$._links.models.href", is("http://localhost/api/brands/1/models")))
+               .andReturn();
+        verify(modelService, times(1)).findBrandByModelId(1L);
+        verifyNoMoreInteractions(modelService);
+    }
+
+    @Test
+    public void getMachinesShouldFetchAHalDocument() throws Exception{
+        //todo
     }
 }

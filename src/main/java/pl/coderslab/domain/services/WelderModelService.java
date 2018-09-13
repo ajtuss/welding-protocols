@@ -1,5 +1,6 @@
 package pl.coderslab.domain.services;
 
+import pl.coderslab.domain.dto.BrandDTO;
 import pl.coderslab.domain.dto.WelderModelCreationDTO;
 import pl.coderslab.domain.dto.WelderModelDTO;
 import pl.coderslab.domain.dto.WelderModelUpdateDTO;
@@ -14,4 +15,6 @@ public interface WelderModelService {
     WelderModelDTO update(WelderModelUpdateDTO model);
 
     void remove(Long id);
+
+    BrandDTO findBrandByModelId(long l);
 }

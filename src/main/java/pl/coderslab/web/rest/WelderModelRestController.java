@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 import pl.coderslab.domain.dto.*;
 import pl.coderslab.domain.services.WelderModelService;
+import pl.coderslab.web.rest.assemblers.BrandResourceAssembler;
 import pl.coderslab.web.rest.assemblers.WelderModelResourceAssembler;
 
 import javax.validation.Valid;
@@ -27,10 +28,13 @@ public class WelderModelRestController {
 
     private final WelderModelResourceAssembler assembler;
 
+    private final BrandResourceAssembler brandAssembler;
+
     @Autowired
-    public WelderModelRestController(WelderModelService modelService, WelderModelResourceAssembler assembler) {
+    public WelderModelRestController(WelderModelService modelService, WelderModelResourceAssembler assembler, BrandResourceAssembler brandAssembler) {
         this.modelService = modelService;
         this.assembler = assembler;
+        this.brandAssembler = brandAssembler;
     }
 
     @GetMapping
@@ -73,7 +77,8 @@ public class WelderModelRestController {
 
     @GetMapping("{id:\\d+}/brands")
     public Resource<BrandDTO> getBrandByModelId(@PathVariable Long id) {
-        return null;
+        BrandDTO brandDTO = modelService.findBrandByModelId(id);
+        return brandAssembler.toResource(brandDTO);
     }
 
     @GetMapping("{id:\\d+}/machines")
