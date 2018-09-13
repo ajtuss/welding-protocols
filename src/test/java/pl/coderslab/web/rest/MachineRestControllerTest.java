@@ -162,7 +162,7 @@ public class MachineRestControllerTest {
                .andExpect(jsonPath("$.id", is(MACHINE_1.getId().intValue())))
                .andExpect(jsonPath("$.serialNumber", is(MACHINE_1.getSerialNumber())))
                .andExpect(jsonPath("$.inwNumber", is(MACHINE_1.getInwNumber())))
-               .andExpect(jsonPath("$.welderModelBrandId", is(MACHINE_1.getWelderModelBrandId())))
+               .andExpect(jsonPath("$.welderModelBrandId", is(MACHINE_1.getWelderModelBrandId().intValue())))
                .andExpect(jsonPath("$.welderModelBrandName", is(MACHINE_1.getWelderModelBrandName())))
                .andExpect(jsonPath("$.welderModelId", is(MACHINE_1.getWelderModelId().intValue())))
                .andExpect(jsonPath("$.welderModelName", is(MACHINE_1.getWelderModelName())))
@@ -313,7 +313,7 @@ public class MachineRestControllerTest {
                .andExpect(jsonPath("$._links.self.href", is("http://localhost/api/customers/1")))
                .andExpect(jsonPath("$._links.machines.href", is("http://localhost/api/customers/1/machines")))
                .andReturn();
-        verify(machineService, times(1)).findModelByMachineId(1L);
+        verify(machineService, times(1)).findCustomerByMachineId(1L);
         verifyNoMoreInteractions(machineService);
     }
 
