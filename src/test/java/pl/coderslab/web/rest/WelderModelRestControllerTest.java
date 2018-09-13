@@ -11,10 +11,7 @@ import org.springframework.hateoas.MediaTypes;
 import org.springframework.http.HttpHeaders;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
-import pl.coderslab.domain.dto.BrandDTO;
-import pl.coderslab.domain.dto.RangeDTO;
-import pl.coderslab.domain.dto.WelderModelDTO;
-import pl.coderslab.domain.dto.WelderModelUpdateDTO;
+import pl.coderslab.domain.dto.*;
 import pl.coderslab.domain.services.WelderModelService;
 import pl.coderslab.web.rest.assemblers.WelderModelResourceAssembler;
 
@@ -62,6 +59,9 @@ public class WelderModelRestControllerTest {
     private static final WelderModelDTO MODEL_AFTER_UPDATE_1 = new WelderModelDTO(1L, "Mastertig 4000", 1L,
             "Kemppi", true, true, true, true, true, false,
             RANGE_MIG, RANGE_MMA, RANGE_TIG, DATE_TIME, DATE_TIME, 2L);
+    private static final WelderModelCreationDTO MODEL_CREATION_1 = new WelderModelCreationDTO("Mastertig 3000", 1L,
+            "Kemppi", true, true, true, true, true, false,
+            RANGE_MIG, RANGE_MMA, RANGE_TIG);
 
     @Test
     public void getShouldFetchAllAHalDocument() throws Exception {
@@ -83,6 +83,18 @@ public class WelderModelRestControllerTest {
                .andExpect(jsonPath("$._embedded.models[0].voltageMeter", is(MODEL_1.getVoltageMeter())))
                .andExpect(jsonPath("$._embedded.models[0].stepControl", is(MODEL_1.getStepControl())))
                .andExpect(jsonPath("$._embedded.models[0].stepControl", is(MODEL_1.getStepControl())))
+               .andExpect(jsonPath("$._embedded.models[0].migRange.imin", is(RANGE_MIG.getIMin())))
+               .andExpect(jsonPath("$._embedded.models[0].migRange.imax", is(RANGE_MIG.getIMax())))
+               .andExpect(jsonPath("$._embedded.models[0].migRange.umin", is(RANGE_MIG.getUMin())))
+               .andExpect(jsonPath("$._embedded.models[0].migRange.umax", is(RANGE_MIG.getUMax())))
+               .andExpect(jsonPath("$._embedded.models[0].tigRange.imin", is(RANGE_TIG.getIMin())))
+               .andExpect(jsonPath("$._embedded.models[0].tigRange.imax", is(RANGE_TIG.getIMax())))
+               .andExpect(jsonPath("$._embedded.models[0].tigRange.umin", is(RANGE_TIG.getUMin())))
+               .andExpect(jsonPath("$._embedded.models[0].tigRange.umax", is(RANGE_TIG.getUMax())))
+               .andExpect(jsonPath("$._embedded.models[0].mmaRange.imin", is(RANGE_MMA.getIMin())))
+               .andExpect(jsonPath("$._embedded.models[0].mmaRange.imax", is(RANGE_MMA.getIMax())))
+               .andExpect(jsonPath("$._embedded.models[0].mmaRange.umin", is(RANGE_MMA.getUMin())))
+               .andExpect(jsonPath("$._embedded.models[0].mmaRange.umax", is(RANGE_MMA.getUMax())))
                .andExpect(jsonPath("$._embedded.models[0].creationDate", is(notNullValue())))
                .andExpect(jsonPath("$._embedded.models[0].modificationDate", is(notNullValue())))
                .andExpect(jsonPath("$._embedded.models[0].versionId", is(MODEL_1.getVersionId().intValue())))
@@ -101,6 +113,18 @@ public class WelderModelRestControllerTest {
                .andExpect(jsonPath("$._embedded.models[1].voltageMeter", is(MODEL_2.getVoltageMeter())))
                .andExpect(jsonPath("$._embedded.models[1].stepControl", is(MODEL_2.getStepControl())))
                .andExpect(jsonPath("$._embedded.models[1].stepControl", is(MODEL_2.getStepControl())))
+               .andExpect(jsonPath("$._embedded.models[1].migRange.imin", is(RANGE_MIG.getIMin())))
+               .andExpect(jsonPath("$._embedded.models[1].migRange.imax", is(RANGE_MIG.getIMax())))
+               .andExpect(jsonPath("$._embedded.models[1].migRange.umin", is(RANGE_MIG.getUMin())))
+               .andExpect(jsonPath("$._embedded.models[1].migRange.umax", is(RANGE_MIG.getUMax())))
+               .andExpect(jsonPath("$._embedded.models[1].tigRange.imin", is(RANGE_TIG.getIMin())))
+               .andExpect(jsonPath("$._embedded.models[1].tigRange.imax", is(RANGE_TIG.getIMax())))
+               .andExpect(jsonPath("$._embedded.models[1].tigRange.umin", is(RANGE_TIG.getUMin())))
+               .andExpect(jsonPath("$._embedded.models[1].tigRange.umax", is(RANGE_TIG.getUMax())))
+               .andExpect(jsonPath("$._embedded.models[1].mmaRange.imin", is(RANGE_MMA.getIMin())))
+               .andExpect(jsonPath("$._embedded.models[1].mmaRange.imax", is(RANGE_MMA.getIMax())))
+               .andExpect(jsonPath("$._embedded.models[1].mmaRange.umin", is(RANGE_MMA.getUMin())))
+               .andExpect(jsonPath("$._embedded.models[1].mmaRange.umax", is(RANGE_MMA.getUMax())))
                .andExpect(jsonPath("$._embedded.models[1].creationDate", is(notNullValue())))
                .andExpect(jsonPath("$._embedded.models[1].modificationDate", is(notNullValue())))
                .andExpect(jsonPath("$._embedded.models[1].versionId", is(MODEL_2.getVersionId().intValue())))
@@ -135,6 +159,18 @@ public class WelderModelRestControllerTest {
                .andExpect(jsonPath("$.voltageMeter", is(MODEL_1.getVoltageMeter())))
                .andExpect(jsonPath("$.stepControl", is(MODEL_1.getStepControl())))
                .andExpect(jsonPath("$.stepControl", is(MODEL_1.getStepControl())))
+               .andExpect(jsonPath("$.migRange.imin", is(RANGE_MIG.getIMin())))
+               .andExpect(jsonPath("$.migRange.imax", is(RANGE_MIG.getIMax())))
+               .andExpect(jsonPath("$.migRange.umin", is(RANGE_MIG.getUMin())))
+               .andExpect(jsonPath("$.migRange.umax", is(RANGE_MIG.getUMax())))
+               .andExpect(jsonPath("$.tigRange.imin", is(RANGE_TIG.getIMin())))
+               .andExpect(jsonPath("$.tigRange.imax", is(RANGE_TIG.getIMax())))
+               .andExpect(jsonPath("$.tigRange.umin", is(RANGE_TIG.getUMin())))
+               .andExpect(jsonPath("$.tigRange.umax", is(RANGE_TIG.getUMax())))
+               .andExpect(jsonPath("$.mmaRange.imin", is(RANGE_MMA.getIMin())))
+               .andExpect(jsonPath("$.mmaRange.imax", is(RANGE_MMA.getIMax())))
+               .andExpect(jsonPath("$.mmaRange.umin", is(RANGE_MMA.getUMin())))
+               .andExpect(jsonPath("$.mmaRange.umax", is(RANGE_MMA.getUMax())))
                .andExpect(jsonPath("$.creationDate", is(notNullValue())))
                .andExpect(jsonPath("$.modificationDate", is(notNullValue())))
                .andExpect(jsonPath("$.versionId", is(MODEL_1.getVersionId().intValue())))
@@ -147,6 +183,52 @@ public class WelderModelRestControllerTest {
         verifyNoMoreInteractions(modelService);
     }
 
+    @Test
+    public void postShouldAddModelAndFetchHalDocument() throws Exception {
+        String contentBody = mapper.writeValueAsString(MODEL_CREATION_1);
+
+
+        given(modelService.save(MODEL_CREATION_1)).willReturn(MODEL_1);
+        mockMvc.perform(put("/api/brands/1")
+                .accept(MediaTypes.HAL_JSON_UTF8_VALUE)
+                .contentType(MediaTypes.HAL_JSON_UTF8_VALUE)
+                .content(contentBody))
+               .andDo(print())
+               .andExpect(status().isOk())
+               .andExpect(jsonPath("$.id", is(MODEL_AFTER_UPDATE_1.getId().intValue())))
+               .andExpect(jsonPath("$.name", is(MODEL_AFTER_UPDATE_1.getName())))
+               .andExpect(jsonPath("$.brandId", is(MODEL_AFTER_UPDATE_1.getBrandId().intValue())))
+               .andExpect(jsonPath("$.brandName", is(MODEL_AFTER_UPDATE_1.getBrandName())))
+               .andExpect(jsonPath("$.mig", is(MODEL_AFTER_UPDATE_1.getMig())))
+               .andExpect(jsonPath("$.mma", is(MODEL_AFTER_UPDATE_1.getMma())))
+               .andExpect(jsonPath("$.tig", is(MODEL_AFTER_UPDATE_1.getTig())))
+               .andExpect(jsonPath("$.currentMeter", is(MODEL_AFTER_UPDATE_1.getCurrentMeter())))
+               .andExpect(jsonPath("$.voltageMeter", is(MODEL_AFTER_UPDATE_1.getVoltageMeter())))
+               .andExpect(jsonPath("$.stepControl", is(MODEL_AFTER_UPDATE_1.getStepControl())))
+               .andExpect(jsonPath("$.stepControl", is(MODEL_AFTER_UPDATE_1.getStepControl())))
+               .andExpect(jsonPath("$.migRange.imin", is(RANGE_MIG.getIMin())))
+               .andExpect(jsonPath("$.migRange.imax", is(RANGE_MIG.getIMax())))
+               .andExpect(jsonPath("$.migRange.umin", is(RANGE_MIG.getUMin())))
+               .andExpect(jsonPath("$.migRange.umax", is(RANGE_MIG.getUMax())))
+               .andExpect(jsonPath("$.tigRange.imin", is(RANGE_TIG.getIMin())))
+               .andExpect(jsonPath("$.tigRange.imax", is(RANGE_TIG.getIMax())))
+               .andExpect(jsonPath("$.tigRange.umin", is(RANGE_TIG.getUMin())))
+               .andExpect(jsonPath("$.tigRange.umax", is(RANGE_TIG.getUMax())))
+               .andExpect(jsonPath("$.mmaRange.imin", is(RANGE_MMA.getIMin())))
+               .andExpect(jsonPath("$.mmaRange.imax", is(RANGE_MMA.getIMax())))
+               .andExpect(jsonPath("$.mmaRange.umin", is(RANGE_MMA.getUMin())))
+               .andExpect(jsonPath("$.mmaRange.umax", is(RANGE_MMA.getUMax())))
+               .andExpect(jsonPath("$.creationDate", is(notNullValue())))
+               .andExpect(jsonPath("$.modificationDate", is(notNullValue())))
+               .andExpect(jsonPath("$.versionId", is(MODEL_AFTER_UPDATE_1.getVersionId().intValue())))
+               .andExpect(jsonPath("$._links.self.href", is("http://localhost/api/models/1")))
+               .andExpect(jsonPath("$._links.models.href", is("http://localhost/api/models")))
+               .andExpect(jsonPath("$._links.brands.href", is("http://localhost/api/models/1/brands")))
+               .andExpect(jsonPath("$._links.machines.href", is("http://localhost/api/models/1/machines")))
+               .andReturn();
+        verify(modelService, times(1)).save(MODEL_CREATION_1);
+        verifyNoMoreInteractions(modelService);
+    }
 
     @Test
     public void putShouldUpdateModelAndFetchHalDocument() throws Exception {
@@ -171,6 +253,18 @@ public class WelderModelRestControllerTest {
                .andExpect(jsonPath("$.voltageMeter", is(MODEL_AFTER_UPDATE_1.getVoltageMeter())))
                .andExpect(jsonPath("$.stepControl", is(MODEL_AFTER_UPDATE_1.getStepControl())))
                .andExpect(jsonPath("$.stepControl", is(MODEL_AFTER_UPDATE_1.getStepControl())))
+               .andExpect(jsonPath("$.migRange.imin", is(RANGE_MIG.getIMin())))
+               .andExpect(jsonPath("$.migRange.imax", is(RANGE_MIG.getIMax())))
+               .andExpect(jsonPath("$.migRange.umin", is(RANGE_MIG.getUMin())))
+               .andExpect(jsonPath("$.migRange.umax", is(RANGE_MIG.getUMax())))
+               .andExpect(jsonPath("$.tigRange.imin", is(RANGE_TIG.getIMin())))
+               .andExpect(jsonPath("$.tigRange.imax", is(RANGE_TIG.getIMax())))
+               .andExpect(jsonPath("$.tigRange.umin", is(RANGE_TIG.getUMin())))
+               .andExpect(jsonPath("$.tigRange.umax", is(RANGE_TIG.getUMax())))
+               .andExpect(jsonPath("$.mmaRange.imin", is(RANGE_MMA.getIMin())))
+               .andExpect(jsonPath("$.mmaRange.imax", is(RANGE_MMA.getIMax())))
+               .andExpect(jsonPath("$.mmaRange.umin", is(RANGE_MMA.getUMin())))
+               .andExpect(jsonPath("$.mmaRange.umax", is(RANGE_MMA.getUMax())))
                .andExpect(jsonPath("$.creationDate", is(notNullValue())))
                .andExpect(jsonPath("$.modificationDate", is(notNullValue())))
                .andExpect(jsonPath("$.versionId", is(MODEL_AFTER_UPDATE_1.getVersionId().intValue())))

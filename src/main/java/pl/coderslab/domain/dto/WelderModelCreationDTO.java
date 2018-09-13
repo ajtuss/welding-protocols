@@ -20,8 +20,8 @@ public class WelderModelCreationDTO {
     private Boolean currentMeter;
     private Boolean voltageMeter;
     private Boolean stepControl;
-    private RangeCreationDTO migRange;
-    private RangeCreationDTO mmaRange;
-    private RangeCreationDTO tigRange;
+    private RangeDTO migRange;
+    private RangeDTO mmaRange;
+    private RangeDTO tigRange;
 
 }
