@@ -10,6 +10,7 @@ import pl.coderslab.domain.dto.*;
 import pl.coderslab.domain.exceptions.InvalidIdException;
 import pl.coderslab.domain.services.WelderModelService;
 import pl.coderslab.web.rest.assemblers.BrandResourceAssembler;
+import pl.coderslab.web.rest.assemblers.MachineResourceAssembler;
 import pl.coderslab.web.rest.assemblers.WelderModelResourceAssembler;
 
 import javax.validation.Valid;
@@ -24,16 +25,16 @@ import static org.springframework.hateoas.mvc.ControllerLinkBuilder.methodOn;
 public class WelderModelRestController {
 
     private final WelderModelService modelService;
-
     private final WelderModelResourceAssembler assembler;
-
     private final BrandResourceAssembler brandAssembler;
+    private final MachineResourceAssembler machineAssembler;
 
     @Autowired
-    public WelderModelRestController(WelderModelService modelService, WelderModelResourceAssembler assembler, BrandResourceAssembler brandAssembler) {
+    public WelderModelRestController(WelderModelService modelService, WelderModelResourceAssembler assembler, BrandResourceAssembler brandAssembler, MachineResourceAssembler machineAssembler) {
         this.modelService = modelService;
         this.assembler = assembler;
         this.brandAssembler = brandAssembler;
+        this.machineAssembler = machineAssembler;
     }
 
     @GetMapping
@@ -82,6 +83,11 @@ public class WelderModelRestController {
 
     @GetMapping("{id:\\d+}/machines")
     public Resources<Resource<MachineDTO>> getMachinesByModelId(@PathVariable Long id) {
-        return null;
+        List<Resource<MachineDTO>> resources = modelService.findAllMachinesByModelId(id)
+                                                         .stream()
+                                                         .map(machineAssembler::toResource)
+                                                         .collect(Collectors.toList());
+        return new Resources<>(resources,
+                linkTo(methodOn(WelderModelRestController.class).getMachinesByModelId(id)).withSelfRel());
     }
 }

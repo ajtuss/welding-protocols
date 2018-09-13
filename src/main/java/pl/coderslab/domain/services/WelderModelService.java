@@ -1,9 +1,6 @@
 package pl.coderslab.domain.services;
 
-import pl.coderslab.domain.dto.BrandDTO;
-import pl.coderslab.domain.dto.WelderModelCreationDTO;
-import pl.coderslab.domain.dto.WelderModelDTO;
-import pl.coderslab.domain.dto.WelderModelUpdateDTO;
+import pl.coderslab.domain.dto.*;
 
 import java.util.List;
 
@@ -16,5 +13,7 @@ public interface WelderModelService {
 
     void remove(Long id);
 
-    BrandDTO findBrandByModelId(long l);
+    BrandDTO findBrandByModelId(Long id);
+
+    List<MachineDTO> findAllMachinesByModelId(Long id);
 }

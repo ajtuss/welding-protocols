@@ -4,10 +4,7 @@ import org.modelmapper.ModelMapper;
 import org.modelmapper.TypeToken;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import pl.coderslab.domain.dto.BrandDTO;
-import pl.coderslab.domain.dto.WelderModelCreationDTO;
-import pl.coderslab.domain.dto.WelderModelDTO;
-import pl.coderslab.domain.dto.WelderModelUpdateDTO;
+import pl.coderslab.domain.dto.*;
 import pl.coderslab.domain.entities.Brand;
 import pl.coderslab.domain.entities.WelderModel;
 import pl.coderslab.domain.repositories.BrandRepository;
@@ -68,9 +65,15 @@ public class WelderModelServiceImpl implements WelderModelService {
     }
 
     @Override
-    public BrandDTO findBrandByModelId(long l) {
+    public BrandDTO findBrandByModelId(Long id) {
         return null; //todo
     }
+
+    @Override
+    public List<MachineDTO> findAllMachinesByModelId(Long id) {
+        return null; //todo
+    }
+
 
     private WelderModel getWelderModel(WelderModelDTO modelDTO) {
         Long brandId = modelDTO.getBrandId();
