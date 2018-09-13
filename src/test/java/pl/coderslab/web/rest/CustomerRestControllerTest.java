@@ -14,8 +14,10 @@ import org.springframework.test.web.servlet.MockMvc;
 import pl.coderslab.domain.dto.CustomerCreationDTO;
 import pl.coderslab.domain.dto.CustomerDTO;
 import pl.coderslab.domain.dto.CustomerUpdateDTO;
+import pl.coderslab.domain.dto.MachineDTO;
 import pl.coderslab.domain.services.CustomerService;
 import pl.coderslab.web.rest.assemblers.CustomerResourceAssembler;
+import pl.coderslab.web.rest.assemblers.MachineResourceAssembler;
 
 import java.time.LocalDateTime;
 import java.util.Arrays;
@@ -31,7 +33,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @RunWith(SpringRunner.class)
 @WebMvcTest(value = CustomerRestController.class, secure = false)
-@Import({CustomerResourceAssembler.class})
+@Import({CustomerResourceAssembler.class, MachineResourceAssembler.class})
 public class CustomerRestControllerTest {
 
     @Autowired
@@ -58,6 +60,14 @@ public class CustomerRestControllerTest {
     private static final CustomerDTO CUSTOMER_AFTER_UPDATE_1 = new CustomerDTO(1L, "FIRMA",
             "FIRMA SP. z O.O.", "CITY", "00-000", "Street 14",
             "firma@firma.pl", "123-456-32-18", DATE_TIME, DATE_TIME, 2L);
+
+    private static final MachineDTO MACHINE_1 = new MachineDTO(1L, "12345678", "484-123123",
+            1L, "Mastertig 3000", 1L, "Kemppi",
+            CUSTOMER_1.getId(), CUSTOMER_1.getShortName(), DATE_TIME, DATE_TIME, 1L);
+
+    private static final MachineDTO MACHINE_2 = new MachineDTO(2L, "9877877123", "484-9879879",
+            2L, "Mastertig 4000", 1L, "Kemppi",
+            CUSTOMER_1.getId(), CUSTOMER_1.getShortName(), DATE_TIME, DATE_TIME, 1L);
 
     @Test
     public void getShouldFetchAllAHalDocument() throws Exception {
@@ -226,7 +236,50 @@ public class CustomerRestControllerTest {
 
     @Test
     public void getMachinesShouldFetchHalDocument() throws Exception {
-        assert false;
-        //todo
+        given(customerService.findAllMachines(1L)).willReturn(Arrays.asList(MACHINE_1, MACHINE_2));
+
+        mockMvc.perform(get("/api/customers/1/machines")
+                .contentType(MediaTypes.HAL_JSON_UTF8_VALUE))
+               .andDo(print())
+               .andExpect(status().isOk())
+               .andExpect(header().string(HttpHeaders.CONTENT_TYPE, MediaTypes.HAL_JSON_UTF8_VALUE))
+               .andExpect(jsonPath("$._embedded.machines[0].id", is(MACHINE_1.getId().intValue())))
+               .andExpect(jsonPath("$._embedded.machines[0].serialNumber", is(MACHINE_1.getSerialNumber())))
+               .andExpect(jsonPath("$._embedded.machines[0].inwNumber", is(MACHINE_1.getInwNumber())))
+               .andExpect(jsonPath("$._embedded.machines[0].welderModelBrandId", is(MACHINE_1.getWelderModelBrandId().intValue())))
+               .andExpect(jsonPath("$._embedded.machines[0].welderModelBrandName", is(MACHINE_1.getWelderModelBrandName())))
+               .andExpect(jsonPath("$._embedded.machines[0].welderModelId", is(MACHINE_1.getWelderModelId().intValue())))
+               .andExpect(jsonPath("$._embedded.machines[0].welderModelName", is(MACHINE_1.getWelderModelName())))
+               .andExpect(jsonPath("$._embedded.machines[0].customerId", is(MACHINE_1.getCustomerId().intValue())))
+               .andExpect(jsonPath("$._embedded.machines[0].customerShortName", is(MACHINE_1.getCustomerShortName())))
+               .andExpect(jsonPath("$._embedded.machines[0].creationDate", is(notNullValue())))
+               .andExpect(jsonPath("$._embedded.machines[0].modificationDate", is(notNullValue())))
+               .andExpect(jsonPath("$._embedded.machines[0].versionId", is(MACHINE_1.getVersionId().intValue())))
+               .andExpect(jsonPath("$._embedded.machines[0]._links.self.href", is("http://localhost/api/machines/1")))
+               .andExpect(jsonPath("$._embedded.machines[0]._links.machines.href", is("http://localhost/api/machines")))
+               .andExpect(jsonPath("$._embedded.machines[0]._links.models.href", is("http://localhost/api/machines/1/models")))
+               .andExpect(jsonPath("$._embedded.machines[0]._links.customers.href", is("http://localhost/api/machines/1/customers")))
+               .andExpect(jsonPath("$._embedded.machines[0]._links.validations.href", is("http://localhost/api/machines/1/validations")))
+               .andExpect(jsonPath("$._embedded.machines[1].id", is(MACHINE_2.getId().intValue())))
+               .andExpect(jsonPath("$._embedded.machines[1].serialNumber", is(MACHINE_2.getSerialNumber())))
+               .andExpect(jsonPath("$._embedded.machines[1].inwNumber", is(MACHINE_2.getInwNumber())))
+               .andExpect(jsonPath("$._embedded.machines[1].welderModelBrandId", is(MACHINE_2.getWelderModelBrandId().intValue())))
+               .andExpect(jsonPath("$._embedded.machines[1].welderModelBrandName", is(MACHINE_2.getWelderModelBrandName())))
+               .andExpect(jsonPath("$._embedded.machines[1].welderModelId", is(MACHINE_2.getWelderModelId().intValue())))
+               .andExpect(jsonPath("$._embedded.machines[1].welderModelName", is(MACHINE_2.getWelderModelName())))
+               .andExpect(jsonPath("$._embedded.machines[1].customerId", is(MACHINE_2.getCustomerId().intValue())))
+               .andExpect(jsonPath("$._embedded.machines[1].customerShortName", is(MACHINE_2.getCustomerShortName())))
+               .andExpect(jsonPath("$._embedded.machines[1].creationDate", is(notNullValue())))
+               .andExpect(jsonPath("$._embedded.machines[1].modificationDate", is(notNullValue())))
+               .andExpect(jsonPath("$._embedded.machines[1].versionId", is(MACHINE_2.getVersionId().intValue())))
+               .andExpect(jsonPath("$._embedded.machines[1]._links.self.href", is("http://localhost/api/machines/2")))
+               .andExpect(jsonPath("$._embedded.machines[1]._links.machines.href", is("http://localhost/api/machines")))
+               .andExpect(jsonPath("$._embedded.machines[1]._links.models.href", is("http://localhost/api/machines/2/models")))
+               .andExpect(jsonPath("$._embedded.machines[1]._links.customers.href", is("http://localhost/api/machines/2/customers")))
+               .andExpect(jsonPath("$._embedded.machines[1]._links.validations.href", is("http://localhost/api/machines/2/validations")))
+               .andExpect(jsonPath("$._links.self.href", is("http://localhost/api/customers/1/machines")))
+               .andReturn();
+        verify(customerService, times(1)).findAllMachines(1L);
+        verifyNoMoreInteractions(customerService);
     }
 }
