@@ -32,7 +32,7 @@ public class CustomerController {
 
     @PostMapping("/add")
     public String addCustomer(@ModelAttribute CustomerDTO customerDTO){
-        customerService.save(customerDTO);
+//        customerService.save(customerDTO); //todo
         return "redirect:/customers";
     }
 
@@ -45,7 +45,7 @@ public class CustomerController {
 
     @PostMapping("{id:\\d+}")
     public String editCustomer(@PathVariable Long id, @ModelAttribute CustomerDTO customerDTO){
-        customerService.update(id, customerDTO);
-        return "redirect:/customers";
+//        customerService.update(id, customerDTO);
+        return "redirect:/customers"; //todo
     }
 }

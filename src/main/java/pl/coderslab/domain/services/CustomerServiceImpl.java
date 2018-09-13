@@ -4,7 +4,9 @@ import org.modelmapper.ModelMapper;
 import org.modelmapper.TypeToken;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import pl.coderslab.domain.dto.CustomerCreationDTO;
 import pl.coderslab.domain.dto.CustomerDTO;
+import pl.coderslab.domain.dto.CustomerUpdateDTO;
 import pl.coderslab.domain.entities.Customer;
 import pl.coderslab.domain.exceptions.CustomerNotFoundException;
 import pl.coderslab.domain.repositories.CustomerRepository;
@@ -35,9 +37,10 @@ public class CustomerServiceImpl implements CustomerService {
     }
 
     @Override
-    public void save(CustomerDTO customerDTO) {
+    public CustomerDTO save(CustomerCreationDTO customerDTO) {
         Customer customer = modelMapper.map(customerDTO, Customer.class);
         customerRepository.save(customer);
+        return null; //todo
     }
 
     @Override
@@ -47,10 +50,11 @@ public class CustomerServiceImpl implements CustomerService {
     }
 
     @Override
-    public void update(Long id, CustomerDTO customerDTO) {
+    public CustomerDTO update(CustomerUpdateDTO customerDTO) {
         Customer customer = modelMapper.map(customerDTO, Customer.class);
-        customer.setId(id);
-        customerRepository.save(customer);
+//        customer.setId(id);
+//        customerRepository.save(customer);
+        return null; //todo
     }
 
     @Override
