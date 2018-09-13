@@ -13,6 +13,9 @@ import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import pl.coderslab.domain.dto.*;
 import pl.coderslab.domain.services.MachineService;
+import pl.coderslab.web.rest.assemblers.CustomerResourceAssembler;
+import pl.coderslab.web.rest.assemblers.MachineResourceAssembler;
+import pl.coderslab.web.rest.assemblers.WelderModelResourceAssembler;
 
 import java.time.LocalDateTime;
 import java.util.Arrays;
@@ -26,8 +29,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @RunWith(SpringRunner.class)
-@WebMvcTest(MachineRestController.class)
-@Import({})
+@WebMvcTest(value = MachineRestController.class, secure = false)
+@Import({MachineResourceAssembler.class, WelderModelResourceAssembler.class, CustomerResourceAssembler.class})
 public class MachineRestControllerTest {
 
     @Autowired
