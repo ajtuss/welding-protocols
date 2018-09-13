@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.hateoas.MediaTypes;
 import org.springframework.hateoas.Resource;
 import org.springframework.hateoas.Resources;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import pl.coderslab.domain.dto.CustomerDTO;
 import pl.coderslab.domain.dto.MachineDTO;
@@ -47,8 +48,9 @@ public class CustomerRestController {
     }
 
     @DeleteMapping("/{id:\\d+}")
-    public void delete(@PathVariable Long id){
+    public ResponseEntity<?> delete(@PathVariable Long id){
         customerService.remove(id);
+        return ResponseEntity.noContent().build();
     }
 
     @GetMapping("/{id:\\d+}/machines")
