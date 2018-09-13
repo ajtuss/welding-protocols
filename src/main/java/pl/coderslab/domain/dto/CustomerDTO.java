@@ -3,13 +3,14 @@ package pl.coderslab.domain.dto;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.hateoas.core.Relation;
 
 import java.time.LocalDateTime;
-import java.util.Objects;
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+@Relation(value = "customer", collectionRelation = "customers")
 public class CustomerDTO {
 
     private Long id;
