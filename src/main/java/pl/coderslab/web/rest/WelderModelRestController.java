@@ -6,12 +6,11 @@ import org.springframework.hateoas.Resource;
 import org.springframework.hateoas.Resources;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import pl.coderslab.domain.dto.BrandDTO;
-import pl.coderslab.domain.dto.MachineDTO;
-import pl.coderslab.domain.dto.WelderModelDTO;
+import pl.coderslab.domain.dto.*;
 import pl.coderslab.domain.services.WelderModelService;
 import pl.coderslab.web.rest.assemblers.WelderModelResourceAssembler;
 
+import javax.validation.Valid;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -51,7 +50,14 @@ public class WelderModelRestController {
     public ResponseEntity<?> deleteModel(@PathVariable Long id) {
         modelService.remove(id);
         return ResponseEntity.noContent().build();
+    }
 
+    @PostMapping
+    public ResponseEntity<Resource<WelderModelDTO>> addModel(@RequestBody @Valid WelderModelCreationDTO modelCreationDTO) {
+        WelderModelDTO welderModelDTO = modelService.save(modelCreationDTO);
+        Resource<WelderModelDTO> resource = assembler.toResource(welderModelDTO);
+        return ResponseEntity.created(linkTo(methodOn(WelderModelRestController.class).getOne(welderModelDTO.getId())).toUri())
+                             .body(resource);
     }
 
     @GetMapping("{id:\\d+}/brands")
