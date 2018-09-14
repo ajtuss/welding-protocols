@@ -1,5 +1,8 @@
 package pl.coderslab.domain.entities;
 
+import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.OneToMany;
@@ -10,6 +13,8 @@ import java.util.Objects;
 
 @Entity
 @Table(name = "brands")
+@NoArgsConstructor
+@AllArgsConstructor
 public class Brand extends AbstractEntity{
 
     @Column(unique = true, nullable = false)
