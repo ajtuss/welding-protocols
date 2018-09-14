@@ -59,12 +59,12 @@ public class MachineRestControllerTest {
     private static final MachineDTO MACHINE_2 = new MachineDTO(2L, "9877877123", "484-9879879",
             MODEL_1.getId(), MODEL_1.getName(), MODEL_1.getBrandId(), MODEL_1.getBrandName(),
             CUSTOMER_1.getId(), CUSTOMER_1.getShortName(), DATE_TIME, DATE_TIME, 1L);
-    private static final MachineUpdateDTO MACHINE_UPDATE = new MachineUpdateDTO(1L, "12345678", "484-123123",
+    private static final MachineDTO MACHINE_UPDATE = new MachineDTO(1L, "12345678", "484-123123",
             MODEL_1.getId(), CUSTOMER_1.getId(), 1L);
     private static final MachineDTO MACHINE_AFTER_UPDATE = new MachineDTO(1L, "12345678", "484-123123",
             MODEL_1.getId(), MODEL_1.getName(), MODEL_1.getBrandId(), MODEL_1.getBrandName(),
             CUSTOMER_1.getId(), CUSTOMER_1.getShortName(), DATE_TIME, DATE_TIME, 2L);
-    private static final MachineCreationDTO MACHINE_CREATION = new MachineCreationDTO("12345678", "484-123123",
+    private static final MachineDTO MACHINE_CREATION = new MachineDTO("12345678", "484-123123",
             MODEL_1.getId(), CUSTOMER_1.getId());
 
     @Test
