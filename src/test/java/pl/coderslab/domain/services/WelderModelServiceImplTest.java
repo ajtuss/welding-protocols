@@ -8,7 +8,6 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.context.annotation.Import;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.junit4.SpringRunner;
-import pl.coderslab.domain.dto.WelderModelCreationDTO;
 import pl.coderslab.domain.dto.WelderModelDTO;
 import pl.coderslab.domain.repositories.BrandRepository;
 import pl.coderslab.domain.repositories.WelderModelRepository;
@@ -35,9 +34,9 @@ public class WelderModelServiceImplTest {
     @Autowired
     private BrandRepository brandRepository;
 
-    private final static WelderModelCreationDTO MODEL_CREATION_1 = new WelderModelCreationDTO("Mastertig 3000",
+    private final static WelderModelDTO MODEL_CREATION_1 = new WelderModelDTO("Mastertig 3000",
             1L, false, false, false, false, false, false, null, null, null);
-    private final static WelderModelCreationDTO MODEL_CREATION_2 = new WelderModelCreationDTO("Mastertig 4000",
+    private final static WelderModelDTO MODEL_CREATION_2 = new WelderModelDTO("Mastertig 4000",
             1L, false, false, false, false, false, false, null, null, null);
 
     @Test

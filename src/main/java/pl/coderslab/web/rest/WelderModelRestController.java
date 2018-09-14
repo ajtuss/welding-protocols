@@ -7,7 +7,9 @@ import org.springframework.hateoas.Resources;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import pl.coderslab.domain.dto.*;
+import pl.coderslab.domain.dto.BrandDTO;
+import pl.coderslab.domain.dto.MachineDTO;
+import pl.coderslab.domain.dto.WelderModelDTO;
 import pl.coderslab.domain.exceptions.InvalidIdException;
 import pl.coderslab.domain.services.WelderModelService;
 import pl.coderslab.web.rest.assemblers.BrandResourceAssembler;
@@ -60,15 +62,15 @@ public class WelderModelRestController {
     }
 
     @PostMapping
-    public ResponseEntity<Resource<WelderModelDTO>> addModel(@RequestBody @Valid WelderModelCreationDTO modelCreationDTO) {
-        WelderModelDTO welderModelDTO = modelService.save(modelCreationDTO);
-        Resource<WelderModelDTO> resource = assembler.toResource(welderModelDTO);
-        return ResponseEntity.created(linkTo(methodOn(WelderModelRestController.class).getOne(welderModelDTO.getId())).toUri())
+    public ResponseEntity<Resource<WelderModelDTO>> addModel(@RequestBody @Valid WelderModelDTO modelDTO) {
+        WelderModelDTO savedModel = modelService.save(modelDTO);
+        Resource<WelderModelDTO> resource = assembler.toResource(savedModel);
+        return ResponseEntity.created(linkTo(methodOn(WelderModelRestController.class).getOne(savedModel.getId())).toUri())
                              .body(resource);
     }
 
     @PutMapping("{id:\\d+}")
-    public Resource<WelderModelDTO> editModel(@PathVariable Long id, @RequestBody @Valid WelderModelUpdateDTO modelUpdateDTO) {
+    public Resource<WelderModelDTO> editModel(@PathVariable Long id, @RequestBody @Valid WelderModelDTO modelUpdateDTO) {
         if (!id.equals(modelUpdateDTO.getId())) {
             throw new InvalidIdException();
         }

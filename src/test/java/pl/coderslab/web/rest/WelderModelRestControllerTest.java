@@ -11,7 +11,10 @@ import org.springframework.hateoas.MediaTypes;
 import org.springframework.http.HttpHeaders;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
-import pl.coderslab.domain.dto.*;
+import pl.coderslab.domain.dto.BrandDTO;
+import pl.coderslab.domain.dto.MachineDTO;
+import pl.coderslab.domain.dto.RangeDTO;
+import pl.coderslab.domain.dto.WelderModelDTO;
 import pl.coderslab.domain.services.WelderModelService;
 import pl.coderslab.web.rest.assemblers.BrandResourceAssembler;
 import pl.coderslab.web.rest.assemblers.MachineResourceAssembler;
@@ -52,13 +55,13 @@ public class WelderModelRestControllerTest {
     private static final WelderModelDTO MODEL_2 = new WelderModelDTO(2L, "ProEvolution 4200", 1L,
             "Kemppi", true, true, true, true, true, false,
             RANGE_MIG, RANGE_MMA, RANGE_TIG, DATE_TIME, DATE_TIME, 1L);
-    private static final WelderModelUpdateDTO MODEL_UPDATE_1 = new WelderModelUpdateDTO(1L, "Mastertig 3000", 1L,
+    private static final WelderModelDTO MODEL_UPDATE_1 = new WelderModelDTO(1L, "Mastertig 3000", 1L,
             true, true, true, true, true, false,
             RANGE_MIG, RANGE_MMA, RANGE_TIG, 1L);
     private static final WelderModelDTO MODEL_AFTER_UPDATE_1 = new WelderModelDTO(1L, "Mastertig 4000", 1L,
             "Kemppi", true, true, true, true, true, false,
             RANGE_MIG, RANGE_MMA, RANGE_TIG, DATE_TIME, DATE_TIME, 2L);
-    private static final WelderModelCreationDTO MODEL_CREATION_1 = new WelderModelCreationDTO("Mastertig 3000", 1L,
+    private static final WelderModelDTO MODEL_CREATION_1 = new WelderModelDTO("Mastertig 3000", 1L,
             true, true, true, true, true, false,
             RANGE_MIG, RANGE_MMA, RANGE_TIG);
 

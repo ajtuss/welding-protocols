@@ -4,7 +4,9 @@ import org.modelmapper.ModelMapper;
 import org.modelmapper.TypeToken;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import pl.coderslab.domain.dto.*;
+import pl.coderslab.domain.dto.BrandDTO;
+import pl.coderslab.domain.dto.MachineDTO;
+import pl.coderslab.domain.dto.WelderModelDTO;
 import pl.coderslab.domain.entities.Brand;
 import pl.coderslab.domain.entities.Machine;
 import pl.coderslab.domain.entities.WelderModel;
@@ -53,7 +55,7 @@ public class WelderModelServiceImpl implements WelderModelService {
     }
 
     @Override
-    public WelderModelDTO save(WelderModelCreationDTO modelCreationDTO) {
+    public WelderModelDTO save(WelderModelDTO modelCreationDTO) {
         WelderModel model = modelMapper.map(modelCreationDTO, WelderModel.class);
 //        if(modelCreationDTO.getMig() != null && mo)
         Long brandId = model.getBrand().getId();
@@ -63,7 +65,7 @@ public class WelderModelServiceImpl implements WelderModelService {
     }
 
     @Override
-    public WelderModelDTO update(WelderModelUpdateDTO modelUpdateDTO) {
+    public WelderModelDTO update(WelderModelDTO modelUpdateDTO) {
         WelderModel welderModel = modelMapper.map(modelUpdateDTO, WelderModel.class);
         WelderModel save = modelRepository.save(welderModel);
         return modelMapper.map(save, WelderModelDTO.class);
@@ -88,12 +90,4 @@ public class WelderModelServiceImpl implements WelderModelService {
         }.getType();
         return modelMapper.map(machines, resultType);
     }
-
-//    private WelderModel getWelderModel(WelderModelDTO modelDTO) {
-//        Long brandId = modelDTO.getBrandId();
-//        WelderModel model = modelMapper.map(modelDTO, WelderModel.class);
-//        Brand brand = brandRepository.findById(brandId).orElse(null);
-//        model.setBrand(brand);
-//        return model;
-//    }
 }
