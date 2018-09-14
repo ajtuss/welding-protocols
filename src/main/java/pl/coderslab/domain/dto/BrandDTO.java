@@ -3,6 +3,8 @@ package pl.coderslab.domain.dto;
 import lombok.Data;
 import org.springframework.hateoas.core.Relation;
 
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 import java.time.LocalDateTime;
 
 @Data
@@ -10,6 +12,8 @@ import java.time.LocalDateTime;
 public class BrandDTO {
 
     private Long id;
+    @NotNull
+    @Size(min = 3, max = 30)
     private String name;
     private LocalDateTime creationDate;
     private LocalDateTime modificationDate;

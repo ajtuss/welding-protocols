@@ -4,14 +4,14 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
 @ResponseStatus(HttpStatus.BAD_REQUEST)
-public class InvalidIdException extends RuntimeException {
+public class InvalidRequestException extends RuntimeException {
     private final static String MESSAGE = "Id from URL and field must be the same";
 
-    public InvalidIdException() {
+    public InvalidRequestException() {
         super(MESSAGE);
     }
 
-    public InvalidIdException(String message) {
+    public InvalidRequestException(String message) {
         super(message);
     }
 }

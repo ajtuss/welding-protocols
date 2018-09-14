@@ -8,7 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import pl.coderslab.domain.dto.CustomerDTO;
 import pl.coderslab.domain.dto.MachineDTO;
-import pl.coderslab.domain.exceptions.InvalidIdException;
+import pl.coderslab.domain.exceptions.InvalidRequestException;
 import pl.coderslab.domain.services.CustomerService;
 import pl.coderslab.web.rest.assemblers.CustomerResourceAssembler;
 import pl.coderslab.web.rest.assemblers.MachineResourceAssembler;
@@ -63,7 +63,7 @@ public class CustomerRestController {
     @PutMapping("/{id:\\d+}")
     public Resource<CustomerDTO> updateCustomer(@PathVariable Long id, @RequestBody @Valid CustomerDTO customerUpdateDTO) {
         if(!id.equals(customerUpdateDTO.getId())){
-            throw new InvalidIdException();
+            throw new InvalidRequestException();
         }
         CustomerDTO customerDTO = customerService.update(customerUpdateDTO);
         return assembler.toResource(customerDTO);

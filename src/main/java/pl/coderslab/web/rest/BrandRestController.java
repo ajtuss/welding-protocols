@@ -9,7 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import pl.coderslab.domain.dto.BrandDTO;
 import pl.coderslab.domain.dto.WelderModelDTO;
-import pl.coderslab.domain.exceptions.InvalidIdException;
+import pl.coderslab.domain.exceptions.InvalidRequestException;
 import pl.coderslab.domain.services.BrandService;
 import pl.coderslab.web.rest.assemblers.BrandResourceAssembler;
 import pl.coderslab.web.rest.assemblers.WelderModelResourceAssembler;
@@ -72,7 +72,7 @@ public class BrandRestController {
     @PutMapping(value = "/{id:\\d+}")
     public Resource<BrandDTO> editBrand(@PathVariable Long id, @RequestBody @Valid BrandDTO brand) {
         if (!id.equals(brand.getId())) {
-            throw new InvalidIdException();
+            throw new InvalidRequestException();
         }
         BrandDTO brandDTO = brandService.updateBrand(brand);
         return assembler.toResource(brandDTO);

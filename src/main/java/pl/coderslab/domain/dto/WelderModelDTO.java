@@ -3,6 +3,8 @@ package pl.coderslab.domain.dto;
 import lombok.Data;
 import org.springframework.hateoas.core.Relation;
 
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 import java.time.LocalDateTime;
 
 @Data
@@ -10,14 +12,24 @@ import java.time.LocalDateTime;
 public class WelderModelDTO {
 
     private Long id;
+
+    @NotNull
+    @Size(min = 3, max = 30)
     private String name;
+    @NotNull
     private Long brandId;
     private String brandName;
+    @NotNull
     private Boolean mig;
+    @NotNull
     private Boolean mma;
+    @NotNull
     private Boolean tig;
+    @NotNull
     private Boolean currentMeter;
+    @NotNull
     private Boolean voltageMeter;
+    @NotNull
     private Boolean stepControl;
     private RangeDTO migRange;
     private RangeDTO mmaRange;

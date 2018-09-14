@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.*;
 import pl.coderslab.domain.dto.BrandDTO;
 import pl.coderslab.domain.dto.MachineDTO;
 import pl.coderslab.domain.dto.WelderModelDTO;
-import pl.coderslab.domain.exceptions.InvalidIdException;
+import pl.coderslab.domain.exceptions.InvalidRequestException;
 import pl.coderslab.domain.services.WelderModelService;
 import pl.coderslab.web.rest.assemblers.BrandResourceAssembler;
 import pl.coderslab.web.rest.assemblers.MachineResourceAssembler;
@@ -72,7 +72,7 @@ public class WelderModelRestController {
     @PutMapping("{id:\\d+}")
     public Resource<WelderModelDTO> editModel(@PathVariable Long id, @RequestBody @Valid WelderModelDTO modelUpdateDTO) {
         if (!id.equals(modelUpdateDTO.getId())) {
-            throw new InvalidIdException();
+            throw new InvalidRequestException();
         }
         WelderModelDTO modelDTO = modelService.update(modelUpdateDTO);
         return assembler.toResource(modelDTO);
