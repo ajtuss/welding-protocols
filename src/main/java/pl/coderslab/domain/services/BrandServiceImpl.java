@@ -4,9 +4,7 @@ import org.modelmapper.ModelMapper;
 import org.modelmapper.TypeToken;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import pl.coderslab.domain.dto.BrandCreationDTO;
 import pl.coderslab.domain.dto.BrandDTO;
-import pl.coderslab.domain.dto.BrandUpdateDTO;
 import pl.coderslab.domain.dto.WelderModelDTO;
 import pl.coderslab.domain.entities.Brand;
 import pl.coderslab.domain.entities.WelderModel;
@@ -38,8 +36,8 @@ public class BrandServiceImpl implements BrandService {
     }
 
     @Override
-    public BrandDTO saveBrand(BrandCreationDTO brandCreationDTO) {
-        Brand brand = modelMapper.map(brandCreationDTO, Brand.class);
+    public BrandDTO saveBrand(BrandDTO brandDTO) {
+        Brand brand = modelMapper.map(brandDTO, Brand.class);
         Brand save = brandRepository.save(brand);
         return modelMapper.map(save, BrandDTO.class);
     }
@@ -59,8 +57,8 @@ public class BrandServiceImpl implements BrandService {
     }
 
     @Override
-    public BrandDTO updateBrand(BrandUpdateDTO brandUpdateDTO) {
-        Brand brand = modelMapper.map(brandUpdateDTO, Brand.class);
+    public BrandDTO updateBrand(BrandDTO brandDTO) {
+        Brand brand = modelMapper.map(brandDTO, Brand.class);
         Brand save = brandRepository.saveAndFlush(brand);
         entityManager.refresh(save);
         return modelMapper.map(save,BrandDTO.class);
