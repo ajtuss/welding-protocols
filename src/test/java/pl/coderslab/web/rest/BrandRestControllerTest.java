@@ -11,7 +11,9 @@ import org.springframework.hateoas.MediaTypes;
 import org.springframework.http.HttpHeaders;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
-import pl.coderslab.domain.dto.*;
+import pl.coderslab.domain.dto.BrandDTO;
+import pl.coderslab.domain.dto.RangeDTO;
+import pl.coderslab.domain.dto.WelderModelDTO;
 import pl.coderslab.domain.services.BrandService;
 import pl.coderslab.web.rest.assemblers.BrandResourceAssembler;
 import pl.coderslab.web.rest.assemblers.WelderModelResourceAssembler;
@@ -45,7 +47,7 @@ public class BrandRestControllerTest {
     private static final BrandDTO BRAND_1 = new BrandDTO(1L, "Kemppi", DATE_TIME, DATE_TIME, 1L);
     private static final BrandDTO BRAND_2 = new BrandDTO(2L, "Fronius", DATE_TIME, DATE_TIME, 1L);
     private static final BrandDTO BRAND_1_AFTER_UPDATE = new BrandDTO(1L, "Kemppi", DATE_TIME, DATE_TIME, 2L);
-    private static final BrandUpdateDTO BRAND_UPDATE_1 = new BrandUpdateDTO(1L, "Kemppi", 1L);
+    private static final BrandDTO BRAND_UPDATE_1 = new BrandDTO(1L, "Kemppi", null, null, 1L);
 
 
     private static final RangeDTO RANGE_MIG = new RangeDTO(1., 100., 10., 100.);
@@ -117,7 +119,7 @@ public class BrandRestControllerTest {
 
     @Test
     public void postShouldCreateNewBrandAndFetchAHalDocument() throws Exception {
-        BrandCreationDTO creationDTO = new BrandCreationDTO(BRAND_1.getName());
+        BrandDTO creationDTO = new BrandDTO(BRAND_1.getName());
         String contentBody = mapper.writeValueAsString(creationDTO);
 
         given(brandService.saveBrand(creationDTO)).willReturn(BRAND_1);

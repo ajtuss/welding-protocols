@@ -7,9 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.context.annotation.Import;
 import org.springframework.test.context.junit4.SpringRunner;
-import pl.coderslab.domain.dto.BrandCreationDTO;
 import pl.coderslab.domain.dto.BrandDTO;
-import pl.coderslab.domain.dto.BrandUpdateDTO;
 import pl.coderslab.domain.dto.WelderModelDTO;
 import pl.coderslab.domain.entities.Brand;
 import pl.coderslab.domain.entities.WelderModel;
@@ -41,15 +39,14 @@ public class BrandServiceImplTest {
     @Autowired
     private BrandService brandService;
 
-    private final static BrandCreationDTO BRAND_CREATION = new BrandCreationDTO("Kemppi");
-    private final static BrandCreationDTO BRAND_CREATION_2 = new BrandCreationDTO("Fronius");
-    private final static BrandCreationDTO BRAND_CREATION_3 = new BrandCreationDTO("EWM");
+    private final static BrandDTO BRAND_CREATION = new BrandDTO("Kemppi");
+    private final static BrandDTO BRAND_CREATION_2 = new BrandDTO("Fronius");
+    private final static BrandDTO BRAND_CREATION_3 = new BrandDTO("EWM");
 
 
     @Test
     public void expectedTrueAfterSaveBrand() {
         BrandDTO result = brandService.saveBrand(BRAND_CREATION);
-        System.out.println(result);
         assertNotNull(result);
         assertNotNull(result.getId());
         assertEquals(BRAND_CREATION.getName(), result.getName());
@@ -61,14 +58,13 @@ public class BrandServiceImplTest {
     @Test
     public void expectedTrueAfterUpdateBrand() {
         BrandDTO saved = brandService.saveBrand(BRAND_CREATION);
-        BrandUpdateDTO brandUpdateDTO = mapper.map(saved, BrandUpdateDTO.class);
-        brandUpdateDTO.setName("Fronius");
+        saved.setName("Fronius");
 
-        BrandDTO result = brandService.updateBrand(brandUpdateDTO);
+        BrandDTO result = brandService.updateBrand(saved);
 
         assertNotNull(result);
         assertEquals(saved.getId(), result.getId());
-        assertEquals(brandUpdateDTO.getName(), result.getName());
+        assertEquals(saved.getName(), result.getName());
         assertEquals(saved.getCreationDate(), result.getCreationDate());
         assertNotEquals(saved.getModificationDate(), result.getModificationDate());
         assertNotEquals(saved.getVersionId(), result.getVersionId());
