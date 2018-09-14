@@ -6,9 +6,7 @@ import org.springframework.hateoas.Resource;
 import org.springframework.hateoas.Resources;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import pl.coderslab.domain.dto.CustomerCreationDTO;
 import pl.coderslab.domain.dto.CustomerDTO;
-import pl.coderslab.domain.dto.CustomerUpdateDTO;
 import pl.coderslab.domain.dto.MachineDTO;
 import pl.coderslab.domain.exceptions.InvalidIdException;
 import pl.coderslab.domain.services.CustomerService;
@@ -55,7 +53,7 @@ public class CustomerRestController {
     }
 
     @PostMapping
-    public ResponseEntity<Resource<CustomerDTO>> addCustomer(@RequestBody @Valid CustomerCreationDTO customerCreationDTO) {
+    public ResponseEntity<Resource<CustomerDTO>> addCustomer(@RequestBody @Valid CustomerDTO customerCreationDTO) {
         CustomerDTO customerDTO = customerService.save(customerCreationDTO);
         Resource<CustomerDTO> resource = assembler.toResource(customerDTO);
         return ResponseEntity.created(linkTo(methodOn(CustomerRestController.class).getOne(customerDTO.getId())).toUri())
@@ -63,7 +61,7 @@ public class CustomerRestController {
     }
 
     @PutMapping("/{id:\\d+}")
-    public Resource<CustomerDTO> updateCustomer(@PathVariable Long id, @RequestBody @Valid CustomerUpdateDTO customerUpdateDTO) {
+    public Resource<CustomerDTO> updateCustomer(@PathVariable Long id, @RequestBody @Valid CustomerDTO customerUpdateDTO) {
         if(!id.equals(customerUpdateDTO.getId())){
             throw new InvalidIdException();
         }

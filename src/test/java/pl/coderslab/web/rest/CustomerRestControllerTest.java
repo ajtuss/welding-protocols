@@ -11,9 +11,7 @@ import org.springframework.hateoas.MediaTypes;
 import org.springframework.http.HttpHeaders;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
-import pl.coderslab.domain.dto.CustomerCreationDTO;
 import pl.coderslab.domain.dto.CustomerDTO;
-import pl.coderslab.domain.dto.CustomerUpdateDTO;
 import pl.coderslab.domain.dto.MachineDTO;
 import pl.coderslab.domain.services.CustomerService;
 import pl.coderslab.web.rest.assemblers.CustomerResourceAssembler;
@@ -51,10 +49,10 @@ public class CustomerRestControllerTest {
     private static final CustomerDTO CUSTOMER_2 = new CustomerDTO(2L, "FIRMA 2",
             "FIRMA 2 SP. z O.O.", "CITY", "00-000", "Street 14",
             "firma2@firma2.pl", "725-18-01-126", DATE_TIME, DATE_TIME, 1L);
-    private static final CustomerCreationDTO CUSTOMER_CREATION_1 = new CustomerCreationDTO("FIRMA",
+    private static final CustomerDTO CUSTOMER_CREATION_1 = new CustomerDTO("FIRMA",
             "FIRMA SP. z O.O.", "CITY", "00-000", "Street 14",
             "firma@firma.pl", "123-456-32-18");
-    private static final CustomerUpdateDTO CUSTOMER_UPDATE_1 = new CustomerUpdateDTO(1L, "FIRMA",
+    private static final CustomerDTO CUSTOMER_UPDATE_1 = new CustomerDTO(1L, "FIRMA",
             "FIRMA SP. z O.O.", "CITY", "00-000", "Street 14",
             "firma@firma.pl", "123-456-32-18", 1L);
     private static final CustomerDTO CUSTOMER_AFTER_UPDATE_1 = new CustomerDTO(1L, "FIRMA",
