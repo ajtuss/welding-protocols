@@ -46,11 +46,12 @@ public class WelderModelServiceImplTest {
     @Test
     public void findById() {
 
-        brandRepository.findById(1L);
+        brandRepository.findById(1L);//todo
     }
 
     @Test
     public void findAll() {
+        //todo
     }
 
     @Test
@@ -121,15 +122,22 @@ public class WelderModelServiceImplTest {
         assertTrue(updated.getVersionId() > saved.getVersionId());
     }
 
+    //todo update when id is null and version id is null ( throws exceptions)
+    //test when mig is set but range is null and other side.
+    //test rangeId before and after update, should be the same
+
     @Test
     public void remove() {
+        //todo
     }
 
     @Test
     public void findBrandByModelId() {
+        //todo
     }
 
     @Test
     public void findAllMachinesByModelId() {
+        //todo
     }
 }

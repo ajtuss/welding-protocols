@@ -69,15 +69,17 @@ public class WelderModelServiceImpl implements WelderModelService {
     public WelderModelDTO update(WelderModelDTO modelDTO) {
         checkRange(modelDTO);
         if (modelDTO.getId() == null || modelDTO.getVersionId() == null) {
-            throw new InvalidRequestException();
+            throw new InvalidRequestException("To update id and versionId can`t be null");
         }
         WelderModel model = modelMapper.map(modelDTO, WelderModel.class);
+
+        setIdInRanges(model);
         Long brandId = model.getBrand().getId();
         model.setBrand(brandRepository.findById(brandId).orElseThrow(() -> new BrandNotFoundException(brandId)));
         WelderModel save = modelRepository.saveAndFlush(model);
+        entityManager.refresh(save);
         return modelMapper.map(save, WelderModelDTO.class);
     }
-
 
     @Override
     public void remove(Long id) {
@@ -117,6 +119,20 @@ public class WelderModelServiceImpl implements WelderModelService {
                 throw new InvalidRequestException("Tig Range can`t be null if Tig is checked");
         } else {
             modelDTO.setTigRange(null);
+        }
+    }
+
+    private void setIdInRanges(WelderModel model) {
+        WelderModel oldModel = modelRepository.findById(model.getId())
+                                              .orElseThrow(() -> new WelderModelNotFoundException(model.getId()));
+        if(oldModel.getMigRange()!= null && model.getMig()){
+            model.getMigRange().setId(oldModel.getMigRange().getId());
+        }
+        if(oldModel.getMmaRange()!= null && model.getMma()){
+            model.getMmaRange().setId(oldModel.getMmaRange().getId());
+        }
+        if(oldModel.getTigRange()!= null && model.getTig()){
+            model.getTigRange().setId(oldModel.getTigRange().getId());
         }
     }
 }
