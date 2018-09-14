@@ -1,15 +1,11 @@
 package pl.coderslab.domain.dto;
 
-import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 import org.springframework.hateoas.core.Relation;
 
 import java.time.LocalDateTime;
 
 @Data
-@AllArgsConstructor
-@NoArgsConstructor
 @Relation(value = "brand", collectionRelation = "brands")
 public class BrandDTO {
 
@@ -19,4 +15,19 @@ public class BrandDTO {
     private LocalDateTime modificationDate;
     private Long versionId;
 
+
+    public BrandDTO() {
+    }
+
+    public BrandDTO(String name) {
+        this.name = name;
+    }
+
+    public BrandDTO(Long id, String name, LocalDateTime creationDate, LocalDateTime modificationDate, Long versionId) {
+        this.id = id;
+        this.name = name;
+        this.creationDate = creationDate;
+        this.modificationDate = modificationDate;
+        this.versionId = versionId;
+    }
 }
