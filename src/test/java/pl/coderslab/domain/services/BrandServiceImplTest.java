@@ -66,8 +66,8 @@ public class BrandServiceImplTest {
         assertEquals(saved.getId(), result.getId());
         assertEquals(saved.getName(), result.getName());
         assertEquals(saved.getCreationDate(), result.getCreationDate());
-        assertNotEquals(saved.getModificationDate(), result.getModificationDate());
-        assertNotEquals(saved.getVersionId(), result.getVersionId());
+        assertTrue(result.getModificationDate().isAfter(saved.getModificationDate()));
+        assertTrue(result.getVersionId() > saved.getVersionId());
     }
 
     @Test
