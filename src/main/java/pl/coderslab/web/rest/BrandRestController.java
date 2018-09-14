@@ -4,11 +4,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.hateoas.MediaTypes;
 import org.springframework.hateoas.Resource;
 import org.springframework.hateoas.Resources;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import pl.coderslab.domain.dto.BrandCreationDTO;
 import pl.coderslab.domain.dto.BrandDTO;
-import pl.coderslab.domain.dto.BrandUpdateDTO;
 import pl.coderslab.domain.dto.WelderModelDTO;
 import pl.coderslab.domain.exceptions.InvalidIdException;
 import pl.coderslab.domain.services.BrandService;
@@ -23,7 +22,7 @@ import static org.springframework.hateoas.mvc.ControllerLinkBuilder.linkTo;
 import static org.springframework.hateoas.mvc.ControllerLinkBuilder.methodOn;
 
 @RestController
-@RequestMapping(value = "/api/brands", consumes = MediaTypes.HAL_JSON_UTF8_VALUE, produces = MediaTypes.HAL_JSON_UTF8_VALUE)
+@RequestMapping(value = "/api/brands", consumes = {MediaTypes.HAL_JSON_UTF8_VALUE, MediaType.APPLICATION_JSON_UTF8_VALUE}, produces = MediaTypes.HAL_JSON_UTF8_VALUE)
 public class BrandRestController {
 
     private final BrandService brandService;
@@ -63,19 +62,19 @@ public class BrandRestController {
     }
 
     @PostMapping
-    public ResponseEntity<Resource<BrandDTO>> addBrand(@RequestBody @Valid BrandCreationDTO brandCreationDTO) {
-        BrandDTO brandDTO = brandService.saveBrand(brandCreationDTO);
+    public ResponseEntity<Resource<BrandDTO>> addBrand(@RequestBody @Valid BrandDTO brand) {
+        BrandDTO brandDTO = brandService.saveBrand(brand);
         Resource<BrandDTO> resource = assembler.toResource(brandDTO);
         return ResponseEntity.created(linkTo(methodOn(BrandRestController.class).getOne(brandDTO.getId())).toUri())
                              .body(resource);
     }
 
     @PutMapping(value = "/{id:\\d+}")
-    public Resource<BrandDTO> editBrand(@PathVariable Long id, @RequestBody @Valid BrandUpdateDTO brandUpdateDTO) {
-        if (!id.equals(brandUpdateDTO.getId())) {
+    public Resource<BrandDTO> editBrand(@PathVariable Long id, @RequestBody @Valid BrandDTO brand) {
+        if (!id.equals(brand.getId())) {
             throw new InvalidIdException();
         }
-        BrandDTO brandDTO = brandService.updateBrand(brandUpdateDTO);
+        BrandDTO brandDTO = brandService.updateBrand(brand);
         return assembler.toResource(brandDTO);
     }
 
