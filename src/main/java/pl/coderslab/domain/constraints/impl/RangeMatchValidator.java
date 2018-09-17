@@ -2,11 +2,12 @@ package pl.coderslab.domain.constraints.impl;
 
 import org.apache.commons.beanutils.PropertyUtils;
 import pl.coderslab.domain.constraints.RangeMatch;
+import pl.coderslab.domain.dto.RangeDTO;
 
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
 
-public class RangeMatchValidator implements ConstraintValidator<RangeMatch, Object> {
+public class RangeMatchValidator implements ConstraintValidator<RangeMatch, RangeDTO> {
 
     private String minFieldName;
     private String maxFieldName;
@@ -18,14 +19,13 @@ public class RangeMatchValidator implements ConstraintValidator<RangeMatch, Obje
     }
 
     @Override
-    public boolean isValid(Object value, ConstraintValidatorContext context) {
+    public boolean isValid(RangeDTO value, ConstraintValidatorContext context) {
         boolean matches = false;
         try {
             Double minValue = (Double) PropertyUtils.getProperty(value, minFieldName);
             Double maxValue = (Double) PropertyUtils.getProperty(value, maxFieldName);
             matches = maxValue > minValue;
         } catch (Exception ignore) {
-
         }
 
         return matches;
