@@ -20,14 +20,6 @@ public interface MachineService {
 
     void remove(Long id);
 
-    List<CustomerDTO> findAllCustomers();
-
-    List<BrandDTO> findAllBrands();
-
-    List<BrandDTO> findAllBrands(Long customerId);
-
-    List<WelderModelDTO> findAllMachines(Long customerId, Long brandId);
-
     WelderModelDTO findModelByMachineId(long id);
 
     CustomerDTO findCustomerByMachineId(long id);
