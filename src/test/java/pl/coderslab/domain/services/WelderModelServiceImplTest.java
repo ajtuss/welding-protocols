@@ -8,11 +8,19 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.context.annotation.Import;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.junit4.SpringRunner;
+import pl.coderslab.domain.dto.BrandDTO;
 import pl.coderslab.domain.dto.RangeDTO;
 import pl.coderslab.domain.dto.WelderModelDTO;
+import pl.coderslab.domain.entities.WelderModel;
+import pl.coderslab.domain.exceptions.InvalidRequestException;
+import pl.coderslab.domain.exceptions.WelderModelNotFoundException;
 import pl.coderslab.domain.repositories.BrandRepository;
 import pl.coderslab.domain.repositories.WelderModelRepository;
 
+import java.util.List;
+
+import static org.hamcrest.Matchers.containsInAnyOrder;
+import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.*;
 
@@ -44,14 +52,26 @@ public class WelderModelServiceImplTest {
             1L, false, false, false, false, false, false, RANGE_MIG, RANGE_MMA, RANGE_TIG);
 
     @Test
-    public void findById() {
+    public void expectedTrueAfterFindById() {
+        WelderModelDTO saved = modelService.save(MODEL_CREATION_1);
+        WelderModelDTO found = modelService.findById(saved.getId());
+        assertEquals(saved, found);
+    }
 
-        brandRepository.findById(1L);//todo
+    @Test(expected = WelderModelNotFoundException.class)
+    public void expectedExceptionAfterTryFindNotExistingModel(){
+        modelService.findById(Long.MAX_VALUE);
     }
 
     @Test
     public void findAll() {
-        //todo
+        WelderModelDTO model1 = modelService.save(MODEL_CREATION_1);
+        WelderModelDTO model2 = modelService.save(MODEL_CREATION_2);
+
+        List<WelderModelDTO> found = modelService.findAll();
+
+        assertThat(found, containsInAnyOrder(model1, model2));
+        assertThat(found, hasSize(2));
     }
 
     @Test
@@ -75,9 +95,8 @@ public class WelderModelServiceImplTest {
     }
 
     @Test
-    public void expectedNullRangeAfterSaveModelTypeIsFalse(){
+    public void expectedNullRangeAfterSaveModelTypeIsFalse() {
         WelderModelDTO saved = modelService.save(MODEL_CREATION_2);
-        System.out.println(saved);
         assertNotNull(saved);
         assertNotNull(saved.getId());
         assertThat(saved.getBrandId(), is(MODEL_CREATION_2.getBrandId()));
@@ -122,19 +141,52 @@ public class WelderModelServiceImplTest {
         assertTrue(updated.getVersionId() > saved.getVersionId());
     }
 
-    //todo update when id is null and version id is null ( throws exceptions)
-    //test when mig is set but range is null and other side.
-    //test rangeId before and after update, should be the same
+    @Test(expected = InvalidRequestException.class)
+    public void expectedExceptionWhenUpdateWithIdIsNull() {
+        WelderModelDTO saved = modelService.save(MODEL_CREATION_1);
+        saved.setId(null);
+        modelService.update(saved);
+    }
+
+    @Test(expected = InvalidRequestException.class)
+    public void expectedExceptionWhenUpdateWithVersionIdIsNull() {
+        WelderModelDTO saved = modelService.save(MODEL_CREATION_1);
+        saved.setVersionId(null);
+        modelService.update(saved);
+    }
+
+    @Test(expected = InvalidRequestException.class)
+    public void expectedTrueAfterUpdateAndCompare() {
+        WelderModelDTO saved = modelService.save(MODEL_CREATION_1);
+        saved.setVersionId(null);
+        modelService.update(saved);
+    }
+
 
     @Test
-    public void remove() {
-        //todo
+    public void expectedTrueAfetrRemove() {
+        WelderModelDTO saved = modelService.save(MODEL_CREATION_1);
+
+        modelService.remove(saved.getId());
     }
 
     @Test
-    public void findBrandByModelId() {
-        //todo
+    public void expectedNullAfterRemoveAndFind() {
+        WelderModelDTO saved = modelService.save(MODEL_CREATION_1);
+        modelService.remove(saved.getId());
+
+        WelderModel model = modelRepository.findById(saved.getId()).orElse(null);
+        assertNull(model);
     }
+
+
+    @Test
+    public void expectedTrueAfterFindBrandByModelId() {
+        WelderModelDTO saved = modelService.save(MODEL_CREATION_1);
+        BrandDTO brandDTO = modelService.findBrandByModelId(saved.getId());
+        assertNotNull(brandDTO);
+    }
+
 
     @Test
     public void findAllMachinesByModelId() {
