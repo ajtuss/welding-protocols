@@ -11,7 +11,7 @@ import java.util.Objects;
 
 @Entity
 @Table(name = "customers")
-public class Customer extends AbstractEntity{
+public class Customer extends AbstractEntity {
 
     @Column(unique = true)
     private String shortName;
@@ -31,14 +31,14 @@ public class Customer extends AbstractEntity{
     private String nip;
 
     @OneToMany(mappedBy = "customer")
-    private List<Machine> machines=new ArrayList<>();
+    private List<Machine> machines = new ArrayList<>();
 
-    public void addMachine(Machine machine){
+    public void addMachine(Machine machine) {
         machines.add(machine);
         machine.setCustomer(this);
     }
 
-    public void removeMachine(Machine machine){
+    public void removeMachine(Machine machine) {
         machines.remove(machine);
         machine.setCustomer(null);
     }
