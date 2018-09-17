@@ -27,6 +27,12 @@ public class BrandDTO {
         this.name = name;
     }
 
+    public BrandDTO(Long id, @NotNull @Size(min = 3, max = 30) String name, Long versionId) {
+        this.id = id;
+        this.name = name;
+        this.versionId = versionId;
+    }
+
     public BrandDTO(Long id, String name, LocalDateTime creationDate, LocalDateTime modificationDate, Long versionId) {
         this.id = id;
         this.name = name;
