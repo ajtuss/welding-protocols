@@ -1,5 +1,6 @@
 package pl.coderslab.domain.dto;
 
+import lombok.Builder;
 import lombok.Data;
 import org.springframework.hateoas.core.Relation;
 
@@ -8,6 +9,7 @@ import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
 
 @Data
+@Builder
 @Relation(value = "machine", collectionRelation = "machines")
 public class MachineDTO {
 
