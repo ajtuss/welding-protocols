@@ -26,7 +26,7 @@ import static org.junit.Assert.*;
 @RunWith(SpringRunner.class)
 @DataJpaTest
 @Import({WelderModelServiceImpl.class, BrandServiceImpl.class, ModelMapper.class})
-@Sql(value = "/data-test.sql")
+@Sql(value = "/data-brands.sql")
 public class WelderModelServiceImplTest {
 
     @Autowired
@@ -57,7 +57,7 @@ public class WelderModelServiceImplTest {
     }
 
     @Test
-    public void findAll() {
+    public void expectedTrueAfterFindAll() {
         WelderModelDTO model1 = modelService.save(MODEL_CREATION_1);
         WelderModelDTO model2 = modelService.save(MODEL_CREATION_2);
 

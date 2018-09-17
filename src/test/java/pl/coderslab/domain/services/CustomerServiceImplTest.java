@@ -22,7 +22,7 @@ import static org.junit.Assert.*;
 @RunWith(SpringRunner.class)
 @DataJpaTest
 @Import({CustomerServiceImpl.class, ModelMapper.class})
-@Sql(value = "/data-test.sql")
+@Sql(value = "/data-brands.sql")
 public class CustomerServiceImplTest {
 
     @Autowired
