@@ -50,7 +50,7 @@ public class CustomerServiceImpl implements CustomerService {
 
     @Override
     public CustomerDTO findById(Long id) {
-        Customer customer = customerRepository.findById(id).orElseThrow(CustomerNotFoundException::new);
+        Customer customer = customerRepository.findById(id).orElseThrow(() -> new CustomerNotFoundException(id));
         return modelMapper.map(customer,CustomerDTO.class);
     }
 
@@ -64,7 +64,7 @@ public class CustomerServiceImpl implements CustomerService {
 
     @Override
     public void remove(Long id) {
-        Customer customer = customerRepository.findById(id).orElseThrow(CustomerNotFoundException::new);
+        Customer customer = customerRepository.findById(id).orElseThrow(() -> new CustomerNotFoundException(id));
         customerRepository.delete(customer);
     }
 
