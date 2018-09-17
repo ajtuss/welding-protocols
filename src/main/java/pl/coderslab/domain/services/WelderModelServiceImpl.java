@@ -43,7 +43,7 @@ public class WelderModelServiceImpl implements WelderModelService {
 
     @Override
     public WelderModelDTO findById(Long id) {
-        WelderModel model = modelRepository.findById(id).orElse(null);
+        WelderModel model = modelRepository.findById(id).orElseThrow(() -> new WelderModelNotFoundException((id)));
         return modelMapper.map(model, WelderModelDTO.class);
     }
 
