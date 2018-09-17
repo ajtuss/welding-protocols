@@ -23,4 +23,6 @@ public interface MachineRepository extends JpaRepository<Machine, Long> {
 
     @Query("SELECT DISTINCT b FROM Machine m JOIN m.welderModel.brand b WHERE m.customer.id = ?1 ORDER BY b.name ASC")
     List<Brand> findAllBrandsWhereCustomer(Long customerId);
+
+    List<Machine> findByCustomerId(Long customerId);
 }
