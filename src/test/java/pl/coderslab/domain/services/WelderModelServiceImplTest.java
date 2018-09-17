@@ -14,7 +14,6 @@ import pl.coderslab.domain.dto.WelderModelDTO;
 import pl.coderslab.domain.entities.WelderModel;
 import pl.coderslab.domain.exceptions.InvalidRequestException;
 import pl.coderslab.domain.exceptions.WelderModelNotFoundException;
-import pl.coderslab.domain.repositories.BrandRepository;
 import pl.coderslab.domain.repositories.WelderModelRepository;
 
 import java.util.List;
@@ -34,13 +33,7 @@ public class WelderModelServiceImplTest {
     private WelderModelService modelService;
 
     @Autowired
-    private BrandService brandService;
-
-    @Autowired
     private WelderModelRepository modelRepository;
-
-    @Autowired
-    private BrandRepository brandRepository;
 
     private static final RangeDTO RANGE_MIG = new RangeDTO(1., 100., 10., 100.);
     private static final RangeDTO RANGE_MMA = new RangeDTO(2., 200., 20., 200.);
