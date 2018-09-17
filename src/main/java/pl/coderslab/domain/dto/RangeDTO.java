@@ -3,29 +3,34 @@ package pl.coderslab.domain.dto;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import pl.coderslab.domain.constraints.RangeMatch;
 
-import javax.persistence.Column;
+import javax.validation.constraints.DecimalMax;
 import javax.validation.constraints.NotNull;
 
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
+@RangeMatch.List({
+        @RangeMatch(min = "IMin", max = "IMax", message = "iMax must be higher then iMin"),
+        @RangeMatch(min = "UMin", max = "UMax", message = "uMax must be higher then uMin")
+})
 public class RangeDTO {
 
     @NotNull
-    @Column(precision = 4, scale = 1)
+    @DecimalMax("1000")
     private Double iMin;
 
     @NotNull
-    @Column(precision = 4, scale = 1)
+    @DecimalMax("1000")
     private Double iMax;
 
     @NotNull
-    @Column(precision = 5, scale = 2)
+    @DecimalMax("100")
     private Double uMin;
 
     @NotNull
-    @Column(precision = 5, scale = 2)
+    @DecimalMax("100")
     private Double uMax;
 
 }
