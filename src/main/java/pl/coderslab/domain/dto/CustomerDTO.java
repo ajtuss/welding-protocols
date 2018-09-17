@@ -1,21 +1,43 @@
 package pl.coderslab.domain.dto;
 
+import lombok.Builder;
 import lombok.Data;
+import org.hibernate.validator.constraints.pl.NIP;
 import org.springframework.hateoas.core.Relation;
 
+import javax.validation.constraints.Email;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 import java.time.LocalDateTime;
 
 @Data
+@Builder
 @Relation(value = "customer", collectionRelation = "customers")
 public class CustomerDTO {
 
     private Long id;
+
+    @NotNull
+    @Size(min = 3, max = 15)
     private String shortName;
+
+    @NotNull
+    @Size(min = 3)
     private String fullName;
+
+    @NotNull
     private String city;
+
+    @NotNull
     private String zip;
+
+    @NotNull
     private String street;
+
+    @Email
     private String email;
+
+    @NIP
     private String nip;
     private LocalDateTime creationDate;
     private LocalDateTime modificationDate;
