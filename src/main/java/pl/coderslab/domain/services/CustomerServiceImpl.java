@@ -7,9 +7,12 @@ import org.springframework.stereotype.Service;
 import pl.coderslab.domain.dto.CustomerDTO;
 import pl.coderslab.domain.dto.MachineDTO;
 import pl.coderslab.domain.entities.Customer;
+import pl.coderslab.domain.entities.Machine;
 import pl.coderslab.domain.exceptions.CustomerNotFoundException;
 import pl.coderslab.domain.repositories.CustomerRepository;
+import pl.coderslab.domain.repositories.MachineRepository;
 
+import javax.persistence.EntityManager;
 import javax.transaction.Transactional;
 import java.lang.reflect.Type;
 import java.util.List;
@@ -19,12 +22,15 @@ import java.util.List;
 public class CustomerServiceImpl implements CustomerService {
 
     private final CustomerRepository customerRepository;
-
+    private final MachineRepository machineRepository;
+    private final EntityManager entityManager;
     private final ModelMapper modelMapper;
 
     @Autowired
-    public CustomerServiceImpl(CustomerRepository customerRepository, ModelMapper modelMapper) {
+    public CustomerServiceImpl(CustomerRepository customerRepository, MachineRepository machineRepository, EntityManager entityManager, ModelMapper modelMapper) {
         this.customerRepository = customerRepository;
+        this.machineRepository = machineRepository;
+        this.entityManager = entityManager;
         this.modelMapper = modelMapper;
     }
 
@@ -38,8 +44,8 @@ public class CustomerServiceImpl implements CustomerService {
     @Override
     public CustomerDTO save(CustomerDTO customerDTO) {
         Customer customer = modelMapper.map(customerDTO, Customer.class);
-        customerRepository.save(customer);
-        return null; //todo
+        Customer save = customerRepository.save(customer);
+        return modelMapper.map(save, CustomerDTO.class);
     }
 
     @Override
@@ -51,9 +57,9 @@ public class CustomerServiceImpl implements CustomerService {
     @Override
     public CustomerDTO update(CustomerDTO customerDTO) {
         Customer customer = modelMapper.map(customerDTO, Customer.class);
-//        customer.setId(id);
-//        customerRepository.save(customer);
-        return null; //todo
+        Customer updated = customerRepository.saveAndFlush(customer);
+        entityManager.refresh(updated);
+        return modelMapper.map(updated, CustomerDTO.class);
     }
 
     @Override
@@ -64,6 +70,8 @@ public class CustomerServiceImpl implements CustomerService {
 
     @Override
     public List<MachineDTO> findAllMachines(Long id) {
-        return null; //todo
+        List<Machine> machines = machineRepository.findByCustomerId(id);
+        Type resultType = new TypeToken<List<MachineDTO>>() {}.getType();
+        return modelMapper.map(machines, resultType);
     }
 }
