@@ -3,6 +3,8 @@ package pl.coderslab.domain.dto;
 import lombok.Data;
 import org.springframework.hateoas.core.Relation;
 
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
 
 @Data
@@ -10,16 +12,31 @@ import java.time.LocalDateTime;
 public class MachineDTO {
 
     private Long id;
+
+    @NotNull
+    @NotBlank
     private String serialNumber;
+
     private String inwNumber;
+
+    @NotNull
     private Long welderModelId;
+
     private String welderModelName;
+
     private Long welderModelBrandId;
+
     private String welderModelBrandName;
+
+    @NotNull
     private Long customerId;
+
     private String customerShortName;
+
     private LocalDateTime creationDate;
+
     private LocalDateTime modificationDate;
+
     private Long versionId;
 
     public MachineDTO() {
