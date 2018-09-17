@@ -93,4 +93,17 @@ public class WelderModelRestController {
         return new Resources<>(resources,
                 linkTo(methodOn(WelderModelRestController.class).getMachinesByModelId(id)).withSelfRel());
     }
+
+
+//    @ExceptionHandler
+//    @ResponseStatus(HttpStatus.BAD_REQUEST)
+//    public ErrorResponse handleException(MethodArgumentNotValidException exception) {
+//
+//        String errorMsg = exception.getBindingResult().getFieldErrors().stream()
+//                                   .map(DefaultMessageSourceResolvable::getDefaultMessage)
+//                                   .findFirst()
+//                                   .orElse(exception.getMessage());
+//
+//        return ErrorResponse.builder().message(errorMsg).build();
+//    }
 }
