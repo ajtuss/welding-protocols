@@ -46,9 +46,9 @@ public class WelderModelRestControllerTest {
 
     private static final LocalDateTime DATE_TIME = LocalDateTime.now();
     private static final BrandDTO BRAND_1 = new BrandDTO(1L, "Kemppi", DATE_TIME, DATE_TIME, 1L);
-    private static final RangeDTO RANGE_MIG = new RangeDTO(1., 100., 10., 100.);
-    private static final RangeDTO RANGE_MMA = new RangeDTO(2., 200., 20., 200.);
-    private static final RangeDTO RANGE_TIG = new RangeDTO(3., 300., 30., 300.);
+    private static final RangeDTO RANGE_MIG = new RangeDTO(1., 100., 1., 10.);
+    private static final RangeDTO RANGE_MMA = new RangeDTO(2., 200., 2., 20.);
+    private static final RangeDTO RANGE_TIG = new RangeDTO(3., 300., 3., 30.);
     private static final WelderModelDTO MODEL_1 = new WelderModelDTO(1L, "Mastertig 3000", 1L,
             "Kemppi", true, true, true, true, true, false,
             RANGE_MIG, RANGE_MMA, RANGE_TIG, DATE_TIME, DATE_TIME, 1L);

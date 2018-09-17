@@ -47,7 +47,7 @@ public class BrandRestControllerTest {
     private static final BrandDTO BRAND_1 = new BrandDTO(1L, "Kemppi", DATE_TIME, DATE_TIME, 1L);
     private static final BrandDTO BRAND_2 = new BrandDTO(2L, "Fronius", DATE_TIME, DATE_TIME, 1L);
     private static final BrandDTO BRAND_1_AFTER_UPDATE = new BrandDTO(1L, "Kemppi", DATE_TIME, DATE_TIME, 2L);
-    private static final BrandDTO BRAND_UPDATE_1 = new BrandDTO(1L, "Kemppi", null, null, 1L);
+    private static final BrandDTO BRAND_UPDATE_1 = new BrandDTO(1L, "Kemppi", 1L);
 
 
     private static final RangeDTO RANGE_MIG = new RangeDTO(1., 100., 10., 100.);
