@@ -1,9 +1,6 @@
 package pl.coderslab.domain.services;
 
-import pl.coderslab.domain.dto.BrandDTO;
-import pl.coderslab.domain.dto.CustomerDTO;
-import pl.coderslab.domain.dto.MachineDTO;
-import pl.coderslab.domain.dto.WelderModelDTO;
+import pl.coderslab.domain.dto.*;
 
 import java.util.List;
 
@@ -23,4 +20,6 @@ public interface MachineService {
     WelderModelDTO findModelByMachineId(long id);
 
     CustomerDTO findCustomerByMachineId(long id);
+
+    List<ValidProtocolDTO> findValidationsByMachineId(long id);
 }

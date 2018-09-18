@@ -4,10 +4,7 @@ import org.modelmapper.ModelMapper;
 import org.modelmapper.TypeToken;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import pl.coderslab.domain.dto.BrandDTO;
-import pl.coderslab.domain.dto.CustomerDTO;
-import pl.coderslab.domain.dto.MachineDTO;
-import pl.coderslab.domain.dto.WelderModelDTO;
+import pl.coderslab.domain.dto.*;
 import pl.coderslab.domain.entities.Brand;
 import pl.coderslab.domain.entities.Customer;
 import pl.coderslab.domain.entities.Machine;
@@ -91,6 +88,11 @@ public class MachineServiceImpl implements MachineService {
     public CustomerDTO findCustomerByMachineId(long id) {
         Customer customer = customerRepository.findByMachineId(id);
         return modelMapper.map(customer, CustomerDTO.class);
+    }
+
+    @Override
+    public List<ValidProtocolDTO> findValidationsByMachineId(long id) {
+        return null; //todo
     }
 
     private Machine getMachine(MachineDTO machineDTO) {

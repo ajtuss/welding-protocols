@@ -15,6 +15,7 @@ import pl.coderslab.domain.exceptions.InvalidRequestException;
 import pl.coderslab.domain.services.MachineService;
 import pl.coderslab.web.rest.assemblers.CustomerResourceAssembler;
 import pl.coderslab.web.rest.assemblers.MachineResourceAssembler;
+import pl.coderslab.web.rest.assemblers.ValidProtocolResourceAssembler;
 import pl.coderslab.web.rest.assemblers.WelderModelResourceAssembler;
 
 import javax.validation.Valid;
@@ -32,13 +33,15 @@ public class MachineRestController {
     private final MachineResourceAssembler assembler;
     private final WelderModelResourceAssembler modelAssembler;
     private final CustomerResourceAssembler customerAssembler;
+    private final ValidProtocolResourceAssembler protocolAssembler;
 
     @Autowired
-    public MachineRestController(MachineService machineService, MachineResourceAssembler assembler, WelderModelResourceAssembler modelAssembler, CustomerResourceAssembler customerAssembler) {
+    public MachineRestController(MachineService machineService, MachineResourceAssembler assembler, WelderModelResourceAssembler modelAssembler, CustomerResourceAssembler customerAssembler, ValidProtocolResourceAssembler protocolAssembler) {
         this.machineService = machineService;
         this.assembler = assembler;
         this.modelAssembler = modelAssembler;
         this.customerAssembler = customerAssembler;
+        this.protocolAssembler = protocolAssembler;
     }
 
     @GetMapping
@@ -94,6 +97,10 @@ public class MachineRestController {
 
     @GetMapping("/{id:\\d+}/validations")
     public Resources<Resource<ValidProtocolDTO>> getValidationsByMachineId(@PathVariable Long id) {
-        return null;
+        List<Resource<ValidProtocolDTO>> resources = machineService.findValidationsByMachineId(id)
+                                                                 .stream()
+                                                                 .map(protocolAssembler::toResource)
+                                                                 .collect(Collectors.toList());
+        return new Resources<>(resources, linkTo(methodOn(MachineRestController.class).getValidationsByMachineId(id)).withSelfRel());
     }
 }
