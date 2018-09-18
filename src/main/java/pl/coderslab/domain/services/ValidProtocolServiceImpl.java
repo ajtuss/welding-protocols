@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import pl.coderslab.domain.dto.MachineDTO;
 import pl.coderslab.domain.dto.MeasureDTO;
+import pl.coderslab.domain.dto.RangeDTO;
 import pl.coderslab.domain.dto.ValidProtocolDTO;
 import pl.coderslab.domain.entities.*;
 import pl.coderslab.domain.exceptions.InvalidRequestException;
@@ -19,6 +20,8 @@ import pl.coderslab.domain.repositories.WelderModelRepository;
 import javax.transaction.Transactional;
 import javax.validation.constraints.NotNull;
 import java.lang.reflect.Type;
+import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -60,72 +63,14 @@ public class ValidProtocolServiceImpl implements ValidProtocolService {
         if ((type.equals(PowerType.MIG) && !model.getMig()) ||
                 (type.equals(PowerType.MMA) && !model.getMma()) ||
                 (type.equals(PowerType.TIG) && !model.getTig())) {
-            throw new InvalidRequestException("Type is not correct");
+            throw new InvalidRequestException("Validation Type is not correct for this model");
         }
         protocol.setType(type);
-        if (validProtocolDTO.isAuto()) {
-            System.out.println("---->>>>> auto - true");
-//            WelderModel welderModel = protocol.getMachine().getWelderModel();
-//            Double iMin = null;
-//            Double uMin = null;
-//            Double iMax = null;
-//            Double uMax = null;
-//            PowerType type = protocol.getType();
-//            switch (type) {
-//                case MIG:
-//                    iMin = welderModel.getMigImin();
-//                    uMin = welderModel.getMigUmin();
-//                    iMax = welderModel.getMigImax();
-//                    uMax = welderModel.getMigUmax();
-//                    break;
-//                case MMA:
-//                    iMin = welderModel.getMmaImin();
-//                    uMin = welderModel.getMmaUmin();
-//                    iMax = welderModel.getMmaImax();
-//                    uMax = welderModel.getMmaUmax();
-//                    break;
-//                case TIG:
-//                    iMin = welderModel.getTigImin();
-//                    uMin = welderModel.getTigUmin();
-//                    iMax = welderModel.getTigImax();
-//                    uMax = welderModel.getTigUmax();
-//                    break;
-        }
 
-//        System.out.println(validProtocolDTO.getMachineId());
-//        Boolean auto = validProtocolDTO.getAuto();
-//        ValidProtocol protocol = getValidProtocol(validProtocolDTO);
-//
-//            Measure measure1 = new Measure();
-//            measure1.setiAdjust(iMin);
-//            measure1.setuAdjust(uMin);
-//
-//            Measure measure2 = new Measure();
-//            measure2.setiAdjust(iMin);
-//            measure2.setuAdjust(uMin);
-//
-//
-//            Measure measure3 = new Measure();
-//            measure3.setiAdjust((int) ((iMax-iMin)/2)+iMin);
-//            measure3.setuAdjust((int) ((uMax - uMin)/2)+uMin);
-//
-//
-//            Measure measure4 = new Measure();
-//            measure4.setiAdjust(iMin);
-//            measure4.setuAdjust(uMin);
-//
-//
-//            Measure measure5 = new Measure();
-//            measure5.setiAdjust(iMax);
-//            measure5.setuAdjust(uMax);
-//
-//            protocol.addMeasure(measure1);
-//            protocol.addMeasure(measure2);
-//            protocol.addMeasure(measure3);
-//            protocol.addMeasure(measure4);
-//            protocol.addMeasure(measure5);
-//        }
+        List<Measure> measures = generateMeasures(model, type);
+        measures.forEach(measure -> protocol.addMeasure(measure));
         ValidProtocol saved = validProtocolRepository.save(protocol);
+
         return modelMapper.map(saved, ValidProtocolDTO.class);
     }
 
@@ -171,5 +116,39 @@ public class ValidProtocolServiceImpl implements ValidProtocolService {
                                            .orElseThrow(() -> new MachineNotFoundException((machineId)));
         protocol.setMachine(machine);
         return protocol;
+    }
+
+    private List<Measure> generateMeasures(WelderModel model, PowerType type) {
+        Range range = null;
+        int over = 0;
+        double multiply = 0;
+        switch (type){
+            case TIG:
+                range = model.getTigRange();
+                over = 10;
+                multiply = 0.04;
+                break;
+            case MMA:
+                range = model.getMmaRange();
+                over = 20;
+                multiply = 0.04;
+                break;
+            case MIG:
+                range = model.getMigRange();
+                over = 14;
+                multiply = 0.05;
+                break;
+        }
+        List<Measure> result = new ArrayList<>();
+        Double step = (range.getIMax() - range.getIMin())/4;
+        Double current = range.getIMin();
+        for (int i = 0; i < 5; i++) {
+            Measure measure = new Measure();
+            measure.setIAdjust(BigDecimal.valueOf(current));
+            measure.setUAdjust(BigDecimal.valueOf(over + (multiply * current)));
+            result.add(measure);
+            current += step;
+        }
+        return result;
     }
 }
