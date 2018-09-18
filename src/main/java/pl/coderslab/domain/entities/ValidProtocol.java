@@ -32,6 +32,10 @@ public class ValidProtocol extends AbstractEntity {
     @Column(length = 3)
     private PowerType type;
 
+    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+    @JoinColumn(name = "protocol_id")
+    private DBFile protocol;
+
     public void addMeasure(Measure measure) {
         measures.add(measure);
         measure.setValidProtocol(this);
