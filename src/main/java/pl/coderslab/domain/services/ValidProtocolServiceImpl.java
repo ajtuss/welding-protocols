@@ -4,15 +4,20 @@ import org.modelmapper.ModelMapper;
 import org.modelmapper.TypeToken;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import pl.coderslab.domain.dto.MachineDTO;
 import pl.coderslab.domain.dto.MeasureDTO;
 import pl.coderslab.domain.dto.ValidProtocolDTO;
 import pl.coderslab.domain.entities.*;
+import pl.coderslab.domain.exceptions.InvalidRequestException;
+import pl.coderslab.domain.exceptions.MachineNotFoundException;
+import pl.coderslab.domain.exceptions.ValidProtocolNotFoundException;
 import pl.coderslab.domain.repositories.MachineRepository;
 import pl.coderslab.domain.repositories.MeasureRepository;
 import pl.coderslab.domain.repositories.ValidProtocolRepository;
 import pl.coderslab.domain.repositories.WelderModelRepository;
 
 import javax.transaction.Transactional;
+import javax.validation.constraints.NotNull;
 import java.lang.reflect.Type;
 import java.util.List;
 
@@ -45,11 +50,21 @@ public class ValidProtocolServiceImpl implements ValidProtocolService {
     }
 
     @Override
-    public Long save(ValidProtocolDTO validProtocolDTO) {
-//        System.out.println(validProtocolDTO.getMachineId());
-//        Boolean auto = validProtocolDTO.getAuto();
-//        ValidProtocol protocol = getValidProtocol(validProtocolDTO);
-//        if (auto) {
+    public ValidProtocolDTO save(ValidProtocolDTO validProtocolDTO) {
+        ValidProtocol protocol = new ValidProtocol();
+        Machine machine = machineRepository.findById(validProtocolDTO.getMachineId())
+                                           .orElseThrow(() -> new MachineNotFoundException(validProtocolDTO.getMachineId()));
+        protocol.setMachine(machine);
+        WelderModel model = machine.getWelderModel();
+        PowerType type = validProtocolDTO.getType();
+        if ((type.equals(PowerType.MIG) && !model.getMig()) ||
+                (type.equals(PowerType.MMA) && !model.getMma()) ||
+                (type.equals(PowerType.TIG) && !model.getTig())) {
+            throw new InvalidRequestException("Type is not correct");
+        }
+        protocol.setType(type);
+        if (validProtocolDTO.isAuto()) {
+            System.out.println("---->>>>> auto - true");
 //            WelderModel welderModel = protocol.getMachine().getWelderModel();
 //            Double iMin = null;
 //            Double uMin = null;
@@ -75,7 +90,12 @@ public class ValidProtocolServiceImpl implements ValidProtocolService {
 //                    iMax = welderModel.getTigImax();
 //                    uMax = welderModel.getTigUmax();
 //                    break;
-//            }
+        }
+
+//        System.out.println(validProtocolDTO.getMachineId());
+//        Boolean auto = validProtocolDTO.getAuto();
+//        ValidProtocol protocol = getValidProtocol(validProtocolDTO);
+//
 //            Measure measure1 = new Measure();
 //            measure1.setiAdjust(iMin);
 //            measure1.setuAdjust(uMin);
@@ -105,51 +125,50 @@ public class ValidProtocolServiceImpl implements ValidProtocolService {
 //            protocol.addMeasure(measure4);
 //            protocol.addMeasure(measure5);
 //        }
-//        ValidProtocol savedProt = validProtocolRepository.save(protocol);
-//        return savedProt.getId();
-        return null;
+        ValidProtocol saved = validProtocolRepository.save(protocol);
+        return modelMapper.map(saved, ValidProtocolDTO.class);
     }
 
     @Override
     public ValidProtocolDTO findById(Long id) {
-        ValidProtocol protocol = validProtocolRepository.findById(id).get();
+        ValidProtocol protocol = validProtocolRepository.findById(id)
+                                                        .orElseThrow(() -> new ValidProtocolNotFoundException(id));
         return modelMapper.map(protocol, ValidProtocolDTO.class);
     }
 
     @Override
-    public void update(Long id, ValidProtocolDTO validProtocolDTO) {
+    public ValidProtocolDTO update(ValidProtocolDTO validProtocolDTO) {
         ValidProtocol validProtocol = getValidProtocol(validProtocolDTO);
-        validProtocol.setId(id);
-        validProtocolRepository.save(validProtocol);
+        ValidProtocol save = validProtocolRepository.save(validProtocol);
+        return modelMapper.map(save, ValidProtocolDTO.class);
     }
 
     @Override
     public void remove(Long id) {
-        ValidProtocol protocol = validProtocolRepository.findById(id).get();
+        ValidProtocol protocol = validProtocolRepository.findById(id)
+                                                        .orElseThrow(() -> new ValidProtocolNotFoundException(id));
         validProtocolRepository.delete(protocol);
-    }
-
-    @Override
-    public ValidProtocolDTO getNewValidProtocol(Long machineId) {
-        Machine machine = machineRepository.findById(machineId).get();
-        ValidProtocol validProtocol = new ValidProtocol();
-        validProtocol.setMachine(machine);
-        return modelMapper.map(validProtocol, ValidProtocolDTO.class);
     }
 
     @Override
     public List<MeasureDTO> findAllMeasures(Long protocolId) {
         List<Measure> measures = measureRepository.findByValidProtocolId(protocolId);
-        measures.forEach(System.out::println);
         Type resultType = new TypeToken<List<MeasureDTO>>() {
         }.getType();
         return modelMapper.map(measures, resultType);
     }
 
+    @Override
+    public MachineDTO findMachineByValidProtocolId(Long id) {
+        Machine machine = machineRepository.findByValidProtocolId(id);
+        return modelMapper.map(machine, MachineDTO.class);
+    }
+
     private ValidProtocol getValidProtocol(ValidProtocolDTO validDto) {
         Long machineId = validDto.getMachineId();
         ValidProtocol protocol = modelMapper.map(validDto, ValidProtocol.class);
-        Machine machine = machineRepository.findById(machineId).orElse(null);
+        Machine machine = machineRepository.findById(machineId)
+                                           .orElseThrow(() -> new MachineNotFoundException((machineId)));
         protocol.setMachine(machine);
         return protocol;
     }
