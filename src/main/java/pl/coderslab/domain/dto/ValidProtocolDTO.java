@@ -35,10 +35,6 @@ public class ValidProtocolDTO {
 
     @NotNull
     private PowerType type;
-
-    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
-    private boolean auto;
-
     private LocalDateTime creationDate;
     private LocalDateTime modificationDate;
     private Long versionId;
