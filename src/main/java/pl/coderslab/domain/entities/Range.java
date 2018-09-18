@@ -17,16 +17,16 @@ public class Range {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(precision = 4, scale = 1)
+    @Column(precision = 4, scale = 0)
     private Double iMin;
 
-    @Column(precision = 4, scale = 1)
+    @Column(precision = 4, scale = 0)
     private Double iMax;
 
-    @Column(precision = 5, scale = 2)
+    @Column(precision = 4, scale = 1)
     private Double uMin;
 
-    @Column(precision = 5, scale = 2)
+    @Column(precision = 4, scale = 1)
     private Double uMax;
 
     @Override
