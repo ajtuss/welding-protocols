@@ -1,4 +1,4 @@
-package pl.coderslab.web.rest;
+package pl.coderslab.rest;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.hateoas.MediaTypes;
@@ -11,8 +11,8 @@ import pl.coderslab.domain.dto.CustomerDTO;
 import pl.coderslab.domain.dto.MachineDTO;
 import pl.coderslab.domain.exceptions.InvalidRequestException;
 import pl.coderslab.domain.services.CustomerService;
-import pl.coderslab.web.rest.assemblers.CustomerResourceAssembler;
-import pl.coderslab.web.rest.assemblers.MachineResourceAssembler;
+import pl.coderslab.rest.assemblers.CustomerResourceAssembler;
+import pl.coderslab.rest.assemblers.MachineResourceAssembler;
 
 import javax.validation.Valid;
 import java.util.List;

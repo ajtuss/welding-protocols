@@ -1,10 +1,10 @@
-package pl.coderslab.web.rest.assemblers;
+package pl.coderslab.rest.assemblers;
 
 import org.springframework.hateoas.Resource;
 import org.springframework.hateoas.ResourceAssembler;
 import org.springframework.stereotype.Component;
 import pl.coderslab.domain.dto.WelderModelDTO;
-import pl.coderslab.web.rest.WelderModelRestController;
+import pl.coderslab.rest.WelderModelRestController;
 
 import static org.springframework.hateoas.mvc.ControllerLinkBuilder.linkTo;
 import static org.springframework.hateoas.mvc.ControllerLinkBuilder.methodOn;

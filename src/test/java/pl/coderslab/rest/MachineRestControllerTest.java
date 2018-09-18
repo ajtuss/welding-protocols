@@ -1,4 +1,4 @@
-package pl.coderslab.web.rest;
+package pl.coderslab.rest;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.Test;
@@ -14,10 +14,10 @@ import org.springframework.test.web.servlet.MockMvc;
 import pl.coderslab.domain.dto.*;
 import pl.coderslab.domain.entities.PowerType;
 import pl.coderslab.domain.services.MachineService;
-import pl.coderslab.web.rest.assemblers.CustomerResourceAssembler;
-import pl.coderslab.web.rest.assemblers.MachineResourceAssembler;
-import pl.coderslab.web.rest.assemblers.ValidProtocolResourceAssembler;
-import pl.coderslab.web.rest.assemblers.WelderModelResourceAssembler;
+import pl.coderslab.rest.assemblers.CustomerResourceAssembler;
+import pl.coderslab.rest.assemblers.ValidProtocolResourceAssembler;
+import pl.coderslab.rest.assemblers.MachineResourceAssembler;
+import pl.coderslab.rest.assemblers.WelderModelResourceAssembler;
 
 import java.time.LocalDateTime;
 import java.util.Arrays;

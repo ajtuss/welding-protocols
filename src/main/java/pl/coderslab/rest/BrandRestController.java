@@ -1,4 +1,4 @@
-package pl.coderslab.web.rest;
+package pl.coderslab.rest;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.hateoas.MediaTypes;
@@ -11,8 +11,8 @@ import pl.coderslab.domain.dto.BrandDTO;
 import pl.coderslab.domain.dto.WelderModelDTO;
 import pl.coderslab.domain.exceptions.InvalidRequestException;
 import pl.coderslab.domain.services.BrandService;
-import pl.coderslab.web.rest.assemblers.BrandResourceAssembler;
-import pl.coderslab.web.rest.assemblers.WelderModelResourceAssembler;
+import pl.coderslab.rest.assemblers.BrandResourceAssembler;
+import pl.coderslab.rest.assemblers.WelderModelResourceAssembler;
 
 import javax.validation.Valid;
 import java.util.List;

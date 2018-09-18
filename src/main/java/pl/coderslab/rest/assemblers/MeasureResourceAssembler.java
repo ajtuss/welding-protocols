@@ -1,4 +1,4 @@
-package pl.coderslab.web.rest.assemblers;
+package pl.coderslab.rest.assemblers;
 
 import org.springframework.hateoas.Resource;
 import org.springframework.hateoas.ResourceAssembler;

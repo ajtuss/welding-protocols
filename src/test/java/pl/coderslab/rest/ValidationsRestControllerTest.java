@@ -1,4 +1,4 @@
-package pl.coderslab.web.rest;
+package pl.coderslab.rest;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.Test;
@@ -14,7 +14,9 @@ import org.springframework.test.web.servlet.MockMvc;
 import pl.coderslab.domain.dto.*;
 import pl.coderslab.domain.entities.PowerType;
 import pl.coderslab.domain.services.ValidProtocolService;
-import pl.coderslab.web.rest.assemblers.*;
+import pl.coderslab.rest.assemblers.MachineResourceAssembler;
+import pl.coderslab.rest.assemblers.MeasureResourceAssembler;
+import pl.coderslab.rest.assemblers.ValidProtocolResourceAssembler;
 
 import java.time.LocalDateTime;
 import java.util.Arrays;
@@ -25,9 +27,7 @@ import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @RunWith(SpringRunner.class)
 @WebMvcTest(value = ValidationsRestController.class, secure = false)

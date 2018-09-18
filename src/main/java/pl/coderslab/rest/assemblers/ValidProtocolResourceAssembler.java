@@ -1,10 +1,11 @@
-package pl.coderslab.web.rest.assemblers;
+package pl.coderslab.rest.assemblers;
 
 import org.springframework.hateoas.Resource;
 import org.springframework.hateoas.ResourceAssembler;
+import org.springframework.hateoas.mvc.ControllerLinkBuilder;
 import org.springframework.stereotype.Component;
 import pl.coderslab.domain.dto.ValidProtocolDTO;
-import pl.coderslab.web.rest.ValidationsRestController;
+import pl.coderslab.rest.ValidationsRestController;
 
 import static org.springframework.hateoas.mvc.ControllerLinkBuilder.linkTo;
 import static org.springframework.hateoas.mvc.ControllerLinkBuilder.methodOn;
@@ -15,7 +16,7 @@ public class ValidProtocolResourceAssembler implements ResourceAssembler<ValidPr
     @Override
     public Resource<ValidProtocolDTO> toResource(ValidProtocolDTO protocolDTO) {
         return new Resource<>(protocolDTO,
-                linkTo(methodOn(ValidationsRestController.class).getOne(protocolDTO.getId())).withSelfRel(),
+                ControllerLinkBuilder.linkTo(methodOn(ValidationsRestController.class).getOne(protocolDTO.getId())).withSelfRel(),
                 linkTo(methodOn(ValidationsRestController.class).getAll()).withRel("validations"),
                 linkTo(methodOn(ValidationsRestController.class).getMeasures(protocolDTO.getId())).withRel("measures"),
                 linkTo(methodOn(ValidationsRestController.class).getMachines(protocolDTO.getId())).withRel("machines"),

@@ -1,4 +1,4 @@
-package pl.coderslab.web.rest;
+package pl.coderslab.rest;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.Test;
@@ -16,9 +16,9 @@ import pl.coderslab.domain.dto.MachineDTO;
 import pl.coderslab.domain.dto.RangeDTO;
 import pl.coderslab.domain.dto.WelderModelDTO;
 import pl.coderslab.domain.services.WelderModelService;
-import pl.coderslab.web.rest.assemblers.BrandResourceAssembler;
-import pl.coderslab.web.rest.assemblers.MachineResourceAssembler;
-import pl.coderslab.web.rest.assemblers.WelderModelResourceAssembler;
+import pl.coderslab.rest.assemblers.BrandResourceAssembler;
+import pl.coderslab.rest.assemblers.MachineResourceAssembler;
+import pl.coderslab.rest.assemblers.WelderModelResourceAssembler;
 
 import java.time.LocalDateTime;
 import java.util.Arrays;
