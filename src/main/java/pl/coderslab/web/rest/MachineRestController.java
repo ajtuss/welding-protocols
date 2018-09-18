@@ -9,7 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import pl.coderslab.domain.dto.CustomerDTO;
 import pl.coderslab.domain.dto.MachineDTO;
-import pl.coderslab.domain.dto.ValidationDTO;
+import pl.coderslab.domain.dto.ValidProtocolDTO;
 import pl.coderslab.domain.dto.WelderModelDTO;
 import pl.coderslab.domain.exceptions.InvalidRequestException;
 import pl.coderslab.domain.services.MachineService;
@@ -93,7 +93,7 @@ public class MachineRestController {
     }
 
     @GetMapping("/{id:\\d+}/validations")
-    public Resources<Resource<ValidationDTO>> getValidationsByMachineId(@PathVariable Long id) {
+    public Resources<Resource<ValidProtocolDTO>> getValidationsByMachineId(@PathVariable Long id) {
         return null;
     }
 }
