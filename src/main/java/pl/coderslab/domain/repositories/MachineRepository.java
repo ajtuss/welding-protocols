@@ -15,4 +15,6 @@ public interface MachineRepository extends JpaRepository<Machine, Long> {
 
     List<Machine> findByCustomerId(Long customerId);
 
+    @Query("SELECT m FROM Machine m JOIN m.validProtocols v WHERE v.id = ?1")
+    Machine findByValidProtocolId(Long id);
 }
