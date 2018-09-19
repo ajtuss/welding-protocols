@@ -23,4 +23,5 @@ public interface ValidProtocolService {
     MachineDTO findMachineByValidProtocolId(Long id);
 
     void closeProtocol(Long id);
+    void openProtocol(Long id);
 }

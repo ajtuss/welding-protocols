@@ -107,7 +107,22 @@ public class ValidProtocolServiceImpl implements ValidProtocolService {
     @Override
     public void closeProtocol(Long id) {
         ValidProtocol protocol = getProtocol(id);
-        // todo check measures
+        checkResult(protocol);
+        protocol.setFinalized(true);
+        validProtocolRepository.save(protocol);
+    }
+
+    @Override
+    public void openProtocol(Long id) {
+        ValidProtocol protocol = getProtocol(id);
+        protocol.setFinalized(false);
+        protocol.setResult(null);
+        validProtocolRepository.save(protocol);
+    }
+
+    public void checkResult(ValidProtocol validProtocol){
+        //todo get measures, check result and set result in protocol
+        validProtocol.setResult(false);
     }
 
     private ValidProtocol getValidProtocol(ValidProtocolDTO validDto) {
