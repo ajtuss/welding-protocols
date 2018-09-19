@@ -102,4 +102,16 @@ public class ValidationsRestController {
     public Resource<WelderModelDTO> getModels(@PathVariable Long id) {
         return null;
     }
+
+    @GetMapping("/{id:\\d+}/open")
+    public ResponseEntity<?> openProtocol(@PathVariable Long id){
+        validProtocolService.openProtocol(id);
+        return ResponseEntity.noContent().build();
+    }
+
+    @GetMapping("/{id:\\d+}/close")
+    public ResponseEntity<?> closeProtocol(@PathVariable Long id){
+        validProtocolService.closeProtocol(id);
+        return ResponseEntity.noContent().build();
+    }
 }
