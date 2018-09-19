@@ -15,6 +15,7 @@ public class MeasureResourceAssembler implements ResourceAssembler<MeasureDTO, R
     public Resource<MeasureDTO> toResource(MeasureDTO measureDTO) {
         return new Resource<>(measureDTO,
                 linkTo(methodOn(MeasureRestController.class).getOne(measureDTO.getId())).withSelfRel(),
+                linkTo(methodOn(MeasureRestController.class).getAll()).withRel("measures"),
                 linkTo(methodOn(MeasureRestController.class).getValidProtocol(measureDTO.getId())).withRel("validations"));
     }
 }
