@@ -20,7 +20,7 @@ public interface MeasureService {
 
     void remove(Long id);
 
-    ValidProtocolDTO findProtocolByMeasureId();
+    ValidProtocolDTO findProtocolByMeasureId(Long id);
 
 
 }

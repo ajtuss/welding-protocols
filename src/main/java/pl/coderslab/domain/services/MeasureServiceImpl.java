@@ -122,7 +122,7 @@ public class MeasureServiceImpl implements MeasureService {
     }
 
     @Override
-    public ValidProtocolDTO findProtocolByMeasureId() {
+    public ValidProtocolDTO findProtocolByMeasureId(Long id) {
         return null;
     }
 }
