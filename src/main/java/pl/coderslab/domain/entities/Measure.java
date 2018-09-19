@@ -11,27 +11,33 @@ import java.util.Objects;
 @Table(name = "measures")
 public class Measure extends AbstractEntity {
 
-        @ManyToOne(fetch = FetchType.LAZY)
-        @JoinColumn(name = "validprotocol_id")
-        private ValidProtocol validProtocol;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "validprotocol_id")
+    private ValidProtocol validProtocol;
 
     @Column(precision = 4, scale = 0)
-        private BigDecimal iAdjust;
+    private BigDecimal iAdjust;
 
     @Column(precision = 4, scale = 1)
-        private BigDecimal uAdjust;
+    private BigDecimal uAdjust;
 
     @Column(precision = 4, scale = 0)
-        private BigDecimal iPower;
+    private BigDecimal iPower;
 
     @Column(precision = 4, scale = 1)
-        private BigDecimal uPower;
+    private BigDecimal uPower;
 
     @Column(precision = 4, scale = 0)
-        private BigDecimal iValid;
+    private BigDecimal iValid;
 
     @Column(precision = 4, scale = 1)
-        private BigDecimal uValid;
+    private BigDecimal uValid;
 
+    @Column(precision = 4, scale = 1)
+    private BigDecimal iError;
 
+    @Column(precision = 4, scale = 1)
+    private BigDecimal uError;
+
+    private boolean result;
 }

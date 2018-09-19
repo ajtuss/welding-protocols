@@ -23,6 +23,9 @@ public class MeasureDTO {
     private BigDecimal uPower;
     private BigDecimal iValid;
     private BigDecimal uValid;
+    private BigDecimal iError;
+    private BigDecimal uError;
+    private boolean result;
     private LocalDateTime creationDate;
     private LocalDateTime modificationDate;
     private Long versionId;
