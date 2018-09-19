@@ -38,8 +38,39 @@ public class MeasureServiceImpl implements MeasureService {
 
     @Override
     public void generateMeasure(ValidProtocol validProtocol) {
-        PowerType type = validProtocol.getType();
-        WelderModel model = validProtocol.getMachine().getWelderModel();
+        Range range = getRange(validProtocol);
+        BigDecimal step = (range.getIMax().subtract(range.getIMin())).divide(BigDecimal.valueOf(4));
+        BigDecimal current = range.getIMin();
+        for (int i = 0; i < 5; i++) {
+            Measure measure = new Measure();
+            measure.setIAdjust(current);
+            measure.setUAdjust(calculateVoltage(current, validProtocol));
+            validProtocol.addMeasure(measure);
+            current = current.add(step);
+        }
+    }
+
+    private Range getRange(ValidProtocol protocol) {
+        PowerType type = protocol.getType();
+        WelderModel model = protocol.getMachine().getWelderModel();
+        Range range = null;
+        switch (type) {
+            case TIG:
+                range = model.getTigRange();
+                break;
+            case MMA:
+                range = model.getMmaRange();
+                break;
+            case MIG:
+                range = model.getMigRange();
+                break;
+        }
+        return range;
+    }
+
+    private BigDecimal calculateVoltage(BigDecimal current, ValidProtocol protocol) {
+        PowerType type = protocol.getType();
+        WelderModel model = protocol.getMachine().getWelderModel();
         Range range = null;
         int over = 0;
         double multiply = 0;
@@ -60,15 +91,28 @@ public class MeasureServiceImpl implements MeasureService {
                 multiply = 0.05;
                 break;
         }
-        BigDecimal step = (range.getIMax().subtract(range.getIMin())).divide(BigDecimal.valueOf(4));
-        BigDecimal current = range.getIMin();
-        for (int i = 0; i < 5; i++) {
-            Measure measure = new Measure();
-            measure.setIAdjust(current);
-            measure.setUAdjust(BigDecimal.valueOf(over).add(BigDecimal.valueOf(multiply).multiply(current)));
-            validProtocol.addMeasure(measure);
-            current = current.add(step);
+        BigDecimal resultVoltage = BigDecimal.valueOf(over).add(BigDecimal.valueOf(multiply).multiply(current));
+        return checkVoltageRange(resultVoltage, range);
+    }
+
+    private BigDecimal checkVoltageRange(BigDecimal voltage, Range range){
+        if (voltage.compareTo(range.getUMax()) > 0) {
+            return range.getUMax();
         }
+        if (voltage.compareTo(range.getUMin()) < 0){
+            return range.getUMin();
+        }
+        return voltage;
+    }
+
+    private BigDecimal checkCurrentRange(BigDecimal current, Range range){
+        if (current.compareTo(range.getIMax()) > 0) {
+            throw new InvalidRequestException("iAdjust is to high");
+        }
+        if (current.compareTo(range.getIMin()) < 0){
+            throw new InvalidRequestException("iAdjust is to low");
+        }
+        return current;
     }
 
     @Override
@@ -87,7 +131,13 @@ public class MeasureServiceImpl implements MeasureService {
 
     @Override
     public MeasureDTO save(MeasureDTO measureDTO) {
-        Measure measure = mapper.map(measureDTO, Measure.class);
+        ValidProtocol protocol = getProtocol(measureDTO.getValidProtocolId());
+        Measure measure = new Measure();
+        measure.setValidProtocol(protocol);
+        BigDecimal current = checkCurrentRange(measureDTO.getIAdjust(), getRange(protocol));
+        measure.setIAdjust(current);
+        measure.setUAdjust(calculateVoltage(measure.getIAdjust(), protocol));
+
         Long protocolId = measureDTO.getValidProtocolId();
         ValidProtocol validProtocol = protocolRepository.findById(protocolId)
                                                         .orElseThrow(() -> new ValidProtocolNotFoundException(protocolId));
@@ -98,7 +148,7 @@ public class MeasureServiceImpl implements MeasureService {
 
     @Override
     public MeasureDTO update(MeasureDTO measureDTO) {
-        if(measureDTO.getId() == null || measureDTO.getVersionId() == null){
+        if (measureDTO.getId() == null || measureDTO.getVersionId() == null) {
             throw new InvalidRequestException("To update id and versionId can`t be null");
 
         }
@@ -106,7 +156,7 @@ public class MeasureServiceImpl implements MeasureService {
         Long protocolId = measureDTO.getValidProtocolId();
         ValidProtocol validProtocol = protocolRepository.findById(protocolId)
                                                         .orElseThrow(() -> new ValidProtocolNotFoundException(protocolId));
-        if(validProtocol.isFinalized()){
+        if (validProtocol.isFinalized()) {
             throw new InvalidRequestException("Protocol is closed, Cant change measure");
         }
         measure.setValidProtocol(validProtocol);
@@ -124,5 +174,10 @@ public class MeasureServiceImpl implements MeasureService {
     @Override
     public ValidProtocolDTO findProtocolByMeasureId(Long id) {
         return null;
+    }
+
+    private ValidProtocol getProtocol(Long id) {
+        return protocolRepository.findById(id)
+                                 .orElseThrow(() -> new ValidProtocolNotFoundException(id));
     }
 }
