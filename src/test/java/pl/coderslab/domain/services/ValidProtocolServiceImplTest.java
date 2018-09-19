@@ -128,6 +128,22 @@ public class ValidProtocolServiceImplTest {
                                                              .validProtocolId(1L)
                                                              .build();
 
+    private static final MachineDTO MACHINE_1_DB = MachineDTO.builder()
+                                                             .id(1L)
+                                                             .creationDate(LocalDateTime.parse("2018-09-17T13:52:50"))
+                                                             .modificationDate(LocalDateTime.parse("2018-09-17T13:52:50"))
+                                                             .versionId(1L)
+                                                             .welderModelId(2L)
+                                                             .customerId(1L)
+                                                             .serialNumber("1234567")
+                                                             .welderModelName("MasterTig 3000")
+                                                             .welderModelId(2L)
+                                                             .welderModelBrandId(2L)
+                                                             .welderModelBrandName("EWM")
+                                                             .customerId(1L)
+                                                             .customerShortName("Firma")
+                                                             .build();
+
 
     @Test
     public void expectedTrueAfterSaveProtocol() {
@@ -165,13 +181,17 @@ public class ValidProtocolServiceImplTest {
     }
 
     @Test
-    public void findAllMeasures() {
+    public void expectedTrueAfterFindAllMeasures() {
         List<MeasureDTO> found = protocolService.findAllMeasures(PROTOCOL_1_DB.getId());
 
         assertThat(found, contains(MEASURE_1_DB, MEASURE_2_DB, MEASURE_3_DB, MEASURE_4_DB, MEASURE_5_DB));
     }
 
     @Test
-    public void findMachineByValidProtocolId() {
+    public void expectedTrueAfterFindMachineByValidId() {
+
+        MachineDTO found = protocolService.findMachineByValidProtocolId(MACHINE_1_DB.getId());
+
+        assertThat(found, is(MACHINE_1_DB));
     }
 }
