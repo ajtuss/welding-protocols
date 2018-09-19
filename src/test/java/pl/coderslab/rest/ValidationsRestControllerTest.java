@@ -18,6 +18,7 @@ import pl.coderslab.rest.assemblers.MachineResourceAssembler;
 import pl.coderslab.rest.assemblers.MeasureResourceAssembler;
 import pl.coderslab.rest.assemblers.ValidProtocolResourceAssembler;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.Arrays;
 
@@ -47,9 +48,9 @@ public class ValidationsRestControllerTest {
             "FIRMA SP. z O.O.", "CITY", "00-000", "Street 14",
             "firma@firma.pl", "123-456-32-18", DATE_TIME, DATE_TIME, 1L);
     private static final BrandDTO BRAND = new BrandDTO(1L, "Kemppi", DATE_TIME, DATE_TIME, 1L);
-    private static final RangeDTO RANGE_MIG = new RangeDTO(1., 100., 10., 100.);
-    private static final RangeDTO RANGE_MMA = new RangeDTO(2., 200., 20., 200.);
-    private static final RangeDTO RANGE_TIG = new RangeDTO(3., 300., 30., 300.);
+    private static final RangeDTO RANGE_MIG = new RangeDTO(BigDecimal.valueOf(1.),BigDecimal.valueOf( 100.), BigDecimal.valueOf(10.), BigDecimal.valueOf(100.));
+    private static final RangeDTO RANGE_MMA = new RangeDTO(BigDecimal.valueOf(2.), BigDecimal.valueOf(200.), BigDecimal.valueOf(20.), BigDecimal.valueOf(200.));
+    private static final RangeDTO RANGE_TIG = new RangeDTO(BigDecimal.valueOf(3.), BigDecimal.valueOf(300.), BigDecimal.valueOf(30.), BigDecimal.valueOf(300.));
     private static final WelderModelDTO MODEL_1 = new WelderModelDTO(1L, "Mastertig 3000", BRAND.getId(),
             BRAND.getName(), true, true, true, true, true, false,
             RANGE_MIG, RANGE_MMA, RANGE_TIG, DATE_TIME, DATE_TIME, 1L);

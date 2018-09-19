@@ -19,6 +19,7 @@ import pl.coderslab.rest.assemblers.ValidProtocolResourceAssembler;
 import pl.coderslab.rest.assemblers.MachineResourceAssembler;
 import pl.coderslab.rest.assemblers.WelderModelResourceAssembler;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.Arrays;
 
@@ -48,9 +49,9 @@ public class MachineRestControllerTest {
             "FIRMA SP. z O.O.", "CITY", "00-000", "Street 14",
             "firma@firma.pl", "123-456-32-18", DATE_TIME, DATE_TIME, 1L);
     private static final BrandDTO BRAND_1 = new BrandDTO(1L, "Kemppi", DATE_TIME, DATE_TIME, 1L);
-    private static final RangeDTO RANGE_MIG = new RangeDTO(1., 100., 10., 100.);
-    private static final RangeDTO RANGE_MMA = new RangeDTO(2., 200., 20., 200.);
-    private static final RangeDTO RANGE_TIG = new RangeDTO(3., 300., 30., 300.);
+    private static final RangeDTO RANGE_MIG = new RangeDTO(BigDecimal.valueOf(1.),BigDecimal.valueOf( 100.), BigDecimal.valueOf(10.), BigDecimal.valueOf(100.));
+    private static final RangeDTO RANGE_MMA = new RangeDTO(BigDecimal.valueOf(2.), BigDecimal.valueOf(200.), BigDecimal.valueOf(20.), BigDecimal.valueOf(200.));
+    private static final RangeDTO RANGE_TIG = new RangeDTO(BigDecimal.valueOf(3.), BigDecimal.valueOf(300.), BigDecimal.valueOf(30.), BigDecimal.valueOf(300.));
     private static final WelderModelDTO MODEL_1 = new WelderModelDTO(1L, "Mastertig 3000", 1L,
             "Kemppi", true, true, true, true, true, false,
             RANGE_MIG, RANGE_MMA, RANGE_TIG, DATE_TIME, DATE_TIME, 1L);
@@ -307,18 +308,18 @@ public class MachineRestControllerTest {
                .andExpect(jsonPath("$.voltageMeter", is(MODEL_1.getVoltageMeter())))
                .andExpect(jsonPath("$.stepControl", is(MODEL_1.getStepControl())))
                .andExpect(jsonPath("$.stepControl", is(MODEL_1.getStepControl())))
-               .andExpect(jsonPath("$.migRange.imin", is(RANGE_MIG.getIMin())))
-               .andExpect(jsonPath("$.migRange.imax", is(RANGE_MIG.getIMax())))
-               .andExpect(jsonPath("$.migRange.umin", is(RANGE_MIG.getUMin())))
-               .andExpect(jsonPath("$.migRange.umax", is(RANGE_MIG.getUMax())))
-               .andExpect(jsonPath("$.tigRange.imin", is(RANGE_TIG.getIMin())))
-               .andExpect(jsonPath("$.tigRange.imax", is(RANGE_TIG.getIMax())))
-               .andExpect(jsonPath("$.tigRange.umin", is(RANGE_TIG.getUMin())))
-               .andExpect(jsonPath("$.tigRange.umax", is(RANGE_TIG.getUMax())))
-               .andExpect(jsonPath("$.mmaRange.imin", is(RANGE_MMA.getIMin())))
-               .andExpect(jsonPath("$.mmaRange.imax", is(RANGE_MMA.getIMax())))
-               .andExpect(jsonPath("$.mmaRange.umin", is(RANGE_MMA.getUMin())))
-               .andExpect(jsonPath("$.mmaRange.umax", is(RANGE_MMA.getUMax())))
+               .andExpect(jsonPath("$.migRange.imin", is(RANGE_MIG.getIMin().doubleValue())))
+               .andExpect(jsonPath("$.migRange.imax", is(RANGE_MIG.getIMax().doubleValue())))
+               .andExpect(jsonPath("$.migRange.umin", is(RANGE_MIG.getUMin().doubleValue())))
+               .andExpect(jsonPath("$.migRange.umax", is(RANGE_MIG.getUMax().doubleValue())))
+               .andExpect(jsonPath("$.tigRange.imin", is(RANGE_TIG.getIMin().doubleValue())))
+               .andExpect(jsonPath("$.tigRange.imax", is(RANGE_TIG.getIMax().doubleValue())))
+               .andExpect(jsonPath("$.tigRange.umin", is(RANGE_TIG.getUMin().doubleValue())))
+               .andExpect(jsonPath("$.tigRange.umax", is(RANGE_TIG.getUMax().doubleValue())))
+               .andExpect(jsonPath("$.mmaRange.imin", is(RANGE_MMA.getIMin().doubleValue())))
+               .andExpect(jsonPath("$.mmaRange.imax", is(RANGE_MMA.getIMax().doubleValue())))
+               .andExpect(jsonPath("$.mmaRange.umin", is(RANGE_MMA.getUMin().doubleValue())))
+               .andExpect(jsonPath("$.mmaRange.umax", is(RANGE_MMA.getUMax().doubleValue())))
                .andExpect(jsonPath("$.creationDate", is(notNullValue())))
                .andExpect(jsonPath("$.modificationDate", is(notNullValue())))
                .andExpect(jsonPath("$.versionId", is(MODEL_1.getVersionId().intValue())))

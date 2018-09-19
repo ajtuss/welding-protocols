@@ -49,6 +49,7 @@ public class ValidProtocolServiceImplTest {
                                                                        .machineId(1L)
                                                                        .type(PowerType.TIG)
                                                                        .build();
+
     private static final ValidProtocolDTO PROTOCOL_1_DB = ValidProtocolDTO.builder()
                                                                           .id(1L)
                                                                           .creationDate(LocalDateTime.parse("2018-09-18T13:27:26"))

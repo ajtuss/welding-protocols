@@ -7,6 +7,7 @@ import pl.coderslab.domain.constraints.RangeMatch;
 
 import javax.validation.constraints.DecimalMax;
 import javax.validation.constraints.NotNull;
+import java.math.BigDecimal;
 
 @Data
 @AllArgsConstructor
@@ -19,18 +20,18 @@ public class RangeDTO {
 
     @NotNull
     @DecimalMax("1000")
-    private Double iMin;
+    private BigDecimal iMin;
 
     @NotNull
     @DecimalMax("1000")
-    private Double iMax;
+    private BigDecimal iMax;
 
     @NotNull
-    @DecimalMax("100")
-    private Double uMin;
+    @DecimalMax("100.0")
+    private BigDecimal uMin;
 
     @NotNull
-    @DecimalMax("100")
-    private Double uMax;
+    @DecimalMax("100.0")
+    private BigDecimal uMax;
 
 }

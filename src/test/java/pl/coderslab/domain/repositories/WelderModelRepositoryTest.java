@@ -11,6 +11,8 @@ import pl.coderslab.domain.entities.WelderModel;
 
 import javax.persistence.EntityManager;
 
+import java.math.BigDecimal;
+
 import static org.junit.Assert.*;
 
 @RunWith(SpringRunner.class)
@@ -36,9 +38,9 @@ public class WelderModelRepositoryTest {
         model = new WelderModel();
         model.setName("Test model");
 
-        migRange = new Range(null, 1.0, 100.0, 10.0, 100.0);
-        mmaRange = new Range(null, 2.0, 200.0, 20.0, 200.0);
-        tigRange = new Range(null, 3.0, 300.0, 30.0, 300.0);
+        migRange = new Range(null, BigDecimal.valueOf(1.0), BigDecimal.valueOf(100.0), BigDecimal.valueOf(10.0), BigDecimal.valueOf(100.0));
+        mmaRange = new Range(null, BigDecimal.valueOf(2.0), BigDecimal.valueOf(200.0), BigDecimal.valueOf(20.0), BigDecimal.valueOf(200.0));
+        tigRange = new Range(null, BigDecimal.valueOf(3.0), BigDecimal.valueOf(300.0), BigDecimal.valueOf(30.0), BigDecimal.valueOf(300.0));
 
         model.setMigRange(migRange);
         model.setMmaRange(mmaRange);

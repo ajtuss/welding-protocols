@@ -140,14 +140,14 @@ public class ValidProtocolServiceImpl implements ValidProtocolService {
                 break;
         }
         List<Measure> result = new ArrayList<>();
-        Double step = (range.getIMax() - range.getIMin())/4;
-        Double current = range.getIMin();
+        BigDecimal step = (range.getIMax().subtract(range.getIMin())).divide(BigDecimal.valueOf(4));
+        BigDecimal current = range.getIMin();
         for (int i = 0; i < 5; i++) {
             Measure measure = new Measure();
-            measure.setIAdjust(BigDecimal.valueOf(current));
-            measure.setUAdjust(BigDecimal.valueOf(over + (multiply * current)));
+            measure.setIAdjust(current);
+            measure.setUAdjust(BigDecimal.valueOf(over).add(BigDecimal.valueOf(multiply).multiply(current)));
             result.add(measure);
-            current += step;
+            current = current.add(step);
         }
         return result;
     }

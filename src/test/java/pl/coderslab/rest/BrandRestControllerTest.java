@@ -18,6 +18,7 @@ import pl.coderslab.domain.services.BrandService;
 import pl.coderslab.rest.assemblers.BrandResourceAssembler;
 import pl.coderslab.rest.assemblers.WelderModelResourceAssembler;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.Arrays;
 
@@ -50,9 +51,12 @@ public class BrandRestControllerTest {
     private static final BrandDTO BRAND_UPDATE_1 = new BrandDTO(1L, "Kemppi", 1L);
 
 
-    private static final RangeDTO RANGE_MIG = new RangeDTO(1., 100., 10., 100.);
-    private static final RangeDTO RANGE_MMA = new RangeDTO(2., 200., 20., 200.);
-    private static final RangeDTO RANGE_TIG = new RangeDTO(3., 300., 30., 300.);
+    private static final RangeDTO RANGE_MIG = new RangeDTO(BigDecimal.valueOf(1.), BigDecimal.valueOf(100.),
+            BigDecimal.valueOf(10.), BigDecimal.valueOf(100.));
+    private static final RangeDTO RANGE_MMA = new RangeDTO(BigDecimal.valueOf(2.), BigDecimal.valueOf(200.),
+            BigDecimal.valueOf(20.), BigDecimal.valueOf(200.));
+    private static final RangeDTO RANGE_TIG = new RangeDTO(BigDecimal.valueOf(3.), BigDecimal.valueOf(300.),
+            BigDecimal.valueOf(30.), BigDecimal.valueOf(300.));
     private static final WelderModelDTO MODEL_1 = new WelderModelDTO(1L, "Mastertig 3000", 1L,
             "Kemppi", true, true, true, true, true, false,
             RANGE_MIG, RANGE_MMA, RANGE_TIG, DATE_TIME, DATE_TIME, 1L);

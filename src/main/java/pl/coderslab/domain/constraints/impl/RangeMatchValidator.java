@@ -6,6 +6,7 @@ import pl.coderslab.domain.dto.RangeDTO;
 
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
+import java.math.BigDecimal;
 
 public class RangeMatchValidator implements ConstraintValidator<RangeMatch, RangeDTO> {
 
@@ -20,14 +21,14 @@ public class RangeMatchValidator implements ConstraintValidator<RangeMatch, Rang
 
     @Override
     public boolean isValid(RangeDTO value, ConstraintValidatorContext context) {
-        boolean matches = false;
+        int matches = -1;
         try {
-            Double minValue = (Double) PropertyUtils.getProperty(value, minFieldName);
-            Double maxValue = (Double) PropertyUtils.getProperty(value, maxFieldName);
-            matches = maxValue > minValue;
+            BigDecimal minValue = (BigDecimal) PropertyUtils.getProperty(value, minFieldName);
+            BigDecimal maxValue = (BigDecimal) PropertyUtils.getProperty(value, maxFieldName);
+            matches = maxValue.compareTo(minValue);
         } catch (Exception ignore) {
         }
 
-        return matches;
+        return matches == 1;
     }
 }

@@ -3,6 +3,7 @@ package pl.coderslab.domain.entities;
 import lombok.*;
 
 import javax.persistence.*;
+import java.math.BigDecimal;
 import java.util.Objects;
 
 @Entity
@@ -18,16 +19,16 @@ public class Range {
     private Long id;
 
     @Column(precision = 4, scale = 0)
-    private Double iMin;
+    private BigDecimal iMin;
 
     @Column(precision = 4, scale = 0)
-    private Double iMax;
+    private BigDecimal iMax;
 
     @Column(precision = 4, scale = 1)
-    private Double uMin;
+    private BigDecimal uMin;
 
     @Column(precision = 4, scale = 1)
-    private Double uMax;
+    private BigDecimal uMax;
 
     @Override
     public boolean equals(Object o) {

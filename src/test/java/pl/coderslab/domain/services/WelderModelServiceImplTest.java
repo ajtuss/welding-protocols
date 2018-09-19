@@ -16,6 +16,7 @@ import pl.coderslab.domain.exceptions.InvalidRequestException;
 import pl.coderslab.domain.exceptions.WelderModelNotFoundException;
 import pl.coderslab.domain.repositories.WelderModelRepository;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 import static org.hamcrest.Matchers.containsInAnyOrder;
@@ -35,9 +36,9 @@ public class WelderModelServiceImplTest {
     @Autowired
     private WelderModelRepository modelRepository;
 
-    private static final RangeDTO RANGE_MIG = new RangeDTO(1., 100., 10., 100.);
-    private static final RangeDTO RANGE_MMA = new RangeDTO(2., 200., 20., 200.);
-    private static final RangeDTO RANGE_TIG = new RangeDTO(3., 300., 30., 300.);
+    private static final RangeDTO RANGE_MIG = new RangeDTO(BigDecimal.valueOf(1.0), BigDecimal.valueOf(100.), BigDecimal.valueOf(10.), BigDecimal.valueOf(100.));
+    private static final RangeDTO RANGE_MMA = new RangeDTO(BigDecimal.valueOf(2.), BigDecimal.valueOf(200.), BigDecimal.valueOf(20.), BigDecimal.valueOf(200.));
+    private static final RangeDTO RANGE_TIG = new RangeDTO(BigDecimal.valueOf(3.), BigDecimal.valueOf(300.), BigDecimal.valueOf(30.), BigDecimal.valueOf(300.));
 
     private final static WelderModelDTO MODEL_CREATION_1 = new WelderModelDTO("Mastertig 3000",
             1L, true, true, true, true, true, true, RANGE_MIG, RANGE_MMA, RANGE_TIG);
