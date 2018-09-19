@@ -21,4 +21,6 @@ public interface ValidProtocolService {
     List<MeasureDTO> findAllMeasures(Long id);
 
     MachineDTO findMachineByValidProtocolId(Long id);
+
+    void closeProtocol(Long id);
 }

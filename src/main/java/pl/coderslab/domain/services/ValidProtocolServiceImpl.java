@@ -6,7 +6,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import pl.coderslab.domain.dto.MachineDTO;
 import pl.coderslab.domain.dto.MeasureDTO;
-import pl.coderslab.domain.dto.RangeDTO;
 import pl.coderslab.domain.dto.ValidProtocolDTO;
 import pl.coderslab.domain.entities.*;
 import pl.coderslab.domain.exceptions.InvalidRequestException;
@@ -18,16 +17,14 @@ import pl.coderslab.domain.repositories.ValidProtocolRepository;
 import pl.coderslab.domain.repositories.WelderModelRepository;
 
 import javax.transaction.Transactional;
-import javax.validation.constraints.NotNull;
 import java.lang.reflect.Type;
-import java.math.BigDecimal;
-import java.util.ArrayList;
 import java.util.List;
 
 @Service
 @Transactional
 public class ValidProtocolServiceImpl implements ValidProtocolService {
 
+    private final MeasureService measureService;
     private final ValidProtocolRepository validProtocolRepository;
     private final MachineRepository machineRepository;
     private final WelderModelRepository modelRepository;
@@ -35,7 +32,8 @@ public class ValidProtocolServiceImpl implements ValidProtocolService {
     private final ModelMapper modelMapper;
 
     @Autowired
-    public ValidProtocolServiceImpl(ValidProtocolRepository validProtocolRepository, ModelMapper modelMapper, MachineRepository machineRepository, WelderModelRepository modelRepository, MeasureRepository measureRepository) {
+    public ValidProtocolServiceImpl(MeasureService measureService, ValidProtocolRepository validProtocolRepository, ModelMapper modelMapper, MachineRepository machineRepository, WelderModelRepository modelRepository, MeasureRepository measureRepository) {
+        this.measureService = measureService;
         this.validProtocolRepository = validProtocolRepository;
         this.modelMapper = modelMapper;
         this.machineRepository = machineRepository;
@@ -55,8 +53,7 @@ public class ValidProtocolServiceImpl implements ValidProtocolService {
     @Override
     public ValidProtocolDTO save(ValidProtocolDTO validProtocolDTO) {
         ValidProtocol protocol = new ValidProtocol();
-        Machine machine = machineRepository.findById(validProtocolDTO.getMachineId())
-                                           .orElseThrow(() -> new MachineNotFoundException(validProtocolDTO.getMachineId()));
+        Machine machine = getMachine(validProtocolDTO.getMachineId());
         protocol.setMachine(machine);
         WelderModel model = machine.getWelderModel();
         PowerType type = validProtocolDTO.getType();
@@ -67,31 +64,29 @@ public class ValidProtocolServiceImpl implements ValidProtocolService {
         }
         protocol.setType(type);
 
-        List<Measure> measures = generateMeasures(model, type);
-        measures.forEach(measure -> protocol.addMeasure(measure));
         ValidProtocol saved = validProtocolRepository.save(protocol);
+        measureService.generateMeasure(saved);
 
         return modelMapper.map(saved, ValidProtocolDTO.class);
     }
 
     @Override
     public ValidProtocolDTO findById(Long id) {
-        ValidProtocol protocol = validProtocolRepository.findById(id)
-                                                        .orElseThrow(() -> new ValidProtocolNotFoundException(id));
+        ValidProtocol protocol = getProtocol(id);
         return modelMapper.map(protocol, ValidProtocolDTO.class);
     }
 
     @Override
     public ValidProtocolDTO update(ValidProtocolDTO validProtocolDTO) {
-        ValidProtocol validProtocol = getValidProtocol(validProtocolDTO);
-        ValidProtocol save = validProtocolRepository.save(validProtocol);
-        return modelMapper.map(save, ValidProtocolDTO.class);
+//        ValidProtocol validProtocol = getValidProtocol(validProtocolDTO);
+//        ValidProtocol save = validProtocolRepository.save(validProtocol);
+//        return modelMapper.map(save, ValidProtocolDTO.class);
+        return null;
     }
 
     @Override
     public void remove(Long id) {
-        ValidProtocol protocol = validProtocolRepository.findById(id)
-                                                        .orElseThrow(() -> new ValidProtocolNotFoundException(id));
+        ValidProtocol protocol = getProtocol(id);
         validProtocolRepository.delete(protocol);
     }
 
@@ -109,46 +104,27 @@ public class ValidProtocolServiceImpl implements ValidProtocolService {
         return modelMapper.map(machine, MachineDTO.class);
     }
 
+    @Override
+    public void closeProtocol(Long id) {
+        ValidProtocol protocol = getProtocol(id);
+        // todo check measures
+    }
+
     private ValidProtocol getValidProtocol(ValidProtocolDTO validDto) {
         Long machineId = validDto.getMachineId();
         ValidProtocol protocol = modelMapper.map(validDto, ValidProtocol.class);
-        Machine machine = machineRepository.findById(machineId)
-                                           .orElseThrow(() -> new MachineNotFoundException((machineId)));
+        Machine machine = getMachine(machineId);
         protocol.setMachine(machine);
         return protocol;
     }
 
-    private List<Measure> generateMeasures(WelderModel model, PowerType type) {
-        Range range = null;
-        int over = 0;
-        double multiply = 0;
-        switch (type){
-            case TIG:
-                range = model.getTigRange();
-                over = 10;
-                multiply = 0.04;
-                break;
-            case MMA:
-                range = model.getMmaRange();
-                over = 20;
-                multiply = 0.04;
-                break;
-            case MIG:
-                range = model.getMigRange();
-                over = 14;
-                multiply = 0.05;
-                break;
-        }
-        List<Measure> result = new ArrayList<>();
-        BigDecimal step = (range.getIMax().subtract(range.getIMin())).divide(BigDecimal.valueOf(4));
-        BigDecimal current = range.getIMin();
-        for (int i = 0; i < 5; i++) {
-            Measure measure = new Measure();
-            measure.setIAdjust(current);
-            measure.setUAdjust(BigDecimal.valueOf(over).add(BigDecimal.valueOf(multiply).multiply(current)));
-            result.add(measure);
-            current = current.add(step);
-        }
-        return result;
+    private ValidProtocol getProtocol(Long id) {
+        return validProtocolRepository.findById(id)
+                                      .orElseThrow(() -> new ValidProtocolNotFoundException(id));
+    }
+
+    private Machine getMachine(Long machineId) {
+        return machineRepository.findById(machineId)
+                                .orElseThrow(() -> new MachineNotFoundException(machineId));
     }
 }
