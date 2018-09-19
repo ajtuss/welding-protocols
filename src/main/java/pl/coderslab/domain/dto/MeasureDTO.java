@@ -6,6 +6,8 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.hateoas.core.Relation;
 
+import javax.validation.constraints.DecimalMax;
+import javax.validation.constraints.NotNull;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
@@ -18,8 +20,13 @@ public class MeasureDTO {
 
 
     private Long id;
+    @NotNull
     private Long validProtocolId;
+
+    @NotNull
+    @DecimalMax("1000")
     private BigDecimal iAdjust;
+
     private BigDecimal uAdjust;
     private BigDecimal iPower;
     private BigDecimal uPower;
