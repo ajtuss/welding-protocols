@@ -13,6 +13,7 @@ import pl.coderslab.domain.dto.MeasureDTO;
 import pl.coderslab.domain.dto.ValidProtocolDTO;
 import pl.coderslab.domain.services.MeasureService;
 import pl.coderslab.rest.assemblers.MeasureResourceAssembler;
+import pl.coderslab.rest.assemblers.ValidProtocolResourceAssembler;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -26,11 +27,13 @@ public class MeasureRestController {
 
     private final MeasureService measureService;
     private final MeasureResourceAssembler assembler;
+    private final ValidProtocolResourceAssembler protocolAssembler;
 
     @Autowired
-    public MeasureRestController(MeasureService measureService, MeasureResourceAssembler assembler) {
+    public MeasureRestController(MeasureService measureService, MeasureResourceAssembler assembler, ValidProtocolResourceAssembler protocolAssembler) {
         this.measureService = measureService;
         this.assembler = assembler;
+        this.protocolAssembler = protocolAssembler;
     }
 
 
@@ -52,6 +55,7 @@ public class MeasureRestController {
 
     @GetMapping("/{id:\\d+}/validations")
     public Resource<ValidProtocolDTO> getValidProtocol(@PathVariable Long id) {
-        return null;
+        ValidProtocolDTO protocol = measureService.findProtocolByMeasureId(id);
+        return protocolAssembler.toResource(protocol);
     }
 }
