@@ -15,8 +15,8 @@ INSERT INTO `machines` (`id`,`creation_date`,`modification_date`,`version_id`,`i
 VALUES (1,'2018-09-17 13:52:50','2018-09-17 13:52:50',1,NULL,'1234567',1,2);
 
 INSERT INTO `validations` (`id`,`creation_date`,`modification_date`,`version_id`,`date_validation`,`finalized`,`next_validation`,`protocol_number`,`result`,`type`,`machine_id`,`protocol_id`)
-VALUES (1,'2018-09-18 13:27:26','2018-09-18 13:27:26',1,NULL,NULL,NULL,NULL,NULL,'MMA',1,NULL),
-(2,'2018-09-18 13:27:26','2018-09-18 13:27:26',1,NULL,NULL,NULL,NULL,NULL,'TIG',1,NULL);
+VALUES (1,'2018-09-18 13:27:26','2018-09-18 13:27:26',1,NULL,FALSE ,NULL,NULL,NULL,'MMA',1,NULL),
+(2,'2018-09-18 13:27:26','2018-09-18 13:27:26',1,NULL,FALSE ,NULL,NULL,NULL,'TIG',1,NULL);
 
 INSERT INTO `measures` (`id`,`creation_date`,`modification_date`,`version_id`,`i_adjust`,`i_power`,`i_valid`,`u_adjust`,`u_power`,`u_valid`,`validprotocol_id`) VALUES
 (2,'2018-09-19 09:24:58','2018-09-19 09:24:58',1,79,NULL,NULL,13.2,NULL,NULL,1),

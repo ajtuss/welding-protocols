@@ -1,5 +1,7 @@
 package pl.coderslab.domain.entities;
 
+import lombok.Data;
+
 import javax.persistence.*;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -8,6 +10,7 @@ import java.util.Objects;
 
 @Entity
 @Table(name = "validations")
+@Data
 public class ValidProtocol extends AbstractEntity {
 
     @Column(unique = true)
@@ -24,7 +27,7 @@ public class ValidProtocol extends AbstractEntity {
     private List<Measure> measures = new ArrayList<>();
 
     private Boolean result;
-    private Boolean finalized;
+    private boolean finalized;
     private LocalDateTime dateValidation;
     private LocalDateTime nextValidation;
 
@@ -46,93 +49,4 @@ public class ValidProtocol extends AbstractEntity {
         measure.setValidProtocol(null);
     }
 
-    public String getProtocolNumber() {
-        return protocolNumber;
-    }
-
-    public void setProtocolNumber(String protocolNumber) {
-        this.protocolNumber = protocolNumber;
-    }
-
-    public Machine getMachine() {
-        return machine;
-    }
-
-    public void setMachine(Machine machine) {
-        this.machine = machine;
-    }
-
-    public List<Measure> getMeasures() {
-        return measures;
-    }
-
-    public void setMeasures(List<Measure> measures) {
-        this.measures = measures;
-    }
-
-    public Boolean getResult() {
-        return result;
-    }
-
-    public void setResult(Boolean result) {
-        this.result = result;
-    }
-
-    public Boolean getFinalized() {
-        return finalized;
-    }
-
-    public void setFinalized(Boolean finalized) {
-        this.finalized = finalized;
-    }
-
-    public LocalDateTime getDateValidation() {
-        return dateValidation;
-    }
-
-    public void setDateValidation(LocalDateTime dateValidation) {
-        this.dateValidation = dateValidation;
-    }
-
-    public LocalDateTime getNextValidation() {
-        return nextValidation;
-    }
-
-    public void setNextValidation(LocalDateTime nextValidation) {
-        this.nextValidation = nextValidation;
-    }
-
-    public PowerType getType() {
-        return type;
-    }
-
-    public void setType(PowerType type) {
-        this.type = type;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        if (!super.equals(o)) return false;
-        ValidProtocol that = (ValidProtocol) o;
-        return Objects.equals(protocolNumber, that.protocolNumber) &&
-                Objects.equals(result, that.result) &&
-                Objects.equals(finalized, that.finalized);
-    }
-
-    @Override
-    public int hashCode() {
-
-        return Objects.hash(super.hashCode(), protocolNumber, result, finalized);
-    }
-
-    @Override
-    public String toString() {
-        return "ValidProtocol{" +
-                "protocolNumber='" + protocolNumber + '\'' +
-                ", result=" + result +
-                ", finalized=" + finalized +
-                "} " + super.toString();
-    }
 }

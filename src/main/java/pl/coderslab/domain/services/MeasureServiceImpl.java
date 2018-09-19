@@ -106,7 +106,7 @@ public class MeasureServiceImpl implements MeasureService {
         Long protocolId = measureDTO.getValidProtocolId();
         ValidProtocol validProtocol = protocolRepository.findById(protocolId)
                                                         .orElseThrow(() -> new ValidProtocolNotFoundException(protocolId));
-        if(validProtocol.getFinalized()){
+        if(validProtocol.isFinalized()){
             throw new InvalidRequestException("Protocol is closed, Cant change measure");
         }
         measure.setValidProtocol(validProtocol);

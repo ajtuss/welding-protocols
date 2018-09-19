@@ -31,7 +31,7 @@ public class ValidProtocolDTO {
     private LocalDateTime dateValidation;
     private LocalDateTime nextValidation;
     private Boolean result;
-    private Boolean finalized;
+    private boolean finalized;
 
     @NotNull
     private PowerType type;
