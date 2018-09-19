@@ -28,7 +28,7 @@ import static org.junit.Assert.*;
 
 @RunWith(SpringRunner.class)
 @DataJpaTest
-@Import({ValidProtocolServiceImpl.class, ModelMapper.class})
+@Import({ValidProtocolServiceImpl.class, ModelMapper.class, MeasureServiceImpl.class})
 @Sql(value = "/data-valid.sql")
 public class ValidProtocolServiceImplTest {
 
