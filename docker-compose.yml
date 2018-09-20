@@ -8,10 +8,16 @@ services:
       - MYSQL_DATABASE=${MYSQL_DATABASE}
       - MYSQL_USER=${MYSQL_USER}
       - MYSQL_PASSWORD=${MYSQL_PASSWORD}
+    volumes:
+      - ./src/main/docker/init.sql:/docker-entrypoint-initdb.d/init.sql
+    healthcheck:
+                test: ["CMD", "mysqladmin" ,"ping", "-h", "localhost", "-uroot", "-p${MYSQL_ROOT_PASSWORD}"]
   spring-boot-jpa-docker-webapp:
     image: ajtus/welding-protocols
+    container_name: welding-protocols
     depends_on:
-      - welding-mysql
+      welding-mysql:
+          condition: service_healthy
     ports:
       - 8080:8080
     environment:
