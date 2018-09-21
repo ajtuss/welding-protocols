@@ -13,7 +13,7 @@ services:
     healthcheck:
                 test: ["CMD", "mysqladmin" ,"ping", "-h", "localhost", "-uroot", "-p${MYSQL_ROOT_PASSWORD}"]
   spring-boot-jpa-docker-webapp:
-    image: ajtus/welding-protocols
+    image: ajtuss/welding-protocols
     container_name: welding-protocols
     depends_on:
       welding-mysql:
