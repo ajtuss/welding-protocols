@@ -24,8 +24,8 @@ To build project and start app run following commands:
 ```
 git clone https://github.com/ajtuss/welding-protocols.git
 cd welding-protocols
-mvn clean package docker:build
 docker-compose up
 ```
 
-
+or simply check page:
+[http://51.15.102.169:8080/api](http://51.15.102.169:8080/api)

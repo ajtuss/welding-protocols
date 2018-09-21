@@ -9,7 +9,7 @@
     <packaging>jar</packaging>
 
     <name>welding-protocols</name>
-    <description>REST service for collect data and generate protocols in welding service</description>
+    <description>REST-full app in spring-boot for support welding service.</description>
 
     <parent>
         <groupId>org.springframework.boot</groupId>
