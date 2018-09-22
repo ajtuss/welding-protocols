@@ -11,6 +11,7 @@ REST-full app in spring-boot for support welding service.
 * JPA/Hibernate
 * MySQL
 * JUnit
+* MockMVC
 * Lombok
 * Maven
 * Docker & Docker-compose
