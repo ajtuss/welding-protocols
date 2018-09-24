@@ -1,13 +1,16 @@
 package pl.coderslab.rest;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.ByteArrayResource;
 import org.springframework.hateoas.MediaTypes;
 import org.springframework.hateoas.Resource;
 import org.springframework.hateoas.Resources;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import pl.coderslab.domain.dto.*;
+import pl.coderslab.domain.entities.DBFile;
 import pl.coderslab.domain.exceptions.InvalidRequestException;
 import pl.coderslab.domain.services.ValidProtocolService;
 import pl.coderslab.rest.assemblers.MachineResourceAssembler;
@@ -113,5 +116,15 @@ public class ValidationsRestController {
     public ResponseEntity<?> closeProtocol(@PathVariable Long id){
         validProtocolService.closeProtocol(id);
         return ResponseEntity.noContent().build();
+    }
+
+    @GetMapping("/{id:\\d+}/files")
+    public ResponseEntity<?> getFile(@PathVariable Long id){
+        DBFile dbFile =  validProtocolService.getFile(id);
+
+        return ResponseEntity.ok()
+                .contentType(MediaType.parseMediaType(dbFile.getFileType()))
+                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + dbFile.getFileName() + "\"")
+                .body(new ByteArrayResource(dbFile.getData()));
     }
 }
