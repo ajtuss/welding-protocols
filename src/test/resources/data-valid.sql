@@ -18,9 +18,9 @@ INSERT INTO `validations` (`id`,`creation_date`,`modification_date`,`version_id`
 VALUES (1,'2018-09-18 13:27:26','2018-09-18 13:27:26',1,NULL,FALSE ,NULL,NULL,NULL,'MMA',1,NULL),
 (2,'2018-09-18 13:27:26','2018-09-18 13:27:26',1,NULL,FALSE ,NULL,NULL,NULL,'TIG',1,NULL);
 
-INSERT INTO `measures` (`id`,`creation_date`,`modification_date`,`version_id`,`i_adjust`,`i_power`,`i_valid`,`u_adjust`,`u_power`,`u_valid`,`validprotocol_id`, `i_error`, `u_error`, `result`) VALUES
-(2,'2018-09-19 09:24:58','2018-09-19 09:24:58',1,79,NULL,NULL,13.2,NULL,NULL,1, NULL, NULL, FALSE ),
-(1,'2018-09-19 09:24:58','2018-09-19 09:24:58',1,5,NULL,NULL,10.2,NULL,NULL,1, NULL, NULL, FALSE ),
-(4,'2018-09-19 09:24:58','2018-09-19 09:24:58',1,226,NULL,NULL,19.1,NULL,NULL,1, NULL, NULL, FALSE ),
-(3,'2018-09-19 09:24:58','2018-09-19 09:24:58',1,153,NULL,NULL,16.1,NULL,NULL,1,NULL, NULL, FALSE ),
-(5,'2018-09-19 09:24:58','2018-09-19 09:24:58',1,300,NULL,NULL,22.0,NULL,NULL,1,NULL, NULL, FALSE );
+INSERT INTO `measures` (`id`,`creation_date`,`modification_date`,`version_id`,`i_adjust`,`i_power`,`i_valid`,`u_adjust`,`u_power`,`u_valid`,`validprotocol_id`, `i_error`, `u_error`, `i_result`, `u_result`) VALUES
+(2,'2018-09-19 09:24:58','2018-09-19 09:24:58',1,79,NULL,NULL,13.2,NULL,NULL,1, NULL, NULL, FALSE, FALSE ),
+(1,'2018-09-19 09:24:58','2018-09-19 09:24:58',1,5,NULL,NULL,10.2,NULL,NULL,1, NULL, NULL, FALSE, FALSE ),
+(4,'2018-09-19 09:24:58','2018-09-19 09:24:58',1,226,NULL,NULL,19.1,NULL,NULL,1, NULL, NULL, FALSE, FALSE ),
+(3,'2018-09-19 09:24:58','2018-09-19 09:24:58',1,153,NULL,NULL,16.1,NULL,NULL,1,NULL, NULL, FALSE, FALSE ),
+(5,'2018-09-19 09:24:58','2018-09-19 09:24:58',1,300,NULL,NULL,22.0,NULL,NULL,1,NULL, NULL, FALSE, FALSE );
