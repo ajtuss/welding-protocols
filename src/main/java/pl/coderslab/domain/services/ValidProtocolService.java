@@ -3,6 +3,7 @@ package pl.coderslab.domain.services;
 import pl.coderslab.domain.dto.MachineDTO;
 import pl.coderslab.domain.dto.MeasureDTO;
 import pl.coderslab.domain.dto.ValidProtocolDTO;
+import pl.coderslab.domain.entities.DBFile;
 
 import java.util.List;
 
@@ -24,4 +25,6 @@ public interface ValidProtocolService {
 
     void closeProtocol(Long id);
     void openProtocol(Long id);
+
+    DBFile getFile(Long id);
 }
