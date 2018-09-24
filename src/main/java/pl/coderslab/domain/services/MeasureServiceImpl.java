@@ -95,21 +95,21 @@ public class MeasureServiceImpl implements MeasureService {
         return checkVoltageRange(resultVoltage, range);
     }
 
-    private BigDecimal checkVoltageRange(BigDecimal voltage, Range range){
+    private BigDecimal checkVoltageRange(BigDecimal voltage, Range range) {
         if (voltage.compareTo(range.getUMax()) > 0) {
             return range.getUMax();
         }
-        if (voltage.compareTo(range.getUMin()) < 0){
+        if (voltage.compareTo(range.getUMin()) < 0) {
             return range.getUMin();
         }
         return voltage;
     }
 
-    private BigDecimal checkCurrentRange(BigDecimal current, Range range){
+    private BigDecimal checkCurrentRange(BigDecimal current, Range range) {
         if (current.compareTo(range.getIMax()) > 0) {
             throw new InvalidRequestException("iAdjust is to high");
         }
-        if (current.compareTo(range.getIMin()) < 0){
+        if (current.compareTo(range.getIMin()) < 0) {
             throw new InvalidRequestException("iAdjust is to low");
         }
         return current;
@@ -152,17 +152,57 @@ public class MeasureServiceImpl implements MeasureService {
             throw new InvalidRequestException("To update id and versionId can`t be null");
 
         }
-        Measure measure = mapper.map(measureDTO, Measure.class);
-        Long protocolId = measureDTO.getValidProtocolId();
-        ValidProtocol validProtocol = protocolRepository.findById(protocolId)
-                                                        .orElseThrow(() -> new ValidProtocolNotFoundException(protocolId));
+        Measure measure = measureRepository.findById(measureDTO.getId())
+                                           .orElseThrow(() -> new MeasureNotFoundException(measureDTO.getId()));
+        ValidProtocol validProtocol = measure.getValidProtocol();
+
         if (validProtocol.isFinalized()) {
             throw new InvalidRequestException("Protocol is closed, Cant change measure");
         }
-        measure.setValidProtocol(validProtocol);
+        measure.setIPower(measureDTO.getIPower());
+        measure.setUPower(measureDTO.getUPower());
+        measure.setIValid(measureDTO.getIValid());
+        measure.setUValid(measureDTO.getUValid());
+
+        Range range = getRange(validProtocol);
+
+        if (measure.getIPower() != null && measure.getIValid() != null) {
+            BigDecimal diff = measure.getIPower().subtract(measure.getIValid());
+            measure.setIError(diff);
+            BigDecimal maxIError = calculateMaxIError(range, measure.getIAdjust());
+            System.out.println(maxIError);
+            measure.setIResult(diff.abs().compareTo(maxIError) < 1);
+        }
+        if (measure.getUAdjust() != null && measure.getUPower() != null && measure.getUValid() != null) {
+            BigDecimal diff = measure.getUPower().subtract(measure.getUValid());
+            measure.setUError(diff);
+            BigDecimal maxUError = calculateMaxUError(range, measure.getUAdjust());
+            System.out.println(maxUError);
+            measure.setUResult(diff.abs().compareTo(maxUError) < 1);
+        }
         Measure save = measureRepository.saveAndFlush(measure);
         entityManager.refresh(save);
         return mapper.map(save, MeasureDTO.class);
+    }
+
+    private BigDecimal calculateMaxIError(Range range, BigDecimal iAdjust) {
+        BigDecimal diff = range.getIMax().subtract(range.getIMin());
+        BigDecimal quarter = diff.divide(BigDecimal.valueOf(4));
+        BigDecimal firstQuarter = quarter.add(range.getIMin());
+        if (iAdjust.compareTo(firstQuarter) < 1) {
+            return range.getIMax().multiply(BigDecimal.valueOf(0.05));
+        }
+        return iAdjust.multiply(BigDecimal.valueOf(0.05));
+    }
+
+    private BigDecimal calculateMaxUError(Range range, BigDecimal uAdjust) {
+        BigDecimal diff = range.getUMax().subtract(range.getUMin());
+        BigDecimal quarter = diff.divide(BigDecimal.valueOf(4));
+        BigDecimal firstQuarter = quarter.add(range.getUMin());
+        if (uAdjust.compareTo(firstQuarter) < 1) {
+            return range.getUMax().multiply(BigDecimal.valueOf(0.05));
+        }
+        return uAdjust.multiply(BigDecimal.valueOf(0.05));
     }
 
     @Override
@@ -177,6 +217,7 @@ public class MeasureServiceImpl implements MeasureService {
     }
 
     private ValidProtocol getProtocol(Long id) {
+        if(id == null) throw new InvalidRequestException("validationProtocol can`t be null");
         return protocolRepository.findById(id)
                                  .orElseThrow(() -> new ValidProtocolNotFoundException(id));
     }
