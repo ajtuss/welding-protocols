@@ -1,5 +1,6 @@
 package pl.coderslab.domain.dto;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -20,10 +21,8 @@ public class MeasureDTO {
 
 
     private Long id;
-    @NotNull
     private Long validProtocolId;
 
-    @NotNull
     @DecimalMax("1000")
     private BigDecimal iAdjust;
 
@@ -34,7 +33,9 @@ public class MeasureDTO {
     private BigDecimal uValid;
     private BigDecimal iError;
     private BigDecimal uError;
-    private boolean result;
+    private boolean iResult;
+    private boolean uResult;
+
     private LocalDateTime creationDate;
     private LocalDateTime modificationDate;
     private Long versionId;

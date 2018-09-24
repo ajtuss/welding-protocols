@@ -39,5 +39,6 @@ public class Measure extends AbstractEntity {
     @Column(precision = 4, scale = 1)
     private BigDecimal uError;
 
-    private boolean result;
+    private boolean iResult;
+    private boolean uResult;
 }
