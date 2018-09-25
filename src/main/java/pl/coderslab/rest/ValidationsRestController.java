@@ -13,9 +13,7 @@ import pl.coderslab.domain.dto.*;
 import pl.coderslab.domain.entities.DBFile;
 import pl.coderslab.domain.exceptions.InvalidRequestException;
 import pl.coderslab.domain.services.ValidProtocolService;
-import pl.coderslab.rest.assemblers.MachineResourceAssembler;
-import pl.coderslab.rest.assemblers.MeasureResourceAssembler;
-import pl.coderslab.rest.assemblers.ValidProtocolResourceAssembler;
+import pl.coderslab.rest.assemblers.*;
 
 import javax.validation.Valid;
 import java.util.List;
@@ -32,13 +30,17 @@ public class ValidationsRestController {
     private final ValidProtocolResourceAssembler assembler;
     private final MachineResourceAssembler machineAssembler;
     private final MeasureResourceAssembler measureAssembler;
+    private final CustomerResourceAssembler customerAssembler;
+    private final WelderModelResourceAssembler modelAssembler;
     private final ValidProtocolService validProtocolService;
 
     @Autowired
-    public ValidationsRestController(ValidProtocolResourceAssembler assembler, MachineResourceAssembler machineAssembler, MeasureResourceAssembler measureAssembler, ValidProtocolService validProtocolService) {
+    public ValidationsRestController(ValidProtocolResourceAssembler assembler, MachineResourceAssembler machineAssembler, MeasureResourceAssembler measureAssembler, CustomerResourceAssembler customerAssembler, WelderModelResourceAssembler modelAssembler, ValidProtocolService validProtocolService) {
         this.assembler = assembler;
         this.machineAssembler = machineAssembler;
         this.measureAssembler = measureAssembler;
+        this.customerAssembler = customerAssembler;
+        this.modelAssembler = modelAssembler;
         this.validProtocolService = validProtocolService;
     }
 
@@ -98,12 +100,14 @@ public class ValidationsRestController {
 
     @GetMapping("/{id:\\d+}/customers")
     public Resource<CustomerDTO> getCustomers(@PathVariable Long id) {
-        return null;
+        CustomerDTO customer = validProtocolService.findCustomerByValidProtocolId(id);
+        return customerAssembler.toResource(customer);
     }
 
     @GetMapping("/{id:\\d+}/models")
     public Resource<WelderModelDTO> getModels(@PathVariable Long id) {
-        return null;
+        WelderModelDTO welderModelDTO = validProtocolService.findWelderModelByValidProtocolId(id);
+        return modelAssembler.toResource(welderModelDTO);
     }
 
     @GetMapping("/{id:\\d+}/open")
