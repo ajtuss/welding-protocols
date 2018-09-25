@@ -4,21 +4,16 @@ import org.modelmapper.ModelMapper;
 import org.modelmapper.TypeToken;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import pl.coderslab.domain.dto.MachineDTO;
-import pl.coderslab.domain.dto.MeasureDTO;
-import pl.coderslab.domain.dto.ValidProtocolDTO;
+import org.xhtmlrenderer.pdf.ITextRenderer;
+import pl.coderslab.domain.dto.*;
 import pl.coderslab.domain.entities.*;
 import pl.coderslab.domain.exceptions.*;
 import pl.coderslab.domain.repositories.*;
 
-import com.itextpdf.text.Document;
-import com.itextpdf.text.pdf.PdfWriter;
-import com.itextpdf.tool.xml.XMLWorkerHelper;
-
 import javax.transaction.Transactional;
-import java.io.*;
+import java.io.ByteArrayOutputStream;
+import java.io.OutputStream;
 import java.lang.reflect.Type;
-import java.nio.charset.StandardCharsets;
 import java.util.List;
 
 @Service
@@ -29,17 +24,19 @@ public class ValidProtocolServiceImpl implements ValidProtocolService {
     private final ValidProtocolRepository validProtocolRepository;
     private final MachineRepository machineRepository;
     private final WelderModelRepository modelRepository;
+    private final CustomerRepository customerRepository;
     private final MeasureRepository measureRepository;
     private final DBFileRepository fileRepository;
     private final ModelMapper modelMapper;
 
     @Autowired
-    public ValidProtocolServiceImpl(MeasureService measureService, ValidProtocolRepository validProtocolRepository, ModelMapper modelMapper, MachineRepository machineRepository, WelderModelRepository modelRepository, MeasureRepository measureRepository, DBFileRepository fileRepository) {
+    public ValidProtocolServiceImpl(MeasureService measureService, ValidProtocolRepository validProtocolRepository, ModelMapper modelMapper, MachineRepository machineRepository, WelderModelRepository modelRepository, CustomerRepository customerRepository, MeasureRepository measureRepository, DBFileRepository fileRepository) {
         this.measureService = measureService;
         this.validProtocolRepository = validProtocolRepository;
         this.modelMapper = modelMapper;
         this.machineRepository = machineRepository;
         this.modelRepository = modelRepository;
+        this.customerRepository = customerRepository;
         this.measureRepository = measureRepository;
         this.fileRepository = fileRepository;
     }
@@ -117,28 +114,85 @@ public class ValidProtocolServiceImpl implements ValidProtocolService {
     }
 
     private void generatePdf(ValidProtocol protocol) {
-        String html = "<html>\n<head>\n<style>\n.handwriting {\n  font-family: 'handwriting', serif;\n" +
-                "}\n.arabic {\n  font-family: 'arabic', serif;\n}\n" +
-                ".deja {\n  /* Contains glyphs for many languages. */\n  font-family: 'deja-sans', sans-serif;\n" +
-                "}\n </style>\n</head>\n<body>\n\n" +
-                "<div class=\"handwriting\" style=\"text-align:center;font-size: 90px;color:orange;\">\n" +
-                "Hello World!\n</div>\n</body>\n</html>";
+        String html = "<!DOCTYPE html>\n" +
+                "<html lang=\"en\">\n" +
+                "<head>\n" +
+                "  <title>Bootstrap Example</title>\n" +
+                "  <meta charset=\"utf-8\"></meta>\n" +
+                "  <meta name=\"viewport\" content=\"width=device-width, initial-scale=1\"></meta>\n" +
+                "  <link rel=\"stylesheet\" href=\"https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css\"></link>\n" +
+                "</head>\n" +
+                "<body>\n" +
+                "\n" +
+                "<div class=\"container\">\n" +
+                "  <h2>Contextual Classes</h2>\n" +
+                "  <p>Contextual classes can be used to color table rows or table cells. The classes that can be used are: .active, .success, .info, .warning, and .danger.</p>\n" +
+                "  <table class=\"table table-bordered\">\n" +
+                "    <thead>\n" +
+                "      <tr>\n" +
+                "        <th>Firstname</th>\n" +
+                "        <th>Lastname</th>\n" +
+                "        <th>Email</th>\n" +
+                "      </tr>\n" +
+                "    </thead>\n" +
+                "    <tbody>\n" +
+                "      <tr>\n" +
+                "        <td>Default</td>\n" +
+                "        <td>Defaultson</td>\n" +
+                "        <td>def@somemail.com</td>\n" +
+                "      </tr>      \n" +
+                "      <tr class=\"success\">\n" +
+                "        <td>Success</td>\n" +
+                "        <td>Doe</td>\n" +
+                "        <td>john@example.com</td>\n" +
+                "      </tr>\n" +
+                "      <tr class=\"danger\">\n" +
+                "        <td>Danger</td>\n" +
+                "        <td>Moe</td>\n" +
+                "        <td>mary@example.com</td>\n" +
+                "      </tr>\n" +
+                "      <tr class=\"info\">\n" +
+                "        <td>Info</td>\n" +
+                "        <td>Dooley</td>\n" +
+                "        <td>july@example.com</td>\n" +
+                "      </tr>\n" +
+                "      <tr class=\"warning\">\n" +
+                "        <td>Warning</td>\n" +
+                "        <td>Refs</td>\n" +
+                "        <td>bo@example.com</td>\n" +
+                "      </tr>\n" +
+                "      <tr class=\"active\">\n" +
+                "        <td>Active</td>\n" +
+                "        <td>Activeson</td>\n" +
+                "        <td>act@example.com</td>\n" +
+                "      </tr>\n" +
+                "    </tbody>\n" +
+                "  </table>\n" +
+                "</div>\n" +
+                "\n" +
+                "</body>\n" +
+                "</html>\n" +
+                "\n";
 
 
         try {
-            Document document = new Document();
+
+
             OutputStream outputStream = new ByteArrayOutputStream();
-            PdfWriter writer = PdfWriter.getInstance(document, outputStream);
-            document.open();
-            InputStream inputStream = new ByteArrayInputStream(html.getBytes(StandardCharsets.UTF_8));
-            XMLWorkerHelper.getInstance().parseXHtml(writer, document, inputStream);
-            document.close();
+            ITextRenderer renderer = new ITextRenderer();
+
+            renderer.setDocumentFromString(html);
+            renderer.layout();
+            renderer.createPDF(outputStream);
+            outputStream.close();
+
             DBFile dbFile = new DBFile();
-            dbFile.setFileName("content");
+            dbFile.setFileName("content.pdf");
             dbFile.setFileType("application/pdf");
             dbFile.setData(((ByteArrayOutputStream) outputStream).toByteArray());
             protocol.setProtocol(dbFile);
         } catch (Exception e) {
+            System.out.println(e.getMessage());
             throw new PdfGeneratingException();
         }
 
@@ -161,6 +215,18 @@ public class ValidProtocolServiceImpl implements ValidProtocolService {
             throw new DBFileNotFoundException();
         }
         return protocol;
+    }
+
+    @Override
+    public CustomerDTO findCustomerByValidProtocolId(Long id) {
+        Customer customer = customerRepository.findByValidProtocolId(id);
+        return modelMapper.map(customer, CustomerDTO.class);
+    }
+
+    @Override
+    public WelderModelDTO findWelderModelByValidProtocolId(Long id) {
+        WelderModel model = modelRepository.findByValidProtocolId(id);
+        return modelMapper.map(model, WelderModelDTO.class);
     }
 
     public void checkResult(ValidProtocol validProtocol) {
