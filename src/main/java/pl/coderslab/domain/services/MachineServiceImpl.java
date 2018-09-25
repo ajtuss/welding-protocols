@@ -4,16 +4,20 @@ import org.modelmapper.ModelMapper;
 import org.modelmapper.TypeToken;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import pl.coderslab.domain.dto.*;
-import pl.coderslab.domain.entities.Brand;
+import pl.coderslab.domain.dto.CustomerDTO;
+import pl.coderslab.domain.dto.MachineDTO;
+import pl.coderslab.domain.dto.ValidProtocolDTO;
+import pl.coderslab.domain.dto.WelderModelDTO;
 import pl.coderslab.domain.entities.Customer;
 import pl.coderslab.domain.entities.Machine;
+import pl.coderslab.domain.entities.ValidProtocol;
 import pl.coderslab.domain.entities.WelderModel;
 import pl.coderslab.domain.exceptions.CustomerNotFoundException;
 import pl.coderslab.domain.exceptions.MachineNotFoundException;
 import pl.coderslab.domain.exceptions.WelderModelNotFoundException;
 import pl.coderslab.domain.repositories.CustomerRepository;
 import pl.coderslab.domain.repositories.MachineRepository;
+import pl.coderslab.domain.repositories.ValidProtocolRepository;
 import pl.coderslab.domain.repositories.WelderModelRepository;
 
 import javax.persistence.EntityManager;
@@ -28,15 +32,17 @@ public class MachineServiceImpl implements MachineService {
     private final MachineRepository machineRepository;
     private final WelderModelRepository modelRepository;
     private final CustomerRepository customerRepository;
+    private final ValidProtocolRepository protocolRepository;
     private final ModelMapper modelMapper;
     private final EntityManager entityManager;
 
     @Autowired
-    public MachineServiceImpl(MachineRepository machineRepository, ModelMapper modelMapper, WelderModelRepository modelRepository, CustomerRepository customerRepository, EntityManager entityManager) {
+    public MachineServiceImpl(MachineRepository machineRepository, ModelMapper modelMapper, WelderModelRepository modelRepository, CustomerRepository customerRepository, ValidProtocolRepository protocolRepository, EntityManager entityManager) {
         this.machineRepository = machineRepository;
         this.modelMapper = modelMapper;
         this.modelRepository = modelRepository;
         this.customerRepository = customerRepository;
+        this.protocolRepository = protocolRepository;
         this.entityManager = entityManager;
     }
 
@@ -92,7 +98,10 @@ public class MachineServiceImpl implements MachineService {
 
     @Override
     public List<ValidProtocolDTO> findValidationsByMachineId(long id) {
-        return null; //todo
+        List<ValidProtocol> protocols = protocolRepository.findByMachineId(id);
+        Type resultType = new TypeToken<List<ValidProtocolDTO>>() {
+        }.getType();
+        return modelMapper.map(protocols, resultType);
     }
 
     private Machine getMachine(MachineDTO machineDTO) {
