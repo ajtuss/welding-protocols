@@ -14,9 +14,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import pl.coderslab.domain.dto.*;
 import pl.coderslab.domain.entities.PowerType;
 import pl.coderslab.domain.services.ValidProtocolService;
-import pl.coderslab.rest.assemblers.MachineResourceAssembler;
-import pl.coderslab.rest.assemblers.MeasureResourceAssembler;
-import pl.coderslab.rest.assemblers.ValidProtocolResourceAssembler;
+import pl.coderslab.rest.assemblers.*;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -32,7 +30,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @RunWith(SpringRunner.class)
 @WebMvcTest(value = ValidationsRestController.class, secure = false)
-@Import({ValidProtocolResourceAssembler.class, MeasureResourceAssembler.class, MachineResourceAssembler.class})
+@Import({ValidProtocolResourceAssembler.class, MeasureResourceAssembler.class, MachineResourceAssembler.class, WelderModelResourceAssembler.class, CustomerResourceAssembler.class})
 public class ValidationsRestControllerTest {
 
     @Autowired
