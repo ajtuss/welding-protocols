@@ -22,6 +22,8 @@ public class ValidProtocolResourceAssembler implements ResourceAssembler<ValidPr
                 linkTo(methodOn(ValidationsRestController.class).getMachines(protocolDTO.getId())).withRel("machines"),
                 linkTo(methodOn(ValidationsRestController.class).getCustomers(protocolDTO.getId())).withRel("customers"),
                 linkTo(methodOn(ValidationsRestController.class).getModels(protocolDTO.getId())).withRel("models"),
+                linkTo(methodOn(ValidationsRestController.class).openProtocol(protocolDTO.getId())).withRel("open"),
+                linkTo(methodOn(ValidationsRestController.class).closeProtocol(protocolDTO.getId())).withRel("close"),
                 linkTo(methodOn(ValidationsRestController.class).getFile(protocolDTO.getId())).withRel("files"));
     }
 }
