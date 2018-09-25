@@ -9,4 +9,7 @@ public interface CustomerRepository extends JpaRepository<Customer, Long> {
 
     @Query("SELECT c FROM Customer c JOIN c.machines m WHERE m.id = ?1")
     Customer findByMachineId(long machineId);
+
+    @Query("SELECT c FROM Customer c JOIN c.machines m JOIN m.validProtocols v WHERE v.id = ?1")
+    Customer findByValidProtocolId(Long id);
 }
