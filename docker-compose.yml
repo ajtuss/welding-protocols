@@ -12,7 +12,7 @@ services:
       - ./src/main/docker/init.sql:/docker-entrypoint-initdb.d/init.sql
     healthcheck:
                 test: ["CMD", "mysqladmin" ,"ping", "-h", "localhost", "-uroot", "-p${MYSQL_ROOT_PASSWORD}"]
-  spring-boot-jpa-docker-webapp:
+  welding-protocols:
     image: ajtuss/welding-protocols
     container_name: welding-protocols
     depends_on:
