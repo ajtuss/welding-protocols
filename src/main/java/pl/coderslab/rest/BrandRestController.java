@@ -1,10 +1,13 @@
 package pl.coderslab.rest;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PagedResourcesAssembler;
 import org.springframework.hateoas.MediaTypes;
+import org.springframework.hateoas.PagedResources;
 import org.springframework.hateoas.Resource;
 import org.springframework.hateoas.Resources;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import pl.coderslab.domain.dto.BrandDTO;
@@ -21,6 +24,7 @@ import java.util.stream.Collectors;
 import static org.springframework.hateoas.mvc.ControllerLinkBuilder.linkTo;
 import static org.springframework.hateoas.mvc.ControllerLinkBuilder.methodOn;
 
+
 @RestController
 @RequestMapping(value = "/api/brands", produces = MediaTypes.HAL_JSON_UTF8_VALUE)
 public class BrandRestController {
@@ -28,21 +32,23 @@ public class BrandRestController {
     private final BrandService brandService;
     private final BrandResourceAssembler assembler;
     private final WelderModelResourceAssembler modelAssembler;
+    private final PagedResourcesAssembler<BrandDTO> resourcesAssembler;
 
     @Autowired
-    public BrandRestController(BrandService brandService, BrandResourceAssembler assembler, WelderModelResourceAssembler modelAssembler) {
+    public BrandRestController(BrandService brandService, BrandResourceAssembler assembler, WelderModelResourceAssembler modelAssembler, PagedResourcesAssembler<BrandDTO> resourcesAssembler) {
         this.brandService = brandService;
         this.assembler = assembler;
         this.modelAssembler = modelAssembler;
+        this.resourcesAssembler = resourcesAssembler;
     }
 
     @GetMapping
-    public Resources<Resource<BrandDTO>> getAll() {
-        List<Resource<BrandDTO>> brands = brandService.findAll().stream()
-                                                      .map(assembler::toResource)
-                                                      .collect(Collectors.toList());
-        return new Resources<>(brands,
-                linkTo(methodOn(BrandRestController.class).getAll()).withSelfRel());
+    public PagedResources<?> getAll(Pageable pageable) {
+        Page<BrandDTO> brands = brandService.findAll(pageable);
+        if (!brands.hasContent()) {
+            return resourcesAssembler.toEmptyResource(brands, BrandDTO.class);
+        }
+        return resourcesAssembler.toResource(brands, assembler);
     }
 
     @GetMapping(value = "/{id:\\d+}")
