@@ -1,5 +1,7 @@
 package pl.coderslab.domain.services;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import pl.coderslab.domain.dto.BrandDTO;
 import pl.coderslab.domain.dto.WelderModelDTO;
 
@@ -9,7 +11,7 @@ public interface BrandService {
 
     BrandDTO saveBrand(BrandDTO brandDTO);
 
-    List<BrandDTO> findAll();
+    Page<BrandDTO> findAll(Pageable pageable);
 
     BrandDTO findById(Long id);
 

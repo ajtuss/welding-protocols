@@ -3,6 +3,8 @@ package pl.coderslab.domain.services;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.TypeToken;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import pl.coderslab.domain.dto.BrandDTO;
 import pl.coderslab.domain.dto.WelderModelDTO;
@@ -43,11 +45,10 @@ public class BrandServiceImpl implements BrandService {
     }
 
     @Override
-    public List<BrandDTO> findAll() {
-        List<Brand> brands = brandRepository.findAll();
-        Type resultType = new TypeToken<List<BrandDTO>>() {
-        }.getType();
-        return modelMapper.map(brands, resultType);
+    public Page<BrandDTO> findAll(Pageable pageable) {
+        Page<Brand> brands = brandRepository.findAll(pageable);
+
+        return brands.map(brand -> modelMapper.map(brand, BrandDTO.class));
     }
 
     @Override
@@ -61,15 +62,16 @@ public class BrandServiceImpl implements BrandService {
         Brand brand = modelMapper.map(brandDTO, Brand.class);
         Brand save = brandRepository.saveAndFlush(brand);
         entityManager.refresh(save);
-        return modelMapper.map(save,BrandDTO.class);
+        return modelMapper.map(save, BrandDTO.class);
     }
 
 
     @Override
     public List<WelderModelDTO> findWelderModelsByBrandId(Long id) {
         List<WelderModel> welderModels = modelRepository.findAllByBrandId(id);
-        Type resultType = new TypeToken<List<WelderModelDTO>>() {}.getType();
-        return modelMapper.map(welderModels,resultType);
+        Type resultType = new TypeToken<List<WelderModelDTO>>() {
+        }.getType();
+        return modelMapper.map(welderModels, resultType);
     }
 
     @Override
