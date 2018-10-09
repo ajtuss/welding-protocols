@@ -7,6 +7,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Import;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PagedResourcesAssembler;
 import org.springframework.hateoas.MediaTypes;
 import org.springframework.http.HttpHeaders;
 import org.springframework.test.context.junit4.SpringRunner;
@@ -33,7 +36,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @RunWith(SpringRunner.class)
 @WebMvcTest(value = BrandRestController.class, secure = false)
-@Import({BrandResourceAssembler.class, WelderModelResourceAssembler.class})
+@Import({BrandResourceAssembler.class, WelderModelResourceAssembler.class, PagedResourcesAssembler.class})
 public class BrandRestControllerTest {
 
     @Autowired
@@ -67,9 +70,7 @@ public class BrandRestControllerTest {
     @Test
     public void getShouldFetchAllAHalDocument() throws Exception {
 
-        given(brandService.findAll()).willReturn(
-                Arrays.asList(BRAND_1, BRAND_2)
-        );
+        given(brandService.findAll(Pageable.unpaged())).willReturn(new PageImpl<>(Arrays.asList(BRAND_1, BRAND_2)));
 
         mockMvc.perform(get("/api/brands")
                 .contentType(MediaTypes.HAL_JSON_UTF8_VALUE))
@@ -94,7 +95,7 @@ public class BrandRestControllerTest {
                .andExpect(jsonPath("$._embedded.brands[1]._links.models.href", is("http://localhost/api/brands/2/models")))
                .andExpect(jsonPath("$._links.self.href", is("http://localhost/api/brands")))
                .andReturn();
-        verify(brandService, times(1)).findAll();
+        verify(brandService, times(1)).findAll(Pageable.unpaged());
         verifyNoMoreInteractions(brandService);
     }
 

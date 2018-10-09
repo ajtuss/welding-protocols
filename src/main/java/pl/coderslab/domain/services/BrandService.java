@@ -13,6 +13,8 @@ public interface BrandService {
 
     Page<BrandDTO> findAll(Pageable pageable);
 
+    Page<BrandDTO> findAllByName(String query, Pageable pageable);
+
     BrandDTO findById(Long id);
 
     BrandDTO updateBrand(BrandDTO brandDTO);

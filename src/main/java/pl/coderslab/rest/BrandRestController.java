@@ -43,8 +43,22 @@ public class BrandRestController {
     }
 
     @GetMapping
-    public PagedResources<?> getAll(Pageable pageable) {
-        Page<BrandDTO> brands = brandService.findAll(pageable);
+    public PagedResources<?> getAll(@RequestParam(required = false, value = "search") String query, Pageable pageable) {
+        Page<BrandDTO> brands;
+        if (query == null) {
+            brands = brandService.findAll(pageable);
+        } else {
+            brands = brandService.findAllByName(query, pageable);
+        }
+        if (!brands.hasContent()) {
+            return resourcesAssembler.toEmptyResource(brands, BrandDTO.class);
+        }
+        return resourcesAssembler.toResource(brands, assembler);
+    }
+
+    @GetMapping(value = "/search/{query}")
+    public PagedResources<?> getAllByName(@PathVariable(required = false) String query, Pageable pageable) {
+        Page<BrandDTO> brands = brandService.findAllByName(query, pageable);
         if (!brands.hasContent()) {
             return resourcesAssembler.toEmptyResource(brands, BrandDTO.class);
         }
@@ -61,9 +75,9 @@ public class BrandRestController {
     @GetMapping(value = "/{id:\\d+}/models")
     public Resources<Resource<WelderModelDTO>> getModelsByBrandId(@PathVariable Long id) {
         List<Resource<WelderModelDTO>> models = brandService.findWelderModelsByBrandId(id)
-                .stream()
-                .map(modelAssembler::toResource)
-                .collect(Collectors.toList());
+                                                            .stream()
+                                                            .map(modelAssembler::toResource)
+                                                            .collect(Collectors.toList());
         return new Resources<>(models, linkTo(methodOn(BrandRestController.class).getModelsByBrandId(id)).withSelfRel());
     }
 

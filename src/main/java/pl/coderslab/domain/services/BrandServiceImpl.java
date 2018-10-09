@@ -47,7 +47,12 @@ public class BrandServiceImpl implements BrandService {
     @Override
     public Page<BrandDTO> findAll(Pageable pageable) {
         Page<Brand> brands = brandRepository.findAll(pageable);
+        return brands.map(brand -> modelMapper.map(brand, BrandDTO.class));
+    }
 
+    @Override
+    public Page<BrandDTO> findAllByName(String query, Pageable pageable) {
+        Page<Brand> brands = brandRepository.findByNameStartingWithIgnoreCase(query, pageable);
         return brands.map(brand -> modelMapper.map(brand, BrandDTO.class));
     }
 
