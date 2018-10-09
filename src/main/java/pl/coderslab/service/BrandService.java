@@ -6,6 +6,7 @@ import pl.coderslab.service.dto.BrandDTO;
 import pl.coderslab.service.dto.WelderModelDTO;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface BrandService {
 
@@ -15,7 +16,7 @@ public interface BrandService {
 
     Page<BrandDTO> findAllByName(String query, Pageable pageable);
 
-    BrandDTO findById(Long id);
+    Optional<BrandDTO> findById(Long id);
 
     BrandDTO updateBrand(BrandDTO brandDTO);
 

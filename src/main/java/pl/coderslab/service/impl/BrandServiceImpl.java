@@ -19,6 +19,7 @@ import javax.persistence.EntityManager;
 import javax.transaction.Transactional;
 import java.lang.reflect.Type;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @Transactional
@@ -58,9 +59,8 @@ public class BrandServiceImpl implements BrandService {
     }
 
     @Override
-    public BrandDTO findById(Long id) {
-        Brand brand = brandRepository.findById(id).orElseThrow(() -> new BrandNotFoundException(id));
-        return modelMapper.map(brand, BrandDTO.class);
+    public Optional<BrandDTO> findById(Long id) {
+        return brandRepository.findById(id).map(brand -> modelMapper.map(brand, BrandDTO.class));
     }
 
     @Override
