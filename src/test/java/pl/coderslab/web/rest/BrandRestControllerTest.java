@@ -102,7 +102,7 @@ public class BrandRestControllerTest {
     @Test
     public void getShouldFetchAHalDocument() throws Exception {
 
-        given(brandService.findById(1L)).willReturn(BRAND_1);
+        given(brandService.findById(1L)).willReturn(java.util.Optional.ofNullable(BRAND_1));
 
         mockMvc.perform(get("/api/brands/1")
                 .contentType(MediaTypes.HAL_JSON_UTF8_VALUE))

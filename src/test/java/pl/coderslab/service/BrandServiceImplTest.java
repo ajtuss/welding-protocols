@@ -17,6 +17,7 @@ import pl.coderslab.repository.WelderModelRepository;
 import pl.coderslab.service.impl.BrandServiceImpl;
 
 import java.util.List;
+import java.util.Optional;
 
 import static org.hamcrest.Matchers.containsInAnyOrder;
 import static org.hamcrest.collection.IsCollectionWithSize.hasSize;
@@ -75,7 +76,7 @@ public class BrandServiceImplTest {
     public void expectedTrueAfterFindById() {
         BrandDTO expected = brandService.saveBrand(BRAND_CREATION);
 
-        BrandDTO found = brandService.findById(expected.getId());
+        Optional<BrandDTO> found = brandService.findById(expected.getId());
 
         assertEquals(expected, found);
     }
