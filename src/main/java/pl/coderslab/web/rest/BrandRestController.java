@@ -1,24 +1,28 @@
 package pl.coderslab.web.rest;
 
+import io.github.jhipster.web.util.ResponseUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PagedResourcesAssembler;
-import org.springframework.hateoas.MediaTypes;
 import org.springframework.hateoas.PagedResources;
 import org.springframework.hateoas.Resource;
 import org.springframework.hateoas.Resources;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import pl.coderslab.service.BrandService;
 import pl.coderslab.service.dto.BrandDTO;
 import pl.coderslab.service.dto.WelderModelDTO;
-import pl.coderslab.web.exceptions.InvalidRequestException;
-import pl.coderslab.service.BrandService;
 import pl.coderslab.web.rest.assemblers.BrandResourceAssembler;
 import pl.coderslab.web.rest.assemblers.WelderModelResourceAssembler;
+import pl.coderslab.web.rest.util.PaginationUtil;
 
 import javax.validation.Valid;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import static org.springframework.hateoas.mvc.ControllerLinkBuilder.linkTo;
@@ -26,7 +30,7 @@ import static org.springframework.hateoas.mvc.ControllerLinkBuilder.methodOn;
 
 
 @RestController
-@RequestMapping(value = "/api/brands", produces = MediaTypes.HAL_JSON_UTF8_VALUE)
+@RequestMapping(value = "/api", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
 public class BrandRestController {
 
     private final BrandService brandService;
@@ -42,21 +46,15 @@ public class BrandRestController {
         this.resourcesAssembler = resourcesAssembler;
     }
 
-    @GetMapping
-    public PagedResources<?> getAll(@RequestParam(required = false, value = "search") String query, Pageable pageable) {
-        Page<BrandDTO> brands;
-        if (query == null) {
-            brands = brandService.findAll(pageable);
-        } else {
-            brands = brandService.findAllByName(query, pageable);
-        }
-        if (!brands.hasContent()) {
-            return resourcesAssembler.toEmptyResource(brands, BrandDTO.class);
-        }
-        return resourcesAssembler.toResource(brands, assembler);
+    @GetMapping("/brands")
+    public ResponseEntity<List<BrandDTO>> getAll(Pageable pageable) {
+
+        Page<BrandDTO> page = brandService.findAll(pageable);
+        HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(page, "/api/brands");
+        return new ResponseEntity<>(page.getContent(), headers, HttpStatus.OK);
     }
 
-    @GetMapping(value = "/search/{query}")
+    @GetMapping(value = "/brands/search/{query}")
     public PagedResources<?> getAllByName(@PathVariable(required = false) String query, Pageable pageable) {
         Page<BrandDTO> brands = brandService.findAllByName(query, pageable);
         if (!brands.hasContent()) {
@@ -65,14 +63,14 @@ public class BrandRestController {
         return resourcesAssembler.toResource(brands, assembler);
     }
 
-    @GetMapping(value = "/{id:\\d+}")
-    public Resource<BrandDTO> getOne(@PathVariable Long id) {
-        BrandDTO brandDTO = brandService.findById(id);
-        return assembler.toResource(brandDTO);
+    @GetMapping(value = "/brands/{id:\\d+}")
+    public ResponseEntity<BrandDTO> getOne(@PathVariable Long id) {
+        Optional<BrandDTO> brandDTO = brandService.findById(id);
+        return ResponseUtil.wrapOrNotFound(brandDTO);
     }
 
 
-    @GetMapping(value = "/{id:\\d+}/models")
+    @GetMapping(value = "/brands/{id:\\d+}/models")
     public Resources<Resource<WelderModelDTO>> getModelsByBrandId(@PathVariable Long id) {
         List<Resource<WelderModelDTO>> models = brandService.findWelderModelsByBrandId(id)
                                                             .stream()
@@ -81,7 +79,7 @@ public class BrandRestController {
         return new Resources<>(models, linkTo(methodOn(BrandRestController.class).getModelsByBrandId(id)).withSelfRel());
     }
 
-    @PostMapping
+    @PostMapping("/brands")
     public ResponseEntity<Resource<BrandDTO>> addBrand(@RequestBody @Valid BrandDTO brand) {
         BrandDTO brandDTO = brandService.saveBrand(brand);
         Resource<BrandDTO> resource = assembler.toResource(brandDTO);
@@ -89,16 +87,13 @@ public class BrandRestController {
                              .body(resource);
     }
 
-    @PutMapping(value = "/{id:\\d+}")
+    @PutMapping(value = "/brands")
     public Resource<BrandDTO> editBrand(@PathVariable Long id, @RequestBody @Valid BrandDTO brand) {
-        if (!id.equals(brand.getId())) {
-            throw new InvalidRequestException();
-        }
         BrandDTO brandDTO = brandService.updateBrand(brand);
         return assembler.toResource(brandDTO);
     }
 
-    @DeleteMapping("/{id:\\d+}")
+    @DeleteMapping("/brands/{id:\\d+}")
     public ResponseEntity<?> delete(@PathVariable Long id) {
         brandService.remove(id);
         return ResponseEntity.noContent().build();
