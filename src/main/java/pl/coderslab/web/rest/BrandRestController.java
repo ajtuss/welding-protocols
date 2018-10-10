@@ -1,11 +1,8 @@
 package pl.coderslab.web.rest;
 
-import io.github.jhipster.web.util.ResponseUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.web.PagedResourcesAssembler;
-import org.springframework.hateoas.PagedResources;
 import org.springframework.hateoas.Resource;
 import org.springframework.hateoas.Resources;
 import org.springframework.http.HttpHeaders;
@@ -36,14 +33,12 @@ public class BrandRestController {
     private final BrandService brandService;
     private final BrandResourceAssembler assembler;
     private final WelderModelResourceAssembler modelAssembler;
-    private final PagedResourcesAssembler<BrandDTO> resourcesAssembler;
 
     @Autowired
-    public BrandRestController(BrandService brandService, BrandResourceAssembler assembler, WelderModelResourceAssembler modelAssembler, PagedResourcesAssembler<BrandDTO> resourcesAssembler) {
+    public BrandRestController(BrandService brandService, BrandResourceAssembler assembler, WelderModelResourceAssembler modelAssembler) {
         this.brandService = brandService;
         this.assembler = assembler;
         this.modelAssembler = modelAssembler;
-        this.resourcesAssembler = resourcesAssembler;
     }
 
     @GetMapping("/brands")
@@ -54,19 +49,20 @@ public class BrandRestController {
         return new ResponseEntity<>(page.getContent(), headers, HttpStatus.OK);
     }
 
-    @GetMapping(value = "/brands/search/{query}")
-    public PagedResources<?> getAllByName(@PathVariable(required = false) String query, Pageable pageable) {
-        Page<BrandDTO> brands = brandService.findAllByName(query, pageable);
-        if (!brands.hasContent()) {
-            return resourcesAssembler.toEmptyResource(brands, BrandDTO.class);
-        }
-        return resourcesAssembler.toResource(brands, assembler);
-    }
+//    @GetMapping(value = "/brands/search/{query}")
+//    public PagedResources<?> getAllByName(@PathVariable(required = false) String query, Pageable pageable) {
+//        Page<BrandDTO> brands = brandService.findAllByName(query, pageable);
+//        if (!brands.hasContent()) {
+//            return resourcesAssembler.toEmptyResource(brands, BrandDTO.class);
+//        }
+//        return resourcesAssembler.toResource(brands, assembler);
+//    }
 
     @GetMapping(value = "/brands/{id:\\d+}")
     public ResponseEntity<BrandDTO> getOne(@PathVariable Long id) {
         Optional<BrandDTO> brandDTO = brandService.findById(id);
-        return ResponseUtil.wrapOrNotFound(brandDTO);
+        return brandDTO.map(response -> ResponseEntity.ok().body(response))
+                       .orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }
 
 
