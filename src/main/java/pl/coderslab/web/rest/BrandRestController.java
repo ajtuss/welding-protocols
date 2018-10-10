@@ -67,12 +67,10 @@ public class BrandRestController {
 
 
     @GetMapping(value = "/brands/{id:\\d+}/models")
-    public Resources<Resource<WelderModelDTO>> getModelsByBrandId(@PathVariable Long id) {
-        List<Resource<WelderModelDTO>> models = brandService.findWelderModelsByBrandId(id)
-                                                            .stream()
-                                                            .map(modelAssembler::toResource)
-                                                            .collect(Collectors.toList());
-        return new Resources<>(models, linkTo(methodOn(BrandRestController.class).getModelsByBrandId(id)).withSelfRel());
+    public ResponseEntity<List<WelderModelDTO>> getModelsByBrandId(@PathVariable Long id, Pageable pageable) {
+        Page<WelderModelDTO> page = brandService.findWelderModelsByBrandId(id, pageable);
+        HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(page, "/api/brands/" + id + "/models");
+        return new ResponseEntity<>(page.getContent(), headers, HttpStatus.OK);
     }
 
     @PostMapping("/brands")

@@ -73,11 +73,9 @@ public class BrandServiceImpl implements BrandService {
 
 
     @Override
-    public List<WelderModelDTO> findWelderModelsByBrandId(Long id) {
-        List<WelderModel> welderModels = modelRepository.findAllByBrandId(id);
-        Type resultType = new TypeToken<List<WelderModelDTO>>() {
-        }.getType();
-        return modelMapper.map(welderModels, resultType);
+    public Page<WelderModelDTO> findWelderModelsByBrandId(Long id, Pageable pageable) {
+        return modelRepository.findAllByBrandId(id, pageable)
+                              .map(model -> modelMapper.map(model, WelderModelDTO.class));
     }
 
     @Override

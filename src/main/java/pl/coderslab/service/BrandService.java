@@ -20,7 +20,7 @@ public interface BrandService {
 
     BrandDTO updateBrand(BrandDTO brandDTO);
 
-    List<WelderModelDTO> findWelderModelsByBrandId(Long id);
+    Page<WelderModelDTO> findWelderModelsByBrandId(Long id, Pageable pageable);
 
     void remove(Long id);
 }
