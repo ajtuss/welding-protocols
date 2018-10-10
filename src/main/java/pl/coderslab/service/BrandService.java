@@ -10,7 +10,7 @@ import java.util.Optional;
 
 public interface BrandService {
 
-    BrandDTO saveBrand(BrandDTO brandDTO);
+    BrandDTO save(BrandDTO brandDTO);
 
     Page<BrandDTO> findAll(Pageable pageable);
 

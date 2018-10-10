@@ -1,4 +1,4 @@
-package pl.coderslab.web.exceptions;
+package pl.coderslab.web.errors;
 
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;

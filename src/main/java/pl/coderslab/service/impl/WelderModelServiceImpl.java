@@ -10,9 +10,9 @@ import pl.coderslab.service.dto.WelderModelDTO;
 import pl.coderslab.domain.Brand;
 import pl.coderslab.domain.Machine;
 import pl.coderslab.domain.WelderModel;
-import pl.coderslab.web.exceptions.BrandNotFoundException;
-import pl.coderslab.web.exceptions.InvalidRequestException;
-import pl.coderslab.web.exceptions.WelderModelNotFoundException;
+import pl.coderslab.web.errors.BrandNotFoundException;
+import pl.coderslab.web.errors.BadRequestException;
+import pl.coderslab.web.errors.WelderModelNotFoundException;
 import pl.coderslab.repository.BrandRepository;
 import pl.coderslab.repository.MachineRepository;
 import pl.coderslab.repository.WelderModelRepository;
@@ -70,7 +70,7 @@ public class WelderModelServiceImpl implements WelderModelService {
     public WelderModelDTO update(WelderModelDTO modelDTO) {
         checkRange(modelDTO);
         if (modelDTO.getId() == null || modelDTO.getVersionId() == null) {
-            throw new InvalidRequestException("To update id and versionId can`t be null");
+            throw new BadRequestException("To update id and versionId can`t be null", null, null);
         }
         WelderModel model = modelMapper.map(modelDTO, WelderModel.class);
 
@@ -105,19 +105,19 @@ public class WelderModelServiceImpl implements WelderModelService {
     private void checkRange(WelderModelDTO modelDTO) {
         if (modelDTO.getMig()) {
             if (modelDTO.getMigRange() == null)
-                throw new InvalidRequestException("Mig Range can`t be null if Mig is checked");
+                throw new BadRequestException("Mig Range can`t be null if Mig is checked", null, null);
         } else {
             modelDTO.setMigRange(null);
         }
         if (modelDTO.getMma()) {
             if (modelDTO.getMmaRange() == null)
-                throw new InvalidRequestException("Mma Range can`t be null if Mma is checked");
+                throw new BadRequestException("Mma Range can`t be null if Mma is checked", null, null);
         } else {
             modelDTO.setMmaRange(null);
         }
         if (modelDTO.getTig()) {
             if (modelDTO.getTigRange() == null)
-                throw new InvalidRequestException("Tig Range can`t be null if Tig is checked");
+                throw new BadRequestException("Tig Range can`t be null if Tig is checked", null, null);
         } else {
             modelDTO.setTigRange(null);
         }

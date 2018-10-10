@@ -8,7 +8,7 @@ import pl.coderslab.service.dto.CustomerDTO;
 import pl.coderslab.service.dto.MachineDTO;
 import pl.coderslab.domain.Customer;
 import pl.coderslab.domain.Machine;
-import pl.coderslab.web.exceptions.CustomerNotFoundException;
+import pl.coderslab.web.errors.CustomerNotFoundException;
 import pl.coderslab.repository.CustomerRepository;
 import pl.coderslab.repository.MachineRepository;
 import pl.coderslab.service.CustomerService;

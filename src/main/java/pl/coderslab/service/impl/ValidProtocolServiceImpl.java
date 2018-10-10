@@ -7,7 +7,7 @@ import org.springframework.stereotype.Service;
 import org.xhtmlrenderer.pdf.ITextRenderer;
 import pl.coderslab.domain.*;
 import pl.coderslab.service.dto.*;
-import pl.coderslab.web.exceptions.*;
+import pl.coderslab.web.errors.*;
 import pl.coderslab.repository.*;
 import pl.coderslab.service.MeasureService;
 import pl.coderslab.service.ValidProtocolService;
@@ -62,7 +62,7 @@ public class ValidProtocolServiceImpl implements ValidProtocolService {
         if ((type.equals(PowerType.MIG) && !model.getMig()) ||
                 (type.equals(PowerType.MMA) && !model.getMma()) ||
                 (type.equals(PowerType.TIG) && !model.getTig())) {
-            throw new InvalidRequestException("Validation Type is not correct for this model");
+            throw new BadRequestException("Validation Type is not correct for this model", null, null);
         }
         protocol.setType(type);
 

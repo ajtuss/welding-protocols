@@ -7,9 +7,9 @@ import org.springframework.stereotype.Service;
 import pl.coderslab.domain.*;
 import pl.coderslab.service.dto.MeasureDTO;
 import pl.coderslab.service.dto.ValidProtocolDTO;
-import pl.coderslab.web.exceptions.InvalidRequestException;
-import pl.coderslab.web.exceptions.MeasureNotFoundException;
-import pl.coderslab.web.exceptions.ValidProtocolNotFoundException;
+import pl.coderslab.web.errors.BadRequestException;
+import pl.coderslab.web.errors.MeasureNotFoundException;
+import pl.coderslab.web.errors.ValidProtocolNotFoundException;
 import pl.coderslab.repository.MeasureRepository;
 import pl.coderslab.repository.ValidProtocolRepository;
 import pl.coderslab.service.MeasureService;
@@ -108,10 +108,10 @@ public class MeasureServiceImpl implements MeasureService {
 
     private BigDecimal checkCurrentRange(BigDecimal current, Range range) {
         if (current.compareTo(range.getIMax()) > 0) {
-            throw new InvalidRequestException("iAdjust is to high");
+            throw new BadRequestException("iAdjust is to high", null, null);
         }
         if (current.compareTo(range.getIMin()) < 0) {
-            throw new InvalidRequestException("iAdjust is to low");
+            throw new BadRequestException("iAdjust is to low", null, null);
         }
         return current;
     }
@@ -150,7 +150,7 @@ public class MeasureServiceImpl implements MeasureService {
     @Override
     public MeasureDTO update(MeasureDTO measureDTO) {
         if (measureDTO.getId() == null || measureDTO.getVersionId() == null) {
-            throw new InvalidRequestException("To update id and versionId can`t be null");
+            throw new BadRequestException("To update id and versionId can`t be null", null, null);
 
         }
         Measure measure = measureRepository.findById(measureDTO.getId())
@@ -158,7 +158,7 @@ public class MeasureServiceImpl implements MeasureService {
         ValidProtocol validProtocol = measure.getValidProtocol();
 
         if (validProtocol.isFinalized()) {
-            throw new InvalidRequestException("Protocol is closed, Cant change measure");
+            throw new BadRequestException("Protocol is closed, Cant change measure", null, null);
         }
         measure.setIPower(measureDTO.getIPower());
         measure.setUPower(measureDTO.getUPower());
@@ -218,7 +218,7 @@ public class MeasureServiceImpl implements MeasureService {
     }
 
     private ValidProtocol getProtocol(Long id) {
-        if(id == null) throw new InvalidRequestException("validationProtocol can`t be null");
+        if (id == null) throw new BadRequestException("validationProtocol can`t be null", null, null);
         return protocolRepository.findById(id)
                                  .orElseThrow(() -> new ValidProtocolNotFoundException(id));
     }
