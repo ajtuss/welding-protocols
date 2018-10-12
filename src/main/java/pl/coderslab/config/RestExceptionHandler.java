@@ -10,10 +10,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
-import pl.coderslab.web.errors.ApiErrorResponse;
-import pl.coderslab.web.errors.BadRequestException;
-import pl.coderslab.web.errors.ErrorConstants;
-import pl.coderslab.web.errors.FieldError;
+import pl.coderslab.web.errors.*;
 
 import java.util.HashMap;
 import java.util.stream.Collectors;
@@ -43,12 +40,21 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
     }
 
     @ExceptionHandler(BadRequestException.class)
-    public ResponseEntity<Object> badRequestException(BadRequestException ex) {
+    public ResponseEntity<Object> badRequestExceptionHandler(BadRequestException ex) {
 
         ApiErrorResponse apiErrorResponse = new ApiErrorResponse(ex.getMessage(), HttpStatus.BAD_REQUEST, ex.getErrorKey(), ex
                 .getParams());
         return new ResponseEntity<>(apiErrorResponse, apiErrorResponse.getStatus());
     }
+
+    @ExceptionHandler(NotFoundException.class)
+    public ResponseEntity<Object> notFoundExceptionHandler(NotFoundException ex) {
+        ApiErrorResponse apiErrorResponse = new ApiErrorResponse(ex.getMessage(), ex.getStatus(), ErrorConstants.ERR_NOT_FOUND, ex
+                .getParams());
+        return new ResponseEntity<>(apiErrorResponse, apiErrorResponse.getStatus());
+    }
+
+
 
 
 }
