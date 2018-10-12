@@ -9,7 +9,7 @@ import org.springframework.context.annotation.Import;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.junit4.SpringRunner;
 import pl.coderslab.service.dto.CustomerDTO;
-import pl.coderslab.web.exceptions.CustomerNotFoundException;
+import pl.coderslab.web.errors.CustomerNotFoundException;
 import pl.coderslab.repository.CustomerRepository;
 import pl.coderslab.service.impl.CustomerServiceImpl;
 

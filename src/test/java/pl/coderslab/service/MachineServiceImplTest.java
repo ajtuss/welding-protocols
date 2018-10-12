@@ -11,7 +11,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 import pl.coderslab.service.dto.CustomerDTO;
 import pl.coderslab.service.dto.MachineDTO;
 import pl.coderslab.service.dto.WelderModelDTO;
-import pl.coderslab.web.exceptions.MachineNotFoundException;
+import pl.coderslab.web.errors.MachineNotFoundException;
 import pl.coderslab.repository.MachineRepository;
 import pl.coderslab.service.impl.MachineServiceImpl;
 

@@ -12,8 +12,8 @@ import pl.coderslab.service.dto.BrandDTO;
 import pl.coderslab.service.dto.RangeDTO;
 import pl.coderslab.service.dto.WelderModelDTO;
 import pl.coderslab.domain.WelderModel;
-import pl.coderslab.web.exceptions.InvalidRequestException;
-import pl.coderslab.web.exceptions.WelderModelNotFoundException;
+import pl.coderslab.web.errors.BadRequestException;
+import pl.coderslab.web.errors.WelderModelNotFoundException;
 import pl.coderslab.repository.WelderModelRepository;
 import pl.coderslab.service.impl.BrandServiceImpl;
 import pl.coderslab.service.impl.WelderModelServiceImpl;
@@ -137,21 +137,21 @@ public class WelderModelServiceImplTest {
         assertTrue(updated.getVersionId() > saved.getVersionId());
     }
 
-    @Test(expected = InvalidRequestException.class)
+    @Test(expected = BadRequestException.class)
     public void expectedExceptionWhenUpdateWithIdIsNull() {
         WelderModelDTO saved = modelService.save(MODEL_CREATION_1);
         saved.setId(null);
         modelService.update(saved);
     }
 
-    @Test(expected = InvalidRequestException.class)
+    @Test(expected = BadRequestException.class)
     public void expectedExceptionWhenUpdateWithVersionIdIsNull() {
         WelderModelDTO saved = modelService.save(MODEL_CREATION_1);
         saved.setVersionId(null);
         modelService.update(saved);
     }
 
-    @Test(expected = InvalidRequestException.class)
+    @Test(expected = BadRequestException.class)
     public void expectedTrueAfterUpdateAndCompare() {
         WelderModelDTO saved = modelService.save(MODEL_CREATION_1);
         saved.setVersionId(null);

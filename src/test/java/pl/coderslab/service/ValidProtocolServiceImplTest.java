@@ -12,7 +12,7 @@ import pl.coderslab.service.dto.MachineDTO;
 import pl.coderslab.service.dto.MeasureDTO;
 import pl.coderslab.service.dto.ValidProtocolDTO;
 import pl.coderslab.domain.PowerType;
-import pl.coderslab.web.exceptions.ValidProtocolNotFoundException;
+import pl.coderslab.web.errors.ValidProtocolNotFoundException;
 import pl.coderslab.repository.ValidProtocolRepository;
 import pl.coderslab.service.impl.MeasureServiceImpl;
 import pl.coderslab.service.impl.ValidProtocolServiceImpl;

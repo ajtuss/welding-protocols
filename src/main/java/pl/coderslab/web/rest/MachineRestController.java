@@ -10,7 +10,7 @@ import pl.coderslab.service.dto.CustomerDTO;
 import pl.coderslab.service.dto.MachineDTO;
 import pl.coderslab.service.dto.ValidProtocolDTO;
 import pl.coderslab.service.dto.WelderModelDTO;
-import pl.coderslab.web.exceptions.InvalidRequestException;
+import pl.coderslab.web.errors.BadRequestException;
 import pl.coderslab.service.MachineService;
 import pl.coderslab.web.rest.assemblers.ValidProtocolResourceAssembler;
 import pl.coderslab.web.rest.assemblers.CustomerResourceAssembler;
@@ -70,7 +70,8 @@ public class MachineRestController {
     @PutMapping("/{id:\\d+}")
     public Resource<MachineDTO> updateMachine(@PathVariable Long id, @RequestBody @Valid MachineDTO machineUpdateDTO){
         if(!id.equals(machineUpdateDTO.getId())){
-            throw new InvalidRequestException();
+            //todo
+            throw new BadRequestException(null, null, null);
         }
         MachineDTO machineDTO = machineService.update(machineUpdateDTO);
         return assembler.toResource(machineDTO);

@@ -4,7 +4,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.hateoas.Resource;
-import org.springframework.hateoas.Resources;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -13,22 +12,25 @@ import org.springframework.web.bind.annotation.*;
 import pl.coderslab.service.BrandService;
 import pl.coderslab.service.dto.BrandDTO;
 import pl.coderslab.service.dto.WelderModelDTO;
+import pl.coderslab.web.errors.BadRequestException;
+import pl.coderslab.web.errors.ErrorConstants;
 import pl.coderslab.web.rest.assemblers.BrandResourceAssembler;
 import pl.coderslab.web.rest.assemblers.WelderModelResourceAssembler;
+import pl.coderslab.web.rest.util.HeaderUtil;
 import pl.coderslab.web.rest.util.PaginationUtil;
 
 import javax.validation.Valid;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
-
-import static org.springframework.hateoas.mvc.ControllerLinkBuilder.linkTo;
-import static org.springframework.hateoas.mvc.ControllerLinkBuilder.methodOn;
 
 
 @RestController
 @RequestMapping(value = "/api", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
 public class BrandRestController {
+
+    private static final String ENTITY_NAME = "brand";
 
     private final BrandService brandService;
     private final BrandResourceAssembler assembler;
@@ -74,11 +76,14 @@ public class BrandRestController {
     }
 
     @PostMapping("/brands")
-    public ResponseEntity<Resource<BrandDTO>> addBrand(@RequestBody @Valid BrandDTO brand) {
-        BrandDTO brandDTO = brandService.saveBrand(brand);
-        Resource<BrandDTO> resource = assembler.toResource(brandDTO);
-        return ResponseEntity.created(linkTo(methodOn(BrandRestController.class).getOne(brandDTO.getId())).toUri())
-                             .body(resource);
+    public ResponseEntity<BrandDTO> addBrand(@RequestBody @Valid BrandDTO brandDTO) throws URISyntaxException {
+        if (brandDTO.getId() != null) {
+            throw new BadRequestException("Id must be null", ENTITY_NAME, ErrorConstants.ERR_IDNULL);
+        }
+        BrandDTO result = brandService.save(brandDTO);
+        return ResponseEntity.created(new URI("/api/brands/" + result.getId()))
+                             .headers(HeaderUtil.createEntityCreationAlert(ENTITY_NAME, result.getId().toString()))
+                             .body(result);
     }
 
     @PutMapping(value = "/brands")

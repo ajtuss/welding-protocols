@@ -11,7 +11,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import pl.coderslab.service.dto.*;
 import pl.coderslab.domain.DBFile;
-import pl.coderslab.web.exceptions.InvalidRequestException;
+import pl.coderslab.web.errors.BadRequestException;
 import pl.coderslab.service.ValidProtocolService;
 import pl.coderslab.web.rest.assemblers.*;
 
@@ -70,7 +70,7 @@ public class ValidationsRestController {
     @PutMapping("/{id:\\d+}")
     public Resource<ValidProtocolDTO> editProtocol(@PathVariable Long id, @RequestBody @Valid ValidProtocolDTO protocolDTO) {
         if(!id.equals(protocolDTO.getId())){
-            throw new InvalidRequestException();
+            throw new BadRequestException(null, null, null);
         }
         ValidProtocolDTO save = validProtocolService.save(protocolDTO);
         return assembler.toResource(save);

@@ -8,7 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import pl.coderslab.service.dto.MeasureDTO;
 import pl.coderslab.service.dto.ValidProtocolDTO;
-import pl.coderslab.web.exceptions.InvalidRequestException;
+import pl.coderslab.web.errors.BadRequestException;
 import pl.coderslab.service.MeasureService;
 import pl.coderslab.web.rest.assemblers.MeasureResourceAssembler;
 import pl.coderslab.web.rest.assemblers.ValidProtocolResourceAssembler;
@@ -69,7 +69,7 @@ public class MeasureRestController {
     @PutMapping("/{id:\\d+}")
     public Resource<MeasureDTO> updateMeasure(@RequestBody @Valid MeasureDTO measureDTO, @PathVariable Long id) {
         if (!id.equals(measureDTO.getId())) {
-            throw new InvalidRequestException();
+            throw new BadRequestException(null, null, null);
         }
         MeasureDTO update = measureService.update(measureDTO);
         return assembler.toResource(update);

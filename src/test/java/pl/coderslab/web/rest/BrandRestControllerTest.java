@@ -127,7 +127,7 @@ public class BrandRestControllerTest {
         BrandDTO creationDTO = new BrandDTO(BRAND_1.getName());
         String contentBody = mapper.writeValueAsString(creationDTO);
 
-        given(brandService.saveBrand(creationDTO)).willReturn(BRAND_1);
+        given(brandService.save(creationDTO)).willReturn(BRAND_1);
         mockMvc.perform(post("/api/brands")
                 .accept(MediaTypes.HAL_JSON_UTF8_VALUE)
                 .contentType(MediaTypes.HAL_JSON_UTF8_VALUE)
@@ -145,7 +145,7 @@ public class BrandRestControllerTest {
                .andExpect(jsonPath("$._links.brands.href", is("http://localhost/api/brands")))
                .andExpect(jsonPath("$._links.models.href", is("http://localhost/api/brands/1/models")))
                .andReturn();
-        verify(brandService, times(1)).saveBrand(creationDTO);
+        verify(brandService, times(1)).save(creationDTO);
         verifyNoMoreInteractions(brandService);
     }
 
@@ -209,7 +209,8 @@ public class BrandRestControllerTest {
 
     @Test
     public void getShouldFetchAllModelsAHalDocument() throws Exception {
-        given(brandService.findWelderModelsByBrandId(1L)).willReturn(Arrays.asList(MODEL_1, MODEL_2));
+        //todo
+//        given(brandService.findWelderModelsByBrandId(1L, null)).willReturn(Arrays.asList(MODEL_1, MODEL_2));
 
         mockMvc.perform(get("/api/brands/1/models")
                 .contentType(MediaTypes.HAL_JSON_UTF8_VALUE))
@@ -254,7 +255,7 @@ public class BrandRestControllerTest {
                .andExpect(jsonPath("$._embedded.models[1]._links.machines.href", is("http://localhost/api/models/2/machines")))
                .andExpect(jsonPath("$._links.self.href", is("http://localhost/api/brands/1/models")))
                .andReturn();
-        verify(brandService, times(1)).findWelderModelsByBrandId(1L);
+        verify(brandService, times(1)).findWelderModelsByBrandId(1L, null);
         verifyNoMoreInteractions(brandService);
     }
 }

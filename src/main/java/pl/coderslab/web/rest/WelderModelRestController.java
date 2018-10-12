@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.*;
 import pl.coderslab.service.dto.BrandDTO;
 import pl.coderslab.service.dto.MachineDTO;
 import pl.coderslab.service.dto.WelderModelDTO;
-import pl.coderslab.web.exceptions.InvalidRequestException;
+import pl.coderslab.web.errors.BadRequestException;
 import pl.coderslab.service.WelderModelService;
 import pl.coderslab.web.rest.assemblers.BrandResourceAssembler;
 import pl.coderslab.web.rest.assemblers.WelderModelResourceAssembler;
@@ -71,7 +71,7 @@ public class WelderModelRestController {
     @PutMapping("{id:\\d+}")
     public Resource<WelderModelDTO> editModel(@PathVariable Long id, @RequestBody @Valid WelderModelDTO modelUpdateDTO) {
         if (!id.equals(modelUpdateDTO.getId())) {
-            throw new InvalidRequestException();
+            throw new BadRequestException(null, null, null);
         }
         WelderModelDTO modelDTO = modelService.update(modelUpdateDTO);
         return assembler.toResource(modelDTO);
@@ -86,9 +86,9 @@ public class WelderModelRestController {
     @GetMapping("{id:\\d+}/machines")
     public Resources<Resource<MachineDTO>> getMachinesByModelId(@PathVariable Long id) {
         List<Resource<MachineDTO>> resources = modelService.findAllMachinesByModelId(id)
-                                                         .stream()
-                                                         .map(machineAssembler::toResource)
-                                                         .collect(Collectors.toList());
+                                                           .stream()
+                                                           .map(machineAssembler::toResource)
+                                                           .collect(Collectors.toList());
         return new Resources<>(resources,
                 linkTo(methodOn(WelderModelRestController.class).getMachinesByModelId(id)).withSelfRel());
     }
