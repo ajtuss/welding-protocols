@@ -128,7 +128,7 @@ public class BrandRestController {
     @GetMapping(value = "/brands/{id}/models")
     public ResponseEntity<List<WelderModelDTO>> getModelsByBrandId(@PathVariable Long id, Pageable pageable) {
         Page<WelderModelDTO> page = brandService.findWelderModelsByBrandId(id, pageable);
-        HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(page, "/api/brands/" + id + "/models");
+        HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(page, String.format("/api/brands/%d/models", id));
         return new ResponseEntity<>(page.getContent(), headers, HttpStatus.OK);
     }
 
