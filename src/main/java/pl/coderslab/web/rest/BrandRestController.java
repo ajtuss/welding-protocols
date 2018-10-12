@@ -122,13 +122,12 @@ public class BrandRestController {
      *
      * @param id       the id of the BrandDTO
      * @param pageable the pagination information
-     * @return the ResponseEntity with the status 200 (ok) and the list of WelderModelDTO in the body,
-     * or with status 404 (Not found) if the BrandDTO not exist
+     * @return the ResponseEntity with the status 200 (ok) and the list of WelderModelDTO in the body
      */
     @GetMapping(value = "/brands/{id}/models")
     public ResponseEntity<List<WelderModelDTO>> getModelsByBrandId(@PathVariable Long id, Pageable pageable) {
         Page<WelderModelDTO> page = brandService.findWelderModelsByBrandId(id, pageable);
-        HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(page, "/api/brands/" + id + "/models");
+        HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(page, String.format("/api/brands/%d/models", id));
         return new ResponseEntity<>(page.getContent(), headers, HttpStatus.OK);
     }
 
