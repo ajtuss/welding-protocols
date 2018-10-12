@@ -43,7 +43,7 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
     }
 
     @ExceptionHandler(BadRequestException.class)
-    private ResponseEntity<Object> badRequestException(BadRequestException ex) {
+    public ResponseEntity<Object> badRequestException(BadRequestException ex) {
 
         ApiErrorResponse apiErrorResponse = new ApiErrorResponse(ex.getMessage(), HttpStatus.BAD_REQUEST, ex.getErrorKey(), ex
                 .getParams());
