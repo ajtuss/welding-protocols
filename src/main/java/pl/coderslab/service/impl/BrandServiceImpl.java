@@ -67,8 +67,8 @@ public class BrandServiceImpl implements BrandService {
 
     @Override
     public void remove(Long id) {
-        Brand brand = brandRepository.findById(id).orElseThrow(() -> new BrandNotFoundException(id));
-        brandRepository.delete(brand);
+        Optional<Brand> byId = brandRepository.findById(id);
+        byId.ifPresent(brandRepository::delete);
     }
 
 
