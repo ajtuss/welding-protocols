@@ -14,7 +14,7 @@ public class BrandResourceAssembler implements ResourceAssembler<BrandDTO, Resou
     @Override
     public Resource<BrandDTO> toResource(BrandDTO brandDTO) {
         return new Resource<>(brandDTO,
-                linkTo(methodOn(BrandRestController.class).getOne(brandDTO.getId())).withSelfRel(),
+                linkTo(methodOn(BrandRestController.class).getBrand(brandDTO.getId())).withSelfRel(),
                 linkTo(methodOn(BrandRestController.class).getModelsByBrandId(brandDTO.getId(), null)).withRel("models"));
     }
 }

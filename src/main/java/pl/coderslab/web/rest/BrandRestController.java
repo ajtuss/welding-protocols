@@ -97,7 +97,7 @@ public class BrandRestController {
      * or with status 404 (Not found)
      */
     @GetMapping(value = "/brands/{id}")
-    public ResponseEntity<BrandDTO> getOne(@PathVariable Long id) {
+    public ResponseEntity<BrandDTO> getBrand(@PathVariable Long id) {
         Optional<BrandDTO> brandDTO = brandService.findById(id);
         return brandDTO.map(response -> ResponseEntity.ok().body(response))
                        .orElseThrow(() -> new NotFoundException(String.format("/brands/%d", id), ENTITY_NAME));
