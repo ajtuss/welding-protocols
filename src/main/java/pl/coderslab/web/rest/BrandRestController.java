@@ -3,7 +3,6 @@ package pl.coderslab.web.rest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.hateoas.Resource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -14,6 +13,7 @@ import pl.coderslab.service.dto.BrandDTO;
 import pl.coderslab.service.dto.WelderModelDTO;
 import pl.coderslab.web.errors.BadRequestException;
 import pl.coderslab.web.errors.ErrorConstants;
+import pl.coderslab.web.errors.NotFoundException;
 import pl.coderslab.web.rest.assemblers.BrandResourceAssembler;
 import pl.coderslab.web.rest.assemblers.WelderModelResourceAssembler;
 import pl.coderslab.web.rest.util.HeaderUtil;
@@ -64,7 +64,7 @@ public class BrandRestController {
     public ResponseEntity<BrandDTO> getOne(@PathVariable Long id) {
         Optional<BrandDTO> brandDTO = brandService.findById(id);
         return brandDTO.map(response -> ResponseEntity.ok().body(response))
-                       .orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
+                       .orElseThrow(() -> new NotFoundException(String.format("/brands/%d", id), ENTITY_NAME));
     }
 
 
@@ -78,7 +78,7 @@ public class BrandRestController {
     @PostMapping("/brands")
     public ResponseEntity<BrandDTO> addBrand(@RequestBody @Valid BrandDTO brandDTO) throws URISyntaxException {
         if (brandDTO.getId() != null) {
-            throw new BadRequestException("Id must be null", ENTITY_NAME, ErrorConstants.ERR_IDNULL);
+            throw new BadRequestException("Id must be null", ENTITY_NAME, ErrorConstants.ERR_ID_EXIST);
         }
         BrandDTO result = brandService.save(brandDTO);
         return ResponseEntity.created(new URI("/api/brands/" + result.getId()))
@@ -87,15 +87,22 @@ public class BrandRestController {
     }
 
     @PutMapping(value = "/brands")
-    public Resource<BrandDTO> editBrand(@PathVariable Long id, @RequestBody @Valid BrandDTO brand) {
-        BrandDTO brandDTO = brandService.updateBrand(brand);
-        return assembler.toResource(brandDTO);
+    public ResponseEntity<BrandDTO> editBrand(@RequestBody @Valid BrandDTO brandDTO) {
+        if (brandDTO.getId() == null) {
+            throw new BadRequestException("Id cant be null", ENTITY_NAME, ErrorConstants.ERR_ID_NULL);
+        }
+        BrandDTO result = brandService.save(brandDTO);
+        return ResponseEntity.ok()
+                             .headers(HeaderUtil.createEntityUpdateAlert(ENTITY_NAME, brandDTO.getId().toString()))
+                             .body(result);
     }
 
     @DeleteMapping("/brands/{id:\\d+}")
     public ResponseEntity<?> delete(@PathVariable Long id) {
         brandService.remove(id);
-        return ResponseEntity.noContent().build();
+        return ResponseEntity.ok()
+                             .headers(HeaderUtil.createEntityDeletionAlert(ENTITY_NAME, id.toString()))
+                             .build();
     }
 
 

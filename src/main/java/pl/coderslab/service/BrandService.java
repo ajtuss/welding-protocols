@@ -18,8 +18,6 @@ public interface BrandService {
 
     Optional<BrandDTO> findById(Long id);
 
-    BrandDTO updateBrand(BrandDTO brandDTO);
-
     Page<WelderModelDTO> findWelderModelsByBrandId(Long id, Pageable pageable);
 
     void remove(Long id);

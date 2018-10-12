@@ -154,7 +154,7 @@ public class BrandRestControllerTest {
         String contentBody = mapper.writeValueAsString(BRAND_UPDATE_1);
 
 
-        given(brandService.updateBrand(BRAND_UPDATE_1)).willReturn(BRAND_1_AFTER_UPDATE);
+        given(brandService.save(BRAND_UPDATE_1)).willReturn(BRAND_1_AFTER_UPDATE);
         mockMvc.perform(put("/api/brands/1")
                 .accept(MediaTypes.HAL_JSON_UTF8_VALUE)
                 .contentType(MediaTypes.HAL_JSON_UTF8_VALUE)
@@ -171,7 +171,7 @@ public class BrandRestControllerTest {
                .andExpect(jsonPath("$._links.brands.href", is("http://localhost/api/brands")))
                .andExpect(jsonPath("$._links.models.href", is("http://localhost/api/brands/1/models")))
                .andReturn();
-        verify(brandService, times(1)).updateBrand(BRAND_UPDATE_1);
+        verify(brandService, times(1)).save(BRAND_UPDATE_1);
         verifyNoMoreInteractions(brandService);
     }
 
@@ -180,7 +180,7 @@ public class BrandRestControllerTest {
         String contentBody = mapper.writeValueAsString(BRAND_UPDATE_1);
 
 
-        given(brandService.updateBrand(BRAND_UPDATE_1)).willReturn(BRAND_1_AFTER_UPDATE);
+        given(brandService.save(BRAND_UPDATE_1)).willReturn(BRAND_1_AFTER_UPDATE);
         mockMvc.perform(put("/api/brands/2")
                 .accept(MediaTypes.HAL_JSON_UTF8_VALUE)
                 .contentType(MediaTypes.HAL_JSON_UTF8_VALUE)

@@ -60,15 +60,6 @@ public class BrandServiceImpl implements BrandService {
     }
 
     @Override
-    public BrandDTO updateBrand(BrandDTO brandDTO) {
-        Brand brand = modelMapper.map(brandDTO, Brand.class);
-        Brand save = brandRepository.saveAndFlush(brand);
-        entityManager.refresh(save);
-        return modelMapper.map(save, BrandDTO.class);
-    }
-
-
-    @Override
     public Page<WelderModelDTO> findWelderModelsByBrandId(Long id, Pageable pageable) {
         return modelRepository.findAllByBrandId(id, pageable)
                               .map(model -> modelMapper.map(model, WelderModelDTO.class));

@@ -60,7 +60,7 @@ public class BrandServiceImplTest {
         BrandDTO saved = brandService.save(BRAND_CREATION);
         saved.setName("Fronius");
 
-        BrandDTO result = brandService.updateBrand(saved);
+        BrandDTO result = brandService.save(saved);
 
         assertNotNull(result);
         assertEquals(saved.getId(), result.getId());
