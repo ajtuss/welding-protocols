@@ -18,7 +18,7 @@ public class ApiRestController {
         ResourceSupport rootSupport = new ResourceSupport();
 
         rootSupport.add(linkTo(methodOn(BrandRestController.class).getAll(null)).withRel("brands"),
-                linkTo(methodOn(WelderModelRestController.class).getAll()).withRel("models"),
+                linkTo(methodOn(WelderModelRestController.class).getAll(null)).withRel("models"),
                 linkTo(methodOn(CustomerRestController.class).getAll()).withRel("customers"),
                 linkTo(methodOn(MachineRestController.class).getAll()).withRel("machines"),
                 linkTo(methodOn(ValidationsRestController.class).getAll()).withRel("validations"),
