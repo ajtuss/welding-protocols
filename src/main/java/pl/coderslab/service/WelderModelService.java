@@ -7,10 +7,11 @@ import pl.coderslab.service.dto.MachineDTO;
 import pl.coderslab.service.dto.WelderModelDTO;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface WelderModelService {
 
-    WelderModelDTO findById(Long id);
+    Optional<WelderModelDTO> findById(Long id);
 
     Page<WelderModelDTO> findAll(Pageable pageable);
     WelderModelDTO save(WelderModelDTO model);

@@ -15,6 +15,7 @@ import pl.coderslab.service.dto.WelderModelDTO;
 import pl.coderslab.web.errors.BadRequestException;
 import pl.coderslab.service.WelderModelService;
 import pl.coderslab.web.errors.ErrorConstants;
+import pl.coderslab.web.errors.NotFoundException;
 import pl.coderslab.web.rest.assemblers.BrandResourceAssembler;
 import pl.coderslab.web.rest.assemblers.WelderModelResourceAssembler;
 import pl.coderslab.web.rest.assemblers.MachineResourceAssembler;
@@ -25,6 +26,7 @@ import javax.validation.Valid;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import static org.springframework.hateoas.mvc.ControllerLinkBuilder.linkTo;
@@ -104,10 +106,18 @@ public class WelderModelRestController {
                              .body(page.getContent());
     }
 
+    /**
+     * GET /models/:id : Get the WelderModelsDTO with id
+     *
+     * @param id the id of WelderModelDTO to retrieve
+     * @return the ResponseEntity with status 200 (ok) and body with the WelderModelDTO,
+     * or status 400 (Not Found)
+     */
     @GetMapping("/models/{id}")
-    public Resource<WelderModelDTO> getOne(@PathVariable Long id) {
-        WelderModelDTO modelDTO = modelService.findById(id);
-        return assembler.toResource(modelDTO);
+    public ResponseEntity<WelderModelDTO> getModel(@PathVariable Long id) {
+        Optional<WelderModelDTO> welderModelDTO = modelService.findById(id);
+        return welderModelDTO.map(response -> ResponseEntity.ok().body(response))
+                             .orElseThrow(() -> new NotFoundException(String.format("/models/%d", id), ENTITY_NAME));
     }
 
     @DeleteMapping("/models/{id}")
