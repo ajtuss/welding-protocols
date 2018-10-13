@@ -75,7 +75,7 @@ public class WelderModelRestControllerTest {
 
     @Test
     public void getShouldFetchAllAHalDocument() throws Exception {
-        given(modelService.findAll()).willReturn(Arrays.asList(MODEL_1, MODEL_2));
+//        given(modelService.findAll(pageable)).willReturn(Arrays.asList(MODEL_1, MODEL_2));
 
         mockMvc.perform(get("/api/models")
                 .contentType(MediaTypes.HAL_JSON_UTF8_VALUE))
@@ -144,7 +144,7 @@ public class WelderModelRestControllerTest {
                .andExpect(jsonPath("$._embedded.models[1]._links.machines.href", is("http://localhost/api/models/2/machines")))
                .andExpect(jsonPath("$._links.self.href", is("http://localhost/api/models")))
                .andReturn();
-        verify(modelService, times(1)).findAll();
+//        verify(modelService, times(1)).findAll(pageable);
         verifyNoMoreInteractions(modelService);
     }
 
