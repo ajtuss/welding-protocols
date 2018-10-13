@@ -3,6 +3,8 @@ package pl.coderslab.service.impl;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.TypeToken;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import pl.coderslab.service.dto.BrandDTO;
 import pl.coderslab.service.dto.MachineDTO;
@@ -49,11 +51,9 @@ public class WelderModelServiceImpl implements WelderModelService {
     }
 
     @Override
-    public List<WelderModelDTO> findAll() {
-        List<WelderModel> models = modelRepository.findAll();
-        Type resultType = new TypeToken<List<WelderModelDTO>>() {
-        }.getType();
-        return modelMapper.map(models, resultType);
+    public Page<WelderModelDTO> findAll(Pageable pageable) {
+        Page<WelderModel> models = modelRepository.findAll(pageable);
+        return models.map(model -> modelMapper.map(model, WelderModelDTO.class));
     }
 
     @Override
