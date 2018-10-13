@@ -24,6 +24,7 @@ import javax.persistence.EntityManager;
 import javax.transaction.Transactional;
 import java.lang.reflect.Type;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @Transactional
@@ -45,9 +46,8 @@ public class WelderModelServiceImpl implements WelderModelService {
     }
 
     @Override
-    public WelderModelDTO findById(Long id) {
-        WelderModel model = modelRepository.findById(id).orElseThrow(() -> new WelderModelNotFoundException((id)));
-        return modelMapper.map(model, WelderModelDTO.class);
+    public Optional<WelderModelDTO> findById(Long id) {
+        return modelRepository.findById(id).map(model -> modelMapper.map(model, WelderModelDTO.class));
     }
 
     @Override
