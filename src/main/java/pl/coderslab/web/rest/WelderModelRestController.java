@@ -3,22 +3,16 @@ package pl.coderslab.web.rest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.hateoas.Resource;
-import org.springframework.hateoas.Resources;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import pl.coderslab.service.dto.BrandDTO;
+import pl.coderslab.service.WelderModelService;
 import pl.coderslab.service.dto.MachineDTO;
 import pl.coderslab.service.dto.WelderModelDTO;
 import pl.coderslab.web.errors.BadRequestException;
-import pl.coderslab.service.WelderModelService;
 import pl.coderslab.web.errors.ErrorConstants;
 import pl.coderslab.web.errors.NotFoundException;
-import pl.coderslab.web.rest.assemblers.BrandResourceAssembler;
-import pl.coderslab.web.rest.assemblers.WelderModelResourceAssembler;
-import pl.coderslab.web.rest.assemblers.MachineResourceAssembler;
 import pl.coderslab.web.rest.util.HeaderUtil;
 import pl.coderslab.web.rest.util.PaginationUtil;
 
@@ -27,10 +21,6 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
-
-import static org.springframework.hateoas.mvc.ControllerLinkBuilder.linkTo;
-import static org.springframework.hateoas.mvc.ControllerLinkBuilder.methodOn;
 
 /**
  * Rest Controller for Managing WelderModels
@@ -42,16 +32,10 @@ public class WelderModelRestController {
     private static final String ENTITY_NAME = "model";
 
     private final WelderModelService modelService;
-    private final WelderModelResourceAssembler assembler;
-    private final BrandResourceAssembler brandAssembler;
-    private final MachineResourceAssembler machineAssembler;
 
     @Autowired
-    public WelderModelRestController(WelderModelService modelService, WelderModelResourceAssembler assembler, BrandResourceAssembler brandAssembler, MachineResourceAssembler machineAssembler) {
+    public WelderModelRestController(WelderModelService modelService) {
         this.modelService = modelService;
-        this.assembler = assembler;
-        this.brandAssembler = brandAssembler;
-        this.machineAssembler = machineAssembler;
     }
 
     /**
@@ -120,27 +104,33 @@ public class WelderModelRestController {
                              .orElseThrow(() -> new NotFoundException(String.format("/models/%d", id), ENTITY_NAME));
     }
 
+    /**
+     * DELETE /models/:id : delete welderModel with id
+     *
+     * @param id the id of WelderModelDTO to delete
+     * @return the ResponseEntity with status 200 (ok)
+     */
     @DeleteMapping("/models/{id}")
-    public ResponseEntity<?> deleteModel(@PathVariable Long id) {
+    public ResponseEntity<Void> deleteModel(@PathVariable Long id) {
         modelService.remove(id);
-        return ResponseEntity.noContent().build();
+        return ResponseEntity.ok()
+                             .headers(HeaderUtil.createEntityDeletionAlert(ENTITY_NAME, id.toString()))
+                             .build();
     }
 
-
-    @GetMapping("/models/{id}/brands")
-    public Resource<BrandDTO> getBrandByModelId(@PathVariable Long id) {
-        BrandDTO brandDTO = modelService.findBrandByModelId(id);
-        return brandAssembler.toResource(brandDTO);
-    }
-
+    /**
+     * GET /models:id/machines : get all machines with welderModel id
+     *
+     * @param id the id of WelderModelDTO to get all machines
+     * @return the ResponseEntity with status 200 (ok) and the list of Machines in body
+     */
     @GetMapping("/models{id}/machines")
-    public Resources<Resource<MachineDTO>> getMachinesByModelId(@PathVariable Long id) {
-        List<Resource<MachineDTO>> resources = modelService.findAllMachinesByModelId(id)
-                                                           .stream()
-                                                           .map(machineAssembler::toResource)
-                                                           .collect(Collectors.toList());
-        return new Resources<>(resources,
-                linkTo(methodOn(WelderModelRestController.class).getMachinesByModelId(id)).withSelfRel());
+    public ResponseEntity<List<MachineDTO>> getMachinesByModelId(@PathVariable Long id) {
+        Page<MachineDTO> page = modelService.findAllMachinesByModelId(id);
+        HttpHeaders httpHeaders = PaginationUtil.generatePaginationHttpHeaders(page, String.format("/api/models/%d/machines", id));
+        return ResponseEntity.ok()
+                             .headers(httpHeaders)
+                             .body(page.getContent());
     }
 
 }
