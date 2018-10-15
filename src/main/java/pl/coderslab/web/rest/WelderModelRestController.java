@@ -51,9 +51,9 @@ public class WelderModelRestController {
             throw new BadRequestException("Id must be null", ENTITY_NAME, ErrorConstants.ERR_ID_EXIST);
         }
         WelderModelDTO result = modelService.save(welderModelDTO);
-        return ResponseEntity.created(new URI(String.format("/models/%d", result.getId())))
+        return ResponseEntity.created(new URI(String.format("/api/models/%d", result.getId())))
                              .headers(HeaderUtil.createEntityCreationAlert(ENTITY_NAME, result.getId().toString()))
-                             .build();
+                             .body(result);
     }
 
     /**
@@ -124,9 +124,9 @@ public class WelderModelRestController {
      * @param id the id of WelderModelDTO to get all machines
      * @return the ResponseEntity with status 200 (ok) and the list of Machines in body
      */
-    @GetMapping("/models{id}/machines")
-    public ResponseEntity<List<MachineDTO>> getMachinesByModelId(@PathVariable Long id) {
-        Page<MachineDTO> page = modelService.findAllMachinesByModelId(id);
+    @GetMapping("/models/{id}/machines")
+    public ResponseEntity<List<MachineDTO>> getMachinesByModelId(@PathVariable Long id, Pageable pageable) {
+        Page<MachineDTO> page = modelService.findAllMachinesByModelId(id, pageable);
         HttpHeaders httpHeaders = PaginationUtil.generatePaginationHttpHeaders(page, String.format("/api/models/%d/machines", id));
         return ResponseEntity.ok()
                              .headers(httpHeaders)

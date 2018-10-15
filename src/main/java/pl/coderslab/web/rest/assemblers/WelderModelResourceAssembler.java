@@ -15,7 +15,6 @@ public class WelderModelResourceAssembler implements ResourceAssembler<WelderMod
     public Resource<WelderModelDTO> toResource(WelderModelDTO modelDTO) {
         return new Resource<>(modelDTO,
                 linkTo(methodOn(WelderModelRestController.class).getModel(modelDTO.getId())).withSelfRel(),
-                linkTo(methodOn(WelderModelRestController.class).getAll(null)).withRel("models"),
-                linkTo(methodOn(WelderModelRestController.class).getMachinesByModelId(modelDTO.getId())).withRel("machines"));
+                linkTo(methodOn(WelderModelRestController.class).getAll(null)).withRel("models"));
     }
 }

@@ -83,8 +83,8 @@ public class WelderModelServiceImpl implements WelderModelService {
     }
 
     @Override
-    public Page<MachineDTO> findAllMachinesByModelId(Long id) {
-        return machineRepository.findMachinesByWelderModelId(id)
+    public Page<MachineDTO> findAllMachinesByModelId(Long id, Pageable pageable) {
+        return machineRepository.findMachinesByWelderModelId(id, pageable)
                                 .map(machine -> modelMapper.map(machine, MachineDTO.class));
     }
 

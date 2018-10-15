@@ -19,5 +19,5 @@ public interface WelderModelService {
 
     void remove(Long id);
 
-    Page<MachineDTO> findAllMachinesByModelId(Long id);
+    Page<MachineDTO> findAllMachinesByModelId(Long id, Pageable pageable);
 }
