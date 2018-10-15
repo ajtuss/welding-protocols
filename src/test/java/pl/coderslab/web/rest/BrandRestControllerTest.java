@@ -83,7 +83,7 @@ public class BrandRestControllerTest {
     @Test
     public void getShouldFetchABrand() throws Exception {
 
-        given(brandService.findById(1L)).willReturn(java.util.Optional.ofNullable(BRAND));
+        given(brandService.findById(1L)).willReturn(java.util.Optional.of(BRAND));
 
         mockMvc.perform(get("/api/brands/1")
                 .contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
