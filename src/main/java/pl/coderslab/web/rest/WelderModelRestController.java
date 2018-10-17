@@ -122,6 +122,7 @@ public class WelderModelRestController {
      * GET /models:id/machines : get all machines with welderModel id
      *
      * @param id the id of WelderModelDTO to get all machines
+     * @param pageable the pagination information
      * @return the ResponseEntity with status 200 (ok) and the list of Machines in body
      */
     @GetMapping("/models/{id}/machines")
