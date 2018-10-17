@@ -99,7 +99,7 @@ public class BrandRestController {
     @GetMapping(value = "/brands/{id}")
     public ResponseEntity<BrandDTO> getBrand(@PathVariable Long id) {
         Optional<BrandDTO> brandDTO = brandService.findById(id);
-        return brandDTO.map(response -> ResponseEntity.ok().body(response))
+        return brandDTO.map(ResponseEntity::ok)
                        .orElseThrow(() -> new NotFoundException(String.format("/brands/%d", id), ENTITY_NAME));
     }
 
