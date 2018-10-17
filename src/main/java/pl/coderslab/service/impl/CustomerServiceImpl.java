@@ -1,22 +1,20 @@
 package pl.coderslab.service.impl;
 
 import org.modelmapper.ModelMapper;
-import org.modelmapper.TypeToken;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-import pl.coderslab.service.dto.CustomerDTO;
-import pl.coderslab.service.dto.MachineDTO;
 import pl.coderslab.domain.Customer;
-import pl.coderslab.domain.Machine;
-import pl.coderslab.web.errors.CustomerNotFoundException;
 import pl.coderslab.repository.CustomerRepository;
 import pl.coderslab.repository.MachineRepository;
 import pl.coderslab.service.CustomerService;
+import pl.coderslab.service.dto.CustomerDTO;
+import pl.coderslab.service.dto.MachineDTO;
 
 import javax.persistence.EntityManager;
 import javax.transaction.Transactional;
-import java.lang.reflect.Type;
-import java.util.List;
+import java.util.Optional;
 
 @Service
 @Transactional
@@ -36,10 +34,9 @@ public class CustomerServiceImpl implements CustomerService {
     }
 
     @Override
-    public List<CustomerDTO> findAll() {
-        List<Customer> customers = customerRepository.findAll();
-        Type resultType = new TypeToken<List<CustomerDTO>>() {}.getType();
-        return modelMapper.map(customers, resultType);
+    public Page<CustomerDTO> findAll(Pageable pageable) {
+        return customerRepository.findAll(pageable)
+                                 .map(customer -> modelMapper.map(customer, CustomerDTO.class));
     }
 
     @Override
@@ -50,29 +47,20 @@ public class CustomerServiceImpl implements CustomerService {
     }
 
     @Override
-    public CustomerDTO findById(Long id) {
-        Customer customer = customerRepository.findById(id).orElseThrow(() -> new CustomerNotFoundException(id));
-        return modelMapper.map(customer,CustomerDTO.class);
-    }
-
-    @Override
-    public CustomerDTO update(CustomerDTO customerDTO) {
-        Customer customer = modelMapper.map(customerDTO, Customer.class);
-        Customer updated = customerRepository.saveAndFlush(customer);
-        entityManager.refresh(updated);
-        return modelMapper.map(updated, CustomerDTO.class);
+    public Optional<CustomerDTO> findById(Long id) {
+        return customerRepository.findById(id)
+                                 .map(customer -> modelMapper.map(customer, CustomerDTO.class));
     }
 
     @Override
     public void remove(Long id) {
-        Customer customer = customerRepository.findById(id).orElseThrow(() -> new CustomerNotFoundException(id));
-        customerRepository.delete(customer);
+        Optional<Customer> customer = customerRepository.findById(id);
+        customer.ifPresent(customerRepository::delete);
     }
 
     @Override
-    public List<MachineDTO> findAllMachines(Long id) {
-        List<Machine> machines = machineRepository.findByCustomerId(id);
-        Type resultType = new TypeToken<List<MachineDTO>>() {}.getType();
-        return modelMapper.map(machines, resultType);
+    public Page<MachineDTO> findAllMachines(Long id, Pageable pageable) {
+        return machineRepository.findByCustomerId(id, pageable)
+                                .map(machine -> modelMapper.map(machine, MachineDTO.class));
     }
 }

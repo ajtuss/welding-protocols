@@ -1,21 +1,21 @@
 package pl.coderslab.service;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import pl.coderslab.service.dto.CustomerDTO;
 import pl.coderslab.service.dto.MachineDTO;
 
-import java.util.List;
+import java.util.Optional;
 
 public interface CustomerService {
 
-    List<CustomerDTO> findAll();
+    Page<CustomerDTO> findAll(Pageable pageable);
 
     CustomerDTO save(CustomerDTO customerDTO);
 
-    CustomerDTO findById(Long id);
-
-    CustomerDTO update(CustomerDTO customerDTO);
+    Optional<CustomerDTO> findById(Long id);
 
     void remove(Long id);
 
-    List<MachineDTO> findAllMachines(Long customerId);
+    Page<MachineDTO> findAllMachines(Long customerId, Pageable pageable);
 }
