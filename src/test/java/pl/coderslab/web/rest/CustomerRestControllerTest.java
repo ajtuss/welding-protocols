@@ -6,19 +6,20 @@ import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.context.annotation.Import;
-import org.springframework.hateoas.MediaTypes;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.config.EnableSpringDataWebSupport;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import pl.coderslab.service.dto.CustomerDTO;
 import pl.coderslab.service.dto.MachineDTO;
 import pl.coderslab.service.CustomerService;
-import pl.coderslab.web.rest.assemblers.CustomerResourceAssembler;
-import pl.coderslab.web.rest.assemblers.MachineResourceAssembler;
 
 import java.time.LocalDateTime;
-import java.util.Arrays;
+import java.util.Collections;
+import java.util.Optional;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.notNullValue;
@@ -31,7 +32,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @RunWith(SpringRunner.class)
 @WebMvcTest(value = CustomerRestController.class, secure = false)
-@Import({CustomerResourceAssembler.class, MachineResourceAssembler.class})
+@EnableSpringDataWebSupport
 public class CustomerRestControllerTest {
 
     @Autowired
@@ -40,193 +41,149 @@ public class CustomerRestControllerTest {
     @MockBean
     private CustomerService customerService;
 
-    private static final ObjectMapper mapper = new ObjectMapper();
+    @Autowired
+    private ObjectMapper mapper;
 
     private static final LocalDateTime DATE_TIME = LocalDateTime.now();
-    private static final CustomerDTO CUSTOMER_1 = new CustomerDTO(1L, "FIRMA",
+    private static final CustomerDTO CUSTOMER = new CustomerDTO(1L, "FIRMA",
             "FIRMA SP. z O.O.", "CITY", "00-000", "Street 14",
             "firma@firma.pl", "123-456-32-18", DATE_TIME, DATE_TIME, 1L);
-    private static final CustomerDTO CUSTOMER_2 = new CustomerDTO(2L, "FIRMA 2",
-            "FIRMA 2 SP. z O.O.", "CITY", "00-000", "Street 14",
-            "firma2@firma2.pl", "725-18-01-126", DATE_TIME, DATE_TIME, 1L);
-    private static final CustomerDTO CUSTOMER_CREATION_1 = new CustomerDTO("FIRMA",
+
+    private static final CustomerDTO CUSTOMER_CREATION = new CustomerDTO("FIRMA",
             "FIRMA SP. z O.O.", "CITY", "00-000", "Street 14",
             "firma@firma.pl", "123-456-32-18");
-    private static final CustomerDTO CUSTOMER_UPDATE_1 = new CustomerDTO(1L, "FIRMA",
+    private static final CustomerDTO CUSTOMER_UPDATE = new CustomerDTO(1L, "FIRMA",
             "FIRMA SP. z O.O.", "CITY", "00-000", "Street 14",
             "firma@firma.pl", "123-456-32-18", 1L);
-    private static final CustomerDTO CUSTOMER_AFTER_UPDATE_1 = new CustomerDTO(1L, "FIRMA",
+    private static final CustomerDTO CUSTOMER_AFTER_UPDATE = new CustomerDTO(1L, "FIRMA",
             "FIRMA SP. z O.O.", "CITY", "00-000", "Street 14",
             "firma@firma.pl", "123-456-32-18", DATE_TIME, DATE_TIME, 2L);
 
-    private static final MachineDTO MACHINE_1 = new MachineDTO(1L, "12345678", "484-123123",
+    private static final MachineDTO MACHINE = new MachineDTO(1L, "12345678", "484-123123",
             1L, "Mastertig 3000", 1L, "Kemppi",
-            CUSTOMER_1.getId(), CUSTOMER_1.getShortName(), DATE_TIME, DATE_TIME, 1L);
+            CUSTOMER.getId(), CUSTOMER.getShortName(), DATE_TIME, DATE_TIME, 1L);
 
-    private static final MachineDTO MACHINE_2 = new MachineDTO(2L, "9877877123", "484-9879879",
-            2L, "Mastertig 4000", 1L, "Kemppi",
-            CUSTOMER_1.getId(), CUSTOMER_1.getShortName(), DATE_TIME, DATE_TIME, 1L);
 
     @Test
-    public void getShouldFetchAllAHalDocument() throws Exception {
-
-        given(customerService.findAll()).willReturn(
-                Arrays.asList(CUSTOMER_1, CUSTOMER_2)
-        );
+    public void getShouldFetchAllCustomers() throws Exception {
+        PageImpl<CustomerDTO> page = new PageImpl<>(Collections.singletonList(CUSTOMER));
+        given(customerService.findAll(any(Pageable.class))).willReturn(page);
 
         mockMvc.perform(get("/api/customers")
-                .contentType(MediaTypes.HAL_JSON_UTF8_VALUE))
+                .contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
                .andDo(print())
                .andExpect(status().isOk())
-               .andExpect(header().string(HttpHeaders.CONTENT_TYPE, MediaTypes.HAL_JSON_UTF8_VALUE))
-               .andExpect(jsonPath("$._embedded.customers[0].id", is(CUSTOMER_1.getId().intValue())))
-               .andExpect(jsonPath("$._embedded.customers[0].shortName", is(CUSTOMER_1.getShortName())))
-               .andExpect(jsonPath("$._embedded.customers[0].fullName", is(CUSTOMER_1.getFullName())))
-               .andExpect(jsonPath("$._embedded.customers[0].city", is(CUSTOMER_1.getCity())))
-               .andExpect(jsonPath("$._embedded.customers[0].zip", is(CUSTOMER_1.getZip())))
-               .andExpect(jsonPath("$._embedded.customers[0].street", is(CUSTOMER_1.getStreet())))
-               .andExpect(jsonPath("$._embedded.customers[0].email", is(CUSTOMER_1.getEmail())))
-               .andExpect(jsonPath("$._embedded.customers[0].nip", is(CUSTOMER_1.getNip())))
-               .andExpect(jsonPath("$._embedded.customers[0].creationDate", is(notNullValue())))
-               .andExpect(jsonPath("$._embedded.customers[0].modificationDate", is(notNullValue())))
-               .andExpect(jsonPath("$._embedded.customers[0].versionId", is(CUSTOMER_1.getVersionId().intValue())))
-               .andExpect(jsonPath("$._embedded.customers[0]._links.self.href", is("http://localhost/api/customers/1")))
-               .andExpect(jsonPath("$._embedded.customers[0]._links.machines.href", is("http://localhost/api/customers/1/machines")))
-               .andExpect(jsonPath("$._embedded.customers[1].id", is(CUSTOMER_2.getId().intValue())))
-               .andExpect(jsonPath("$._embedded.customers[1].shortName", is(CUSTOMER_2.getShortName())))
-               .andExpect(jsonPath("$._embedded.customers[1].fullName", is(CUSTOMER_2.getFullName())))
-               .andExpect(jsonPath("$._embedded.customers[1].city", is(CUSTOMER_2.getCity())))
-               .andExpect(jsonPath("$._embedded.customers[1].zip", is(CUSTOMER_2.getZip())))
-               .andExpect(jsonPath("$._embedded.customers[1].street", is(CUSTOMER_2.getStreet())))
-               .andExpect(jsonPath("$._embedded.customers[1].email", is(CUSTOMER_2.getEmail())))
-               .andExpect(jsonPath("$._embedded.customers[1].nip", is(CUSTOMER_2.getNip())))
-               .andExpect(jsonPath("$._embedded.customers[1].creationDate", is(notNullValue())))
-               .andExpect(jsonPath("$._embedded.customers[1].modificationDate", is(notNullValue())))
-               .andExpect(jsonPath("$._embedded.customers[1].versionId", is(CUSTOMER_2.getVersionId().intValue())))
-               .andExpect(jsonPath("$._embedded.customers[1]._links.self.href", is("http://localhost/api/customers/2")))
-               .andExpect(jsonPath("$._embedded.customers[1]._links.machines.href", is("http://localhost/api/customers/2/machines")))
-               .andExpect(jsonPath("$._links.self.href", is("http://localhost/api/customers")))
+               .andExpect(header().string(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_UTF8_VALUE))
+               .andExpect(jsonPath("$[0].id", is(CUSTOMER.getId().intValue())))
+               .andExpect(jsonPath("$[0].shortName", is(CUSTOMER.getShortName())))
+               .andExpect(jsonPath("$[0].fullName", is(CUSTOMER.getFullName())))
+               .andExpect(jsonPath("$[0].city", is(CUSTOMER.getCity())))
+               .andExpect(jsonPath("$[0].zip", is(CUSTOMER.getZip())))
+               .andExpect(jsonPath("$[0].street", is(CUSTOMER.getStreet())))
+               .andExpect(jsonPath("$[0].email", is(CUSTOMER.getEmail())))
+               .andExpect(jsonPath("$[0].nip", is(CUSTOMER.getNip())))
+               .andExpect(jsonPath("$[0].creationDate", is(notNullValue())))
+               .andExpect(jsonPath("$[0].modificationDate", is(notNullValue())))
+               .andExpect(jsonPath("$[0].versionId", is(CUSTOMER.getVersionId().intValue())))
                .andReturn();
-        verify(customerService, times(1)).findAll();
+        verify(customerService, times(1)).findAll(any(Pageable.class));
         verifyNoMoreInteractions(customerService);
     }
 
     @Test
-    public void getShouldFetchAHalDocument() throws Exception {
+    public void getShouldFetchACustomer() throws Exception {
 
-        given(customerService.findById(1L)).willReturn(CUSTOMER_1);
+        given(customerService.findById(1L)).willReturn(Optional.of(CUSTOMER));
 
         mockMvc.perform(get("/api/customers/1")
-                .contentType(MediaTypes.HAL_JSON_UTF8_VALUE))
+                .contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
                .andDo(print())
                .andExpect(status().isOk())
-               .andExpect(header().string(HttpHeaders.CONTENT_TYPE, MediaTypes.HAL_JSON_UTF8_VALUE))
-               .andExpect(jsonPath("$.id", is(CUSTOMER_1.getId().intValue())))
-               .andExpect(jsonPath("$.shortName", is(CUSTOMER_1.getShortName())))
-               .andExpect(jsonPath("$.fullName", is(CUSTOMER_1.getFullName())))
-               .andExpect(jsonPath("$.city", is(CUSTOMER_1.getCity())))
-               .andExpect(jsonPath("$.zip", is(CUSTOMER_1.getZip())))
-               .andExpect(jsonPath("$.street", is(CUSTOMER_1.getStreet())))
-               .andExpect(jsonPath("$.email", is(CUSTOMER_1.getEmail())))
-               .andExpect(jsonPath("$.nip", is(CUSTOMER_1.getNip())))
+               .andExpect(header().string(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_UTF8_VALUE))
+               .andExpect(jsonPath("$.id", is(CUSTOMER.getId().intValue())))
+               .andExpect(jsonPath("$.shortName", is(CUSTOMER.getShortName())))
+               .andExpect(jsonPath("$.fullName", is(CUSTOMER.getFullName())))
+               .andExpect(jsonPath("$.city", is(CUSTOMER.getCity())))
+               .andExpect(jsonPath("$.zip", is(CUSTOMER.getZip())))
+               .andExpect(jsonPath("$.street", is(CUSTOMER.getStreet())))
+               .andExpect(jsonPath("$.email", is(CUSTOMER.getEmail())))
+               .andExpect(jsonPath("$.nip", is(CUSTOMER.getNip())))
                .andExpect(jsonPath("$.creationDate", is(notNullValue())))
                .andExpect(jsonPath("$.modificationDate", is(notNullValue())))
-               .andExpect(jsonPath("$.versionId", is(CUSTOMER_1.getVersionId().intValue())))
-               .andExpect(jsonPath("$._links.self.href", is("http://localhost/api/customers/1")))
-               .andExpect(jsonPath("$._links.machines.href", is("http://localhost/api/customers/1/machines")))
+               .andExpect(jsonPath("$.versionId", is(CUSTOMER.getVersionId().intValue())))
                .andReturn();
         verify(customerService, times(1)).findById(1L);
         verifyNoMoreInteractions(customerService);
     }
 
     @Test
-    public void postShouldCreateNewCustomerAndFetchAHalDocument() throws Exception {
-        String contentBody = mapper.writeValueAsString(CUSTOMER_CREATION_1);
+    public void postShouldCreateNewCustomerAndSavedCustomer() throws Exception {
+        String contentBody = mapper.writeValueAsString(CUSTOMER_CREATION);
 
-        given(customerService.save(CUSTOMER_CREATION_1)).willReturn(CUSTOMER_1);
+        given(customerService.save(CUSTOMER_CREATION)).willReturn(CUSTOMER);
         mockMvc.perform(post("/api/customers")
-                .accept(MediaTypes.HAL_JSON_UTF8_VALUE)
-                .contentType(MediaTypes.HAL_JSON_UTF8_VALUE)
+                .accept(MediaType.APPLICATION_JSON_UTF8_VALUE)
+                .contentType(MediaType.APPLICATION_JSON_UTF8_VALUE)
                 .content(contentBody))
                .andDo(print())
                .andExpect(status().isCreated())
-               .andExpect(redirectedUrl("http://localhost/api/customers/1"))
-               .andExpect(header().string(HttpHeaders.CONTENT_TYPE, MediaTypes.HAL_JSON_UTF8_VALUE))
-               .andExpect(jsonPath("$.id", is(CUSTOMER_1.getId().intValue())))
-               .andExpect(jsonPath("$.shortName", is(CUSTOMER_1.getShortName())))
-               .andExpect(jsonPath("$.fullName", is(CUSTOMER_1.getFullName())))
-               .andExpect(jsonPath("$.city", is(CUSTOMER_1.getCity())))
-               .andExpect(jsonPath("$.zip", is(CUSTOMER_1.getZip())))
-               .andExpect(jsonPath("$.street", is(CUSTOMER_1.getStreet())))
-               .andExpect(jsonPath("$.email", is(CUSTOMER_1.getEmail())))
-               .andExpect(jsonPath("$.nip", is(CUSTOMER_1.getNip())))
+               .andExpect(redirectedUrl("/api/customers/1"))
+               .andExpect(header().string(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_UTF8_VALUE))
+               .andExpect(jsonPath("$.id", is(CUSTOMER.getId().intValue())))
+               .andExpect(jsonPath("$.shortName", is(CUSTOMER.getShortName())))
+               .andExpect(jsonPath("$.fullName", is(CUSTOMER.getFullName())))
+               .andExpect(jsonPath("$.city", is(CUSTOMER.getCity())))
+               .andExpect(jsonPath("$.zip", is(CUSTOMER.getZip())))
+               .andExpect(jsonPath("$.street", is(CUSTOMER.getStreet())))
+               .andExpect(jsonPath("$.email", is(CUSTOMER.getEmail())))
+               .andExpect(jsonPath("$.nip", is(CUSTOMER.getNip())))
                .andExpect(jsonPath("$.creationDate", is(notNullValue())))
                .andExpect(jsonPath("$.modificationDate", is(notNullValue())))
-               .andExpect(jsonPath("$.versionId", is(CUSTOMER_1.getVersionId().intValue())))
-               .andExpect(jsonPath("$._links.self.href", is("http://localhost/api/customers/1")))
-               .andExpect(jsonPath("$._links.machines.href", is("http://localhost/api/customers/1/machines")))
+               .andExpect(jsonPath("$.versionId", is(CUSTOMER.getVersionId().intValue())))
                .andReturn();
-        verify(customerService, times(1)).save(CUSTOMER_CREATION_1);
+        verify(customerService, times(1)).save(CUSTOMER_CREATION);
         verifyNoMoreInteractions(customerService);
     }
 
     @Test
-    public void putShouldUpdateCustomerAndFetchHalDocument() throws Exception {
-        String contentBody = mapper.writeValueAsString(CUSTOMER_UPDATE_1);
+    public void putShouldUpdateCustomerAndFetchASavedCustomer() throws Exception {
+        String contentBody = mapper.writeValueAsString(CUSTOMER_UPDATE);
 
+        given(customerService.save(CUSTOMER_UPDATE)).willReturn(CUSTOMER_AFTER_UPDATE);
 
-        given(customerService.update(CUSTOMER_UPDATE_1)).willReturn(CUSTOMER_AFTER_UPDATE_1);
-        mockMvc.perform(put("/api/customers/1")
-                .accept(MediaTypes.HAL_JSON_UTF8_VALUE)
-                .contentType(MediaTypes.HAL_JSON_UTF8_VALUE)
+        mockMvc.perform(put("/api/customers")
+                .accept(MediaType.APPLICATION_JSON_UTF8_VALUE)
+                .contentType(MediaType.APPLICATION_JSON_UTF8_VALUE)
                 .content(contentBody))
                .andDo(print())
                .andExpect(status().isOk())
-               .andExpect(header().string(HttpHeaders.CONTENT_TYPE, MediaTypes.HAL_JSON_UTF8_VALUE))
-               .andExpect(jsonPath("$.id", is(CUSTOMER_AFTER_UPDATE_1.getId().intValue())))
-               .andExpect(jsonPath("$.shortName", is(CUSTOMER_AFTER_UPDATE_1.getShortName())))
-               .andExpect(jsonPath("$.fullName", is(CUSTOMER_AFTER_UPDATE_1.getFullName())))
-               .andExpect(jsonPath("$.city", is(CUSTOMER_AFTER_UPDATE_1.getCity())))
-               .andExpect(jsonPath("$.zip", is(CUSTOMER_AFTER_UPDATE_1.getZip())))
-               .andExpect(jsonPath("$.street", is(CUSTOMER_AFTER_UPDATE_1.getStreet())))
-               .andExpect(jsonPath("$.email", is(CUSTOMER_AFTER_UPDATE_1.getEmail())))
-               .andExpect(jsonPath("$.nip", is(CUSTOMER_AFTER_UPDATE_1.getNip())))
+               .andExpect(header().string(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_UTF8_VALUE))
+               .andExpect(jsonPath("$.id", is(CUSTOMER_AFTER_UPDATE.getId().intValue())))
+               .andExpect(jsonPath("$.shortName", is(CUSTOMER_AFTER_UPDATE.getShortName())))
+               .andExpect(jsonPath("$.fullName", is(CUSTOMER_AFTER_UPDATE.getFullName())))
+               .andExpect(jsonPath("$.city", is(CUSTOMER_AFTER_UPDATE.getCity())))
+               .andExpect(jsonPath("$.zip", is(CUSTOMER_AFTER_UPDATE.getZip())))
+               .andExpect(jsonPath("$.street", is(CUSTOMER_AFTER_UPDATE.getStreet())))
+               .andExpect(jsonPath("$.email", is(CUSTOMER_AFTER_UPDATE.getEmail())))
+               .andExpect(jsonPath("$.nip", is(CUSTOMER_AFTER_UPDATE.getNip())))
                .andExpect(jsonPath("$.creationDate", is(notNullValue())))
                .andExpect(jsonPath("$.modificationDate", is(notNullValue())))
-               .andExpect(jsonPath("$.versionId", is(CUSTOMER_AFTER_UPDATE_1.getVersionId().intValue())))
-               .andExpect(jsonPath("$._links.self.href", is("http://localhost/api/customers/1")))
-               .andExpect(jsonPath("$._links.machines.href", is("http://localhost/api/customers/1/machines")))
+               .andExpect(jsonPath("$.versionId", is(CUSTOMER_AFTER_UPDATE.getVersionId().intValue())))
                .andReturn();
-        verify(customerService, times(1)).update(CUSTOMER_UPDATE_1);
+        verify(customerService, times(1)).save(CUSTOMER_UPDATE);
         verifyNoMoreInteractions(customerService);
     }
 
     @Test
-    public void putWithInvalidIdShouldReturnHttpStatus400() throws Exception {
-        String contentBody = mapper.writeValueAsString(CUSTOMER_UPDATE_1);
-
-
-        given(customerService.update(CUSTOMER_UPDATE_1)).willReturn(CUSTOMER_AFTER_UPDATE_1);
-        mockMvc.perform(put("/api/customers/2")
-                .accept(MediaTypes.HAL_JSON_UTF8_VALUE)
-                .contentType(MediaTypes.HAL_JSON_UTF8_VALUE)
-                .content(contentBody))
-               .andDo(print())
-               .andExpect(status().isBadRequest())
-               .andReturn();
-        verifyNoMoreInteractions(customerService);
-    }
-
-    @Test
-    public void deleteShouldRemoveAndReturnNoContent() throws Exception {
+    public void deleteShouldRemoveAndReturnOk() throws Exception {
 
         doNothing().when(customerService).remove(1L);
 
         mockMvc.perform(delete("/api/customers/1")
-                .accept(MediaTypes.HAL_JSON_UTF8_VALUE)
-                .contentType(MediaTypes.HAL_JSON_UTF8_VALUE))
+                .accept(MediaType.APPLICATION_JSON_UTF8_VALUE)
+                .contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
                .andDo(print())
-               .andExpect(status().isNoContent())
+               .andExpect(status().isOk())
                .andReturn();
         verify(customerService, times(1)).remove(1L);
         verifyNoMoreInteractions(customerService);
@@ -234,50 +191,29 @@ public class CustomerRestControllerTest {
 
     @Test
     public void getMachinesShouldFetchHalDocument() throws Exception {
-        given(customerService.findAllMachines(1L)).willReturn(Arrays.asList(MACHINE_1, MACHINE_2));
+        PageImpl<MachineDTO> page = new PageImpl<>(Collections.singletonList(MACHINE));
+        given(customerService.findAllMachines(eq(1L), any(Pageable.class))).willReturn(page);
 
         mockMvc.perform(get("/api/customers/1/machines")
-                .contentType(MediaTypes.HAL_JSON_UTF8_VALUE))
+                .contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
                .andDo(print())
                .andExpect(status().isOk())
-               .andExpect(header().string(HttpHeaders.CONTENT_TYPE, MediaTypes.HAL_JSON_UTF8_VALUE))
-               .andExpect(jsonPath("$._embedded.machines[0].id", is(MACHINE_1.getId().intValue())))
-               .andExpect(jsonPath("$._embedded.machines[0].serialNumber", is(MACHINE_1.getSerialNumber())))
-               .andExpect(jsonPath("$._embedded.machines[0].inwNumber", is(MACHINE_1.getInwNumber())))
-               .andExpect(jsonPath("$._embedded.machines[0].welderModelBrandId", is(MACHINE_1.getWelderModelBrandId().intValue())))
-               .andExpect(jsonPath("$._embedded.machines[0].welderModelBrandName", is(MACHINE_1.getWelderModelBrandName())))
-               .andExpect(jsonPath("$._embedded.machines[0].welderModelId", is(MACHINE_1.getWelderModelId().intValue())))
-               .andExpect(jsonPath("$._embedded.machines[0].welderModelName", is(MACHINE_1.getWelderModelName())))
-               .andExpect(jsonPath("$._embedded.machines[0].customerId", is(MACHINE_1.getCustomerId().intValue())))
-               .andExpect(jsonPath("$._embedded.machines[0].customerShortName", is(MACHINE_1.getCustomerShortName())))
-               .andExpect(jsonPath("$._embedded.machines[0].creationDate", is(notNullValue())))
-               .andExpect(jsonPath("$._embedded.machines[0].modificationDate", is(notNullValue())))
-               .andExpect(jsonPath("$._embedded.machines[0].versionId", is(MACHINE_1.getVersionId().intValue())))
-               .andExpect(jsonPath("$._embedded.machines[0]._links.self.href", is("http://localhost/api/machines/1")))
-               .andExpect(jsonPath("$._embedded.machines[0]._links.machines.href", is("http://localhost/api/machines")))
-               .andExpect(jsonPath("$._embedded.machines[0]._links.models.href", is("http://localhost/api/machines/1/models")))
-               .andExpect(jsonPath("$._embedded.machines[0]._links.customers.href", is("http://localhost/api/machines/1/customers")))
-               .andExpect(jsonPath("$._embedded.machines[0]._links.validations.href", is("http://localhost/api/machines/1/validations")))
-               .andExpect(jsonPath("$._embedded.machines[1].id", is(MACHINE_2.getId().intValue())))
-               .andExpect(jsonPath("$._embedded.machines[1].serialNumber", is(MACHINE_2.getSerialNumber())))
-               .andExpect(jsonPath("$._embedded.machines[1].inwNumber", is(MACHINE_2.getInwNumber())))
-               .andExpect(jsonPath("$._embedded.machines[1].welderModelBrandId", is(MACHINE_2.getWelderModelBrandId().intValue())))
-               .andExpect(jsonPath("$._embedded.machines[1].welderModelBrandName", is(MACHINE_2.getWelderModelBrandName())))
-               .andExpect(jsonPath("$._embedded.machines[1].welderModelId", is(MACHINE_2.getWelderModelId().intValue())))
-               .andExpect(jsonPath("$._embedded.machines[1].welderModelName", is(MACHINE_2.getWelderModelName())))
-               .andExpect(jsonPath("$._embedded.machines[1].customerId", is(MACHINE_2.getCustomerId().intValue())))
-               .andExpect(jsonPath("$._embedded.machines[1].customerShortName", is(MACHINE_2.getCustomerShortName())))
-               .andExpect(jsonPath("$._embedded.machines[1].creationDate", is(notNullValue())))
-               .andExpect(jsonPath("$._embedded.machines[1].modificationDate", is(notNullValue())))
-               .andExpect(jsonPath("$._embedded.machines[1].versionId", is(MACHINE_2.getVersionId().intValue())))
-               .andExpect(jsonPath("$._embedded.machines[1]._links.self.href", is("http://localhost/api/machines/2")))
-               .andExpect(jsonPath("$._embedded.machines[1]._links.machines.href", is("http://localhost/api/machines")))
-               .andExpect(jsonPath("$._embedded.machines[1]._links.models.href", is("http://localhost/api/machines/2/models")))
-               .andExpect(jsonPath("$._embedded.machines[1]._links.customers.href", is("http://localhost/api/machines/2/customers")))
-               .andExpect(jsonPath("$._embedded.machines[1]._links.validations.href", is("http://localhost/api/machines/2/validations")))
-               .andExpect(jsonPath("$._links.self.href", is("http://localhost/api/customers/1/machines")))
+               .andExpect(header().string(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_UTF8_VALUE))
+               .andExpect(jsonPath("$[0].id", is(MACHINE.getId().intValue())))
+               .andExpect(jsonPath("$[0].serialNumber", is(MACHINE.getSerialNumber())))
+               .andExpect(jsonPath("$[0].inwNumber", is(MACHINE.getInwNumber())))
+               .andExpect(jsonPath("$[0].welderModelBrandId", is(MACHINE.getWelderModelBrandId()
+                                                                        .intValue())))
+               .andExpect(jsonPath("$[0].welderModelBrandName", is(MACHINE.getWelderModelBrandName())))
+               .andExpect(jsonPath("$[0].welderModelId", is(MACHINE.getWelderModelId().intValue())))
+               .andExpect(jsonPath("$[0].welderModelName", is(MACHINE.getWelderModelName())))
+               .andExpect(jsonPath("$[0].customerId", is(MACHINE.getCustomerId().intValue())))
+               .andExpect(jsonPath("$[0].customerShortName", is(MACHINE.getCustomerShortName())))
+               .andExpect(jsonPath("$[0].creationDate", is(notNullValue())))
+               .andExpect(jsonPath("$[0].modificationDate", is(notNullValue())))
+               .andExpect(jsonPath("$[0].versionId", is(MACHINE.getVersionId().intValue())))
                .andReturn();
-        verify(customerService, times(1)).findAllMachines(1L);
+        verify(customerService, times(1)).findAllMachines(eq(1L), any(Pageable.class));
         verifyNoMoreInteractions(customerService);
     }
 }
