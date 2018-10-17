@@ -14,7 +14,6 @@ public class CustomerResourceAssembler implements ResourceAssembler<CustomerDTO,
     @Override
     public Resource<CustomerDTO> toResource(CustomerDTO customerDTO) {
         return new Resource<>(customerDTO,
-                linkTo(methodOn(CustomerRestController.class).getOne(customerDTO.getId())).withSelfRel(),
-                linkTo(methodOn(CustomerRestController.class).getMachineByCustomerId(customerDTO.getId())).withRel("machines"));
+                linkTo(methodOn(CustomerRestController.class).getOne(customerDTO.getId())).withSelfRel());
     }
 }
