@@ -42,7 +42,8 @@ public class BrandRestControllerTest {
     @MockBean
     private BrandService brandService;
 
-    private static final ObjectMapper mapper = new ObjectMapper();
+    @Autowired
+    private ObjectMapper mapper;
 
     private static final LocalDateTime DATE_TIME = LocalDateTime.now();
     private static final BrandDTO BRAND = new BrandDTO(1L, "Kemppi", DATE_TIME, DATE_TIME, 1L);
