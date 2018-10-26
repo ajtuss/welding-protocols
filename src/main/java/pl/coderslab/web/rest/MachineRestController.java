@@ -2,6 +2,7 @@ package pl.coderslab.web.rest;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.hateoas.MediaTypes;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
@@ -16,7 +17,6 @@ import pl.coderslab.web.rest.util.HeaderUtil;
 import pl.coderslab.web.rest.util.PaginationUtil;
 
 import javax.validation.Valid;
-import java.awt.print.Pageable;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.List;
