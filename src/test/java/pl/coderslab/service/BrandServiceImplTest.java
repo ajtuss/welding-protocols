@@ -61,7 +61,6 @@ public class BrandServiceImplTest {
         saved.setName("Fronius");
 
         BrandDTO result = brandService.save(saved);
-
         assertNotNull(result);
         assertEquals(saved.getId(), result.getId());
         assertEquals(saved.getName(), result.getName());
@@ -75,8 +74,8 @@ public class BrandServiceImplTest {
         BrandDTO expected = brandService.save(BRAND_CREATION);
 
         Optional<BrandDTO> found = brandService.findById(expected.getId());
-
-        assertEquals(expected, found);
+        assertTrue(found.isPresent());
+        assertEquals(expected, found.get());
     }
 
     @Test(expected = BrandNotFoundException.class)

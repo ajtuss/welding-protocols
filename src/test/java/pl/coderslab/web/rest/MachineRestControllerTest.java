@@ -7,6 +7,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Import;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import org.springframework.hateoas.MediaTypes;
 import org.springframework.http.HttpHeaders;
 import org.springframework.test.context.junit4.SpringRunner;
@@ -22,6 +24,7 @@ import pl.coderslab.web.rest.assemblers.WelderModelResourceAssembler;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.Arrays;
+import java.util.Optional;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.notNullValue;
@@ -107,7 +110,7 @@ public class MachineRestControllerTest {
 
     @Test
     public void getShouldFetchAllAHalDocument() throws Exception {
-        given(machineService.findAll()).willReturn(Arrays.asList(MACHINE_1, MACHINE_2));
+        given(machineService.findAll(any(Pageable.class))).willReturn(new PageImpl<>(Arrays.asList(MACHINE_1, MACHINE_2)));
 
         mockMvc.perform(get("/api/machines")
                 .contentType(MediaTypes.HAL_JSON_UTF8_VALUE))
@@ -154,14 +157,14 @@ public class MachineRestControllerTest {
                .andExpect(jsonPath("$._embedded.machines[1]._links.validations.href", is("http://localhost/api/machines/2/validations")))
                .andExpect(jsonPath("$._links.self.href", is("http://localhost/api/machines")))
                .andReturn();
-        verify(machineService, times(1)).findAll();
+        verify(machineService, times(1)).findAll(any(Pageable.class));
         verifyNoMoreInteractions(machineService);
     }
 
     @Test
     public void getShouldFetchAHalDocument() throws Exception {
 
-        given(machineService.findById(1L)).willReturn(MACHINE_1);
+        given(machineService.findById(1L)).willReturn(Optional.of(MACHINE_1));
 
         mockMvc.perform(get("/api/machines/1")
                 .contentType(MediaTypes.HAL_JSON_UTF8_VALUE))
@@ -228,7 +231,7 @@ public class MachineRestControllerTest {
         String contentBody = mapper.writeValueAsString(MACHINE_UPDATE);
 
 
-        given(machineService.update(MACHINE_UPDATE)).willReturn(MACHINE_AFTER_UPDATE);
+        given(machineService.save(MACHINE_UPDATE)).willReturn(MACHINE_AFTER_UPDATE);
         mockMvc.perform(put("/api/machines/1")
                 .accept(MediaTypes.HAL_JSON_UTF8_VALUE)
                 .contentType(MediaTypes.HAL_JSON_UTF8_VALUE)
@@ -253,7 +256,7 @@ public class MachineRestControllerTest {
                .andExpect(jsonPath("$._links.customers.href", is("http://localhost/api/machines/1/customers")))
                .andExpect(jsonPath("$._links.validations.href", is("http://localhost/api/machines/1/validations")))
                .andReturn();
-        verify(machineService, times(1)).update(MACHINE_UPDATE);
+        verify(machineService, times(1)).save(MACHINE_UPDATE);
         verifyNoMoreInteractions(machineService);
     }
 
@@ -262,7 +265,7 @@ public class MachineRestControllerTest {
         String contentBody = mapper.writeValueAsString(MACHINE_UPDATE);
 
 
-        given(machineService.update(MACHINE_UPDATE)).willReturn(MACHINE_AFTER_UPDATE);
+        given(machineService.save(MACHINE_UPDATE)).willReturn(MACHINE_AFTER_UPDATE);
         mockMvc.perform(put("/api/machines/2")
                 .accept(MediaTypes.HAL_JSON_UTF8_VALUE)
                 .contentType(MediaTypes.HAL_JSON_UTF8_VALUE)
@@ -289,80 +292,9 @@ public class MachineRestControllerTest {
     }
 
     @Test
-    public void getModelShouldFetchHalDocument() throws Exception {
-        given(machineService.findModelByMachineId(1L)).willReturn(MODEL_1);
-
-        mockMvc.perform(get("/api/machines/1/models")
-                .contentType(MediaTypes.HAL_JSON_UTF8_VALUE))
-               .andDo(print())
-               .andExpect(status().isOk())
-               .andExpect(header().string(HttpHeaders.CONTENT_TYPE, MediaTypes.HAL_JSON_UTF8_VALUE))
-               .andExpect(jsonPath("$.id", is(MODEL_1.getId().intValue())))
-               .andExpect(jsonPath("$.name", is(MODEL_1.getName())))
-               .andExpect(jsonPath("$.brandId", is(MODEL_1.getBrandId().intValue())))
-               .andExpect(jsonPath("$.brandName", is(MODEL_1.getBrandName())))
-               .andExpect(jsonPath("$.mig", is(MODEL_1.getMig())))
-               .andExpect(jsonPath("$.mma", is(MODEL_1.getMma())))
-               .andExpect(jsonPath("$.tig", is(MODEL_1.getTig())))
-               .andExpect(jsonPath("$.currentMeter", is(MODEL_1.getCurrentMeter())))
-               .andExpect(jsonPath("$.voltageMeter", is(MODEL_1.getVoltageMeter())))
-               .andExpect(jsonPath("$.stepControl", is(MODEL_1.getStepControl())))
-               .andExpect(jsonPath("$.stepControl", is(MODEL_1.getStepControl())))
-               .andExpect(jsonPath("$.migRange.imin", is(RANGE_MIG.getIMin().doubleValue())))
-               .andExpect(jsonPath("$.migRange.imax", is(RANGE_MIG.getIMax().doubleValue())))
-               .andExpect(jsonPath("$.migRange.umin", is(RANGE_MIG.getUMin().doubleValue())))
-               .andExpect(jsonPath("$.migRange.umax", is(RANGE_MIG.getUMax().doubleValue())))
-               .andExpect(jsonPath("$.tigRange.imin", is(RANGE_TIG.getIMin().doubleValue())))
-               .andExpect(jsonPath("$.tigRange.imax", is(RANGE_TIG.getIMax().doubleValue())))
-               .andExpect(jsonPath("$.tigRange.umin", is(RANGE_TIG.getUMin().doubleValue())))
-               .andExpect(jsonPath("$.tigRange.umax", is(RANGE_TIG.getUMax().doubleValue())))
-               .andExpect(jsonPath("$.mmaRange.imin", is(RANGE_MMA.getIMin().doubleValue())))
-               .andExpect(jsonPath("$.mmaRange.imax", is(RANGE_MMA.getIMax().doubleValue())))
-               .andExpect(jsonPath("$.mmaRange.umin", is(RANGE_MMA.getUMin().doubleValue())))
-               .andExpect(jsonPath("$.mmaRange.umax", is(RANGE_MMA.getUMax().doubleValue())))
-               .andExpect(jsonPath("$.creationDate", is(notNullValue())))
-               .andExpect(jsonPath("$.modificationDate", is(notNullValue())))
-               .andExpect(jsonPath("$.versionId", is(MODEL_1.getVersionId().intValue())))
-               .andExpect(jsonPath("$._links.self.href", is("http://localhost/api/models/1")))
-               .andExpect(jsonPath("$._links.models.href", is("http://localhost/api/models")))
-               .andExpect(jsonPath("$._links.brands.href", is("http://localhost/api/models/1/brands")))
-               .andExpect(jsonPath("$._links.machines.href", is("http://localhost/api/models/1/machines")))
-               .andReturn();
-        verify(machineService, times(1)).findModelByMachineId(1L);
-        verifyNoMoreInteractions(machineService);
-    }
-
-    @Test
-    public void getCustomerShouldFetchHalDocument() throws Exception {
-        given(machineService.findCustomerByMachineId(1L)).willReturn(CUSTOMER_1);
-
-        mockMvc.perform(get("/api/machines/1/customers")
-                .contentType(MediaTypes.HAL_JSON_UTF8_VALUE))
-               .andDo(print())
-               .andExpect(status().isOk())
-               .andExpect(header().string(HttpHeaders.CONTENT_TYPE, MediaTypes.HAL_JSON_UTF8_VALUE))
-               .andExpect(jsonPath("$.id", is(CUSTOMER_1.getId().intValue())))
-               .andExpect(jsonPath("$.shortName", is(CUSTOMER_1.getShortName())))
-               .andExpect(jsonPath("$.fullName", is(CUSTOMER_1.getFullName())))
-               .andExpect(jsonPath("$.city", is(CUSTOMER_1.getCity())))
-               .andExpect(jsonPath("$.zip", is(CUSTOMER_1.getZip())))
-               .andExpect(jsonPath("$.street", is(CUSTOMER_1.getStreet())))
-               .andExpect(jsonPath("$.email", is(CUSTOMER_1.getEmail())))
-               .andExpect(jsonPath("$.nip", is(CUSTOMER_1.getNip())))
-               .andExpect(jsonPath("$.creationDate", is(notNullValue())))
-               .andExpect(jsonPath("$.modificationDate", is(notNullValue())))
-               .andExpect(jsonPath("$.versionId", is(CUSTOMER_1.getVersionId().intValue())))
-               .andExpect(jsonPath("$._links.self.href", is("http://localhost/api/customers/1")))
-               .andExpect(jsonPath("$._links.machines.href", is("http://localhost/api/customers/1/machines")))
-               .andReturn();
-        verify(machineService, times(1)).findCustomerByMachineId(1L);
-        verifyNoMoreInteractions(machineService);
-    }
-
-    @Test
     public void getValidationsShouldFetchHalDocument() throws Exception {
 
-        given(machineService.findValidationsByMachineId(1L)).willReturn(Arrays.asList(VALID_PROTOCOL_1, VALID_PROTOCOL_2));
+        given(machineService.findValidationsByMachineId(1L, any(Pageable.class))).willReturn(new PageImpl<>(Arrays.asList(VALID_PROTOCOL_1, VALID_PROTOCOL_2)));
 
         mockMvc.perform(get("/api/machines/1/validations")
                 .contentType(MediaTypes.HAL_JSON_UTF8_VALUE))
@@ -421,7 +353,7 @@ public class MachineRestControllerTest {
                .andExpect(jsonPath("$._embedded.validations[1]._links.models.href", is("http://localhost/api/validations/2/models")))
                .andExpect(jsonPath("$._links.self.href", is("http://localhost/api/machines/1/validations")))
                .andReturn();
-        verify(machineService, times(1)).findValidationsByMachineId(1L);
+        verify(machineService, times(1)).findValidationsByMachineId(1L, any(Pageable.class));
         verifyNoMoreInteractions(machineService);
     }
 }
