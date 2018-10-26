@@ -1,116 +1,86 @@
 package pl.coderslab.service.impl;
 
 import org.modelmapper.ModelMapper;
-import org.modelmapper.TypeToken;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-import pl.coderslab.service.dto.CustomerDTO;
-import pl.coderslab.service.dto.MachineDTO;
-import pl.coderslab.service.dto.ValidProtocolDTO;
-import pl.coderslab.service.dto.WelderModelDTO;
 import pl.coderslab.domain.Customer;
 import pl.coderslab.domain.Machine;
-import pl.coderslab.domain.ValidProtocol;
 import pl.coderslab.domain.WelderModel;
-import pl.coderslab.web.errors.CustomerNotFoundException;
-import pl.coderslab.web.errors.MachineNotFoundException;
-import pl.coderslab.web.errors.WelderModelNotFoundException;
 import pl.coderslab.repository.CustomerRepository;
 import pl.coderslab.repository.MachineRepository;
 import pl.coderslab.repository.ValidProtocolRepository;
 import pl.coderslab.repository.WelderModelRepository;
 import pl.coderslab.service.MachineService;
+import pl.coderslab.service.dto.MachineDTO;
+import pl.coderslab.service.dto.ValidProtocolDTO;
+import pl.coderslab.web.errors.CustomerNotFoundException;
+import pl.coderslab.web.errors.WelderModelNotFoundException;
 
-import javax.persistence.EntityManager;
 import javax.transaction.Transactional;
-import java.lang.reflect.Type;
-import java.util.List;
+import java.util.Optional;
 
 @Service
 @Transactional
 public class MachineServiceImpl implements MachineService {
 
     private final MachineRepository machineRepository;
+    private final ValidProtocolRepository validProtocolRepository;
     private final WelderModelRepository modelRepository;
     private final CustomerRepository customerRepository;
-    private final ValidProtocolRepository protocolRepository;
     private final ModelMapper modelMapper;
-    private final EntityManager entityManager;
 
     @Autowired
-    public MachineServiceImpl(MachineRepository machineRepository, ModelMapper modelMapper, WelderModelRepository modelRepository, CustomerRepository customerRepository, ValidProtocolRepository protocolRepository, EntityManager entityManager) {
+    public MachineServiceImpl(MachineRepository machineRepository, ValidProtocolRepository validProtocolRepository, ModelMapper modelMapper, WelderModelRepository modelRepository, CustomerRepository customerRepository) {
         this.machineRepository = machineRepository;
+        this.validProtocolRepository = validProtocolRepository;
         this.modelMapper = modelMapper;
         this.modelRepository = modelRepository;
         this.customerRepository = customerRepository;
-        this.protocolRepository = protocolRepository;
-        this.entityManager = entityManager;
     }
 
 
     @Override
     public MachineDTO save(MachineDTO machineDTO) {
         Machine machine = getMachine(machineDTO);
-
         Machine saved = machineRepository.save(machine);
         return modelMapper.map(saved, MachineDTO.class);
     }
 
     @Override
-    public List<MachineDTO> findAll() {
-        List<Machine> machines = machineRepository.findAll();
-        Type resultType = new TypeToken<List<MachineDTO>>() {
-        }.getType();
-        return modelMapper.map(machines, resultType);
+    public Page<MachineDTO> findAll(Pageable pageable) {
+        Page<Machine> machines = machineRepository.findAll(pageable);
+        return machines.map(machine -> modelMapper.map(machine, MachineDTO.class));
     }
 
     @Override
-    public MachineDTO findById(Long id) {
-        Machine machine = machineRepository.findById(id).orElseThrow(() -> new MachineNotFoundException(id));
-        return modelMapper.map(machine, MachineDTO.class);
-    }
-
-    @Override
-    public MachineDTO update(MachineDTO machineDTO) {
-        Machine machine = getMachine(machineDTO);
-        Machine save = machineRepository.saveAndFlush(machine);
-        entityManager.refresh(save);
-        return modelMapper.map(save, MachineDTO.class);
+    public Optional<MachineDTO> findById(Long id) {
+        return machineRepository.findById(id)
+                                .map(machine -> modelMapper.map(machine, MachineDTO.class));
     }
 
     @Override
     public void remove(Long id) {
-        Machine machine = machineRepository.findById(id).get();
-        machineRepository.delete(machine);
-    }
-
-
-    @Override
-    public WelderModelDTO findModelByMachineId(long id) {
-        WelderModel model = modelRepository.findByModelId(id);
-        return modelMapper.map(model, WelderModelDTO.class);
+        machineRepository.findById(id)
+                         .ifPresent(machineRepository::delete);
     }
 
     @Override
-    public CustomerDTO findCustomerByMachineId(long id) {
-        Customer customer = customerRepository.findByMachineId(id);
-        return modelMapper.map(customer, CustomerDTO.class);
-    }
-
-    @Override
-    public List<ValidProtocolDTO> findValidationsByMachineId(long id) {
-        List<ValidProtocol> protocols = protocolRepository.findByMachineId(id);
-        Type resultType = new TypeToken<List<ValidProtocolDTO>>() {
-        }.getType();
-        return modelMapper.map(protocols, resultType);
+    public Page<ValidProtocolDTO> findValidationsByMachineId(long id, Pageable pageable) {
+        return validProtocolRepository.findByMachineId(id, pageable)
+                                      .map(vp -> modelMapper.map(vp, ValidProtocolDTO.class));
     }
 
     private Machine getMachine(MachineDTO machineDTO) {
+        //todo add validation for model and customer to check existing in db
         Long modelId = machineDTO.getWelderModelId();
         Long customerId = machineDTO.getCustomerId();
         Machine machine = modelMapper.map(machineDTO, Machine.class);
-        WelderModel welderModel = modelRepository.findById(modelId).orElseThrow(() -> new WelderModelNotFoundException(modelId));
-        Customer customer = customerRepository.findById(customerId).orElseThrow(() -> new CustomerNotFoundException(customerId));
+        WelderModel welderModel = modelRepository.findById(modelId)
+                                                 .orElseThrow(() -> new WelderModelNotFoundException(modelId));
+        Customer customer = customerRepository.findById(customerId)
+                                              .orElseThrow(() -> new CustomerNotFoundException(customerId));
         machine.setWelderModel(welderModel);
         machine.setCustomer(customer);
         return machine;
