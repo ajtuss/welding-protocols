@@ -3,8 +3,8 @@ package pl.coderslab.web.rest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.hateoas.MediaTypes;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import pl.coderslab.service.MachineService;
@@ -26,7 +26,7 @@ import java.util.Optional;
  * Rest Controller for Managing Machines
  */
 @RestController
-@RequestMapping(value = "/api", produces = MediaTypes.HAL_JSON_UTF8_VALUE)
+@RequestMapping(value = "/api", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
 public class MachineRestController {
 
     private static final String ENTITY_NAME = "machine";
