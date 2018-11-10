@@ -113,7 +113,7 @@ public class ValidationsRestController {
      * @return the ResponseEntity with the status 200 (ok)
      */
     @DeleteMapping("/validations/{id}")
-    public ResponseEntity<?> deleteValidation(@PathVariable Long id) {
+    public ResponseEntity<Void> deleteValidation(@PathVariable Long id) {
         validProtocolService.remove(id);
         return ResponseEntity.ok()
                              .headers(HeaderUtil.createEntityDeletionAlert(ENTITY_NAME, id.toString()))
