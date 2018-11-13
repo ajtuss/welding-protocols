@@ -1,30 +1,42 @@
 package pl.coderslab.service;
 
+import org.hamcrest.Matchers;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.context.annotation.Import;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.config.EnableSpringDataWebSupport;
 import org.springframework.test.context.junit4.SpringRunner;
-import pl.coderslab.service.dto.BrandDTO;
 import pl.coderslab.domain.Brand;
 import pl.coderslab.domain.WelderModel;
-import pl.coderslab.web.errors.BrandNotFoundException;
 import pl.coderslab.repository.BrandRepository;
 import pl.coderslab.repository.WelderModelRepository;
+import pl.coderslab.service.dto.BrandDTO;
 import pl.coderslab.service.impl.BrandServiceImpl;
+import pl.coderslab.web.errors.BrandNotFoundException;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.Optional;
 
 import static org.hamcrest.Matchers.containsInAnyOrder;
+import static org.hamcrest.Matchers.hasItems;
 import static org.hamcrest.collection.IsCollectionWithSize.hasSize;
 import static org.junit.Assert.*;
+import static org.mockito.ArgumentMatchers.any;
 
 
 @RunWith(SpringRunner.class)
 @DataJpaTest
 @Import({BrandServiceImpl.class, ModelMapper.class})
+@EnableSpringDataWebSupport
 public class BrandServiceImplTest {
 
     @Autowired
@@ -65,8 +77,6 @@ public class BrandServiceImplTest {
         assertEquals(saved.getId(), result.getId());
         assertEquals(saved.getName(), result.getName());
         assertEquals(saved.getCreationDate(), result.getCreationDate());
-        assertTrue(result.getModificationDate().isAfter(saved.getModificationDate()));
-        assertTrue(result.getVersionId() > saved.getVersionId());
     }
 
     @Test
@@ -78,21 +88,16 @@ public class BrandServiceImplTest {
         assertEquals(expected, found.get());
     }
 
-    @Test(expected = BrandNotFoundException.class)
-    public void expectedExceptionAfterFindById() {
-        brandService.findById(Long.MAX_VALUE);
-    }
-
     @Test
     public void expectedTrueAfterFindAll() {
         BrandDTO brand1 = brandService.save(BRAND_CREATION);
         BrandDTO brand2 = brandService.save(BRAND_CREATION_2);
         BrandDTO brand3 = brandService.save(BRAND_CREATION_3);
-//
-//        List<BrandDTO> found = brandService.findAll(null);
-//
-//        assertThat(found, containsInAnyOrder(brand1, brand2, brand3));
-//        assertThat(found, hasSize(3));
+
+        Page<BrandDTO> found = brandService.findAll(new PageRequest(0, 20));
+
+        assertThat(found, hasItems(brand1, brand2, brand3));
+        assertThat(found.getContent(), hasSize(3));
     }
 
     @Test
@@ -103,36 +108,14 @@ public class BrandServiceImplTest {
     }
 
 
-    @Test(expected = BrandNotFoundException.class)
-    public void expectedExceptionAfterRemoveAndTryFindIt() {
+    @Test
+    public void expectedNotFoundAfterRemoveAndTryFindIt() {
         BrandDTO saved = brandService.save(BRAND_CREATION);
 
         brandService.remove(saved.getId());
 
-        brandService.findById(saved.getId());
+        Optional<BrandDTO> byId = brandService.findById(saved.getId());
+        assertFalse(byId.isPresent());
     }
 
-    @Test(expected = BrandNotFoundException.class)
-    public void expectedExceptionAfterRemoveNotExistingBrand() {
-        brandService.remove(Long.MAX_VALUE);
-    }
-
-    @Test
-    public void expectedTrueAfterFindModelsByBrandId(){
-        Brand brand = new Brand();
-        brand.setName("Kemppi");
-        WelderModel model1 = new WelderModel();
-        model1.setName("MasterTig 3000");
-        model1.setBrand(brand);
-        WelderModel model2 = new WelderModel();
-        model2.setName("MasterTig 4000");
-        model2.setBrand(brand);
-        brandRepository.save(brand);
-        modelRepository.save(model1);
-        modelRepository.save(model2);
-        //todo
-//        List<WelderModelDTO> found = brandService.findWelderModelsByBrandId(brand.getId());
-//
-//        assertThat(found, hasSize(2));
-    }
 }
