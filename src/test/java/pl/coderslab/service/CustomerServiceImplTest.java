@@ -6,6 +6,8 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.context.annotation.Import;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.junit4.SpringRunner;
 import pl.coderslab.service.dto.CustomerDTO;
@@ -14,9 +16,11 @@ import pl.coderslab.repository.CustomerRepository;
 import pl.coderslab.service.impl.CustomerServiceImpl;
 
 import java.util.List;
+import java.util.Optional;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.Matchers.containsInAnyOrder;
+import static org.hamcrest.Matchers.hasItems;
 import static org.hamcrest.Matchers.hasSize;
 import static org.junit.Assert.*;
 
@@ -71,52 +75,24 @@ public class CustomerServiceImplTest {
 
     @Test
     public void expectedTrueAfterFindById(){
-        //todo
-//        CustomerDTO saved = customerService.save(CUSTOMER_1);
-//
-//        CustomerDTO found = customerService.findById(saved.getId());
-//
-//        assertThat(found, is(saved));
-    }
+        CustomerDTO saved = customerService.save(CUSTOMER_1);
 
-    @Test(expected = CustomerNotFoundException.class)
-    public void expectedExceptionAfterFindNotExistingCustomer(){
-        customerService.findById(Long.MAX_VALUE);
+        Optional<CustomerDTO> found = customerService.findById(saved.getId());
+
+        assertTrue(found.isPresent());
+        assertThat(found.get(), is(saved));
     }
 
     @Test
     public void expectedTrueAfterFindAll(){
 
-        //todo
-//        CustomerDTO customer1 = customerService.save(CUSTOMER_1);
-//        CustomerDTO customer2 = customerService.save(CUSTOMER_2);
-//
-//        List<CustomerDTO> customers = customerService.findAll(pageable);
-//
-//        assertThat(customers, containsInAnyOrder(customer1, customer2));
-//        assertThat(customers, hasSize(2));
-    }
+        CustomerDTO customer1 = customerService.save(CUSTOMER_1);
+        CustomerDTO customer2 = customerService.save(CUSTOMER_2);
 
-    @Test
-    public void expectedTrueAfterUpdate(){
-        //todo
-//        CustomerDTO saved = customerService.save(CUSTOMER_1);
-//        saved.setShortName("NEW CUST");
-//
-//        CustomerDTO update = customerService.update(saved);
-//
-//        assertNotNull(update);
-//        assertNotNull(update.getId());
-//        assertThat(update.getShortName(), is(saved.getShortName()));
-//        assertThat(update.getFullName(), is(saved.getFullName()));
-//        assertThat(update.getCity(), is(saved.getCity()));
-//        assertThat(update.getZip(), is(saved.getZip()));
-//        assertThat(update.getStreet(), is(saved.getStreet()));
-//        assertThat(update.getEmail(), is(saved.getEmail()));
-//        assertThat(update.getNip(), is(saved.getNip()));
-//        assertTrue(update.getModificationDate().isAfter(saved.getModificationDate()));
-//        assertThat(update.getCreationDate(), is(saved.getCreationDate()));
-//        assertTrue(update.getVersionId()> saved.getVersionId());
+        Page<CustomerDTO> customers = customerService.findAll(new PageRequest(0, 20));
+
+        assertThat(customers, hasItems(customer1, customer2));
+        assertThat(customers.getContent(), hasSize(2));
     }
 
     @Test
@@ -124,14 +100,5 @@ public class CustomerServiceImplTest {
         CustomerDTO save = customerService.save(CUSTOMER_1);
         customerService.remove(save.getId());
     }
-
-    @Test(expected = CustomerNotFoundException.class)
-    public void expectedExceptionAfterRemoveAndFind(){
-        CustomerDTO save = customerService.save(CUSTOMER_1);
-        customerService.remove(save.getId());
-        customerService.findById(save.getId());
-    }
-
-
 
 }
