@@ -18,6 +18,7 @@ import pl.coderslab.web.errors.MachineNotFoundException;
 import java.util.Optional;
 
 import static org.hamcrest.Matchers.containsInAnyOrder;
+import static org.hamcrest.Matchers.hasItems;
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.*;
 
@@ -70,19 +71,14 @@ public class MachineServiceImplTest {
         assertThat(found.get(), is(save));
     }
 
-    @Test(expected = MachineNotFoundException.class)
-    public void expectedExceptionAfterFindNotExistingMachine() {
-        machineService.findById(Long.MAX_VALUE);
-    }
-
     @Test
     public void expectedTrueAfterFindAll() {
         MachineDTO machine1 = machineService.save(MACHINE_1);
         MachineDTO machine2 = machineService.save(MACHINE_2);
 
-        Page<MachineDTO> found = machineService.findAll(new PageRequest(1, 2));
+        Page<MachineDTO> found = machineService.findAll(new PageRequest(0, 2));
 
-        assertThat(found.getContent(), containsInAnyOrder(machine1, machine2));
+        assertThat(found.getContent(), hasItems(machine1, machine2));
     }
 
 
