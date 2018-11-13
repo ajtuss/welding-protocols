@@ -1,24 +1,24 @@
 package pl.coderslab.service.impl;
 
 import org.modelmapper.ModelMapper;
-import org.modelmapper.TypeToken;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import pl.coderslab.domain.*;
+import pl.coderslab.repository.MeasureRepository;
+import pl.coderslab.repository.ValidProtocolRepository;
+import pl.coderslab.service.MeasureService;
 import pl.coderslab.service.dto.MeasureDTO;
 import pl.coderslab.service.dto.ValidProtocolDTO;
 import pl.coderslab.web.errors.BadRequestException;
 import pl.coderslab.web.errors.MeasureNotFoundException;
 import pl.coderslab.web.errors.ValidProtocolNotFoundException;
-import pl.coderslab.repository.MeasureRepository;
-import pl.coderslab.repository.ValidProtocolRepository;
-import pl.coderslab.service.MeasureService;
 
 import javax.persistence.EntityManager;
 import javax.transaction.Transactional;
-import java.lang.reflect.Type;
 import java.math.BigDecimal;
-import java.util.List;
+import java.util.Optional;
 
 @Service
 @Transactional
@@ -38,17 +38,15 @@ public class MeasureServiceImpl implements MeasureService {
     }
 
     @Override
-    public void generateMeasure(ValidProtocol validProtocol) {
-        Range range = getRange(validProtocol);
-        BigDecimal step = (range.getIMax().subtract(range.getIMin())).divide(BigDecimal.valueOf(4));
-        BigDecimal current = range.getIMin();
-        for (int i = 0; i < 5; i++) {
-            Measure measure = new Measure();
-            measure.setIAdjust(current);
-            measure.setUAdjust(calculateVoltage(current, validProtocol));
-            validProtocol.addMeasure(measure);
-            current = current.add(step);
-        }
+    public Page<MeasureDTO> findAll(Pageable pageable) {
+        return measureRepository.findAll(pageable)
+                                .map(measure -> mapper.map(measure, MeasureDTO.class));
+    }
+
+    @Override
+    public Optional<MeasureDTO> findById(long id) {
+        return measureRepository.findById(id)
+                                .map(measure -> mapper.map(measure, MeasureDTO.class));
     }
 
     private Range getRange(ValidProtocol protocol) {
@@ -117,32 +115,27 @@ public class MeasureServiceImpl implements MeasureService {
     }
 
     @Override
-    public List<MeasureDTO> findAll() {
-        List<Measure> measures = measureRepository.findAll();
-        Type resultType = new TypeToken<List<MeasureDTO>>() {
-        }.getType();
-        return mapper.map(measures, resultType);
-    }
-
-    @Override
-    public MeasureDTO findById(Long id) {
-        Measure measure = measureRepository.findById(id).orElseThrow(() -> new MeasureNotFoundException(id));
-        return mapper.map(measure, MeasureDTO.class);
+    public void generateMeasure(ValidProtocol validProtocol) {
+        Range range = getRange(validProtocol);
+        BigDecimal step = (range.getIMax().subtract(range.getIMin())).divide(BigDecimal.valueOf(4));
+        BigDecimal current = range.getIMin();
+        for (int i = 0; i < 5; i++) {
+            Measure measure = new Measure();
+            measure.setIAdjust(current);
+            measure.setUAdjust(calculateVoltage(current, validProtocol));
+            validProtocol.addMeasure(measure);
+            current = current.add(step);
+        }
     }
 
     @Override
     public MeasureDTO save(MeasureDTO measureDTO) {
-        ValidProtocol protocol = getProtocol(measureDTO.getValidProtocolId());
         Measure measure = new Measure();
+        ValidProtocol protocol = getProtocol(measureDTO.getValidProtocolId());
         measure.setValidProtocol(protocol);
         BigDecimal current = checkCurrentRange(measureDTO.getIAdjust(), getRange(protocol));
         measure.setIAdjust(current);
-        measure.setUAdjust(calculateVoltage(measure.getIAdjust(), protocol));
-
-        Long protocolId = measureDTO.getValidProtocolId();
-        ValidProtocol validProtocol = protocolRepository.findById(protocolId)
-                                                        .orElseThrow(() -> new ValidProtocolNotFoundException(protocolId));
-        measure.setValidProtocol(validProtocol);
+        measure.setUAdjust(calculateVoltage(current, protocol));
         Measure save = measureRepository.save(measure);
         return mapper.map(save, MeasureDTO.class);
     }
@@ -186,6 +179,17 @@ public class MeasureServiceImpl implements MeasureService {
         return mapper.map(save, MeasureDTO.class);
     }
 
+    @Override
+    public void remove(long id) {
+        measureRepository.findById(id)
+                         .ifPresent(measureRepository::delete);
+    }
+
+    @Override
+    public Page<ValidProtocolDTO> findProtocolByMeasureId(long id, Pageable pageable) {
+        return null; //todo
+    }
+
     private BigDecimal calculateMaxIError(Range range, BigDecimal iAdjust) {
         BigDecimal diff = range.getIMax().subtract(range.getIMin());
         BigDecimal quarter = diff.divide(BigDecimal.valueOf(4));
@@ -206,19 +210,7 @@ public class MeasureServiceImpl implements MeasureService {
         return uAdjust.multiply(BigDecimal.valueOf(0.05));
     }
 
-    @Override
-    public void remove(Long id) {
-        Measure measure = measureRepository.findById(id).orElseThrow(() -> new MeasureNotFoundException(id));
-        measureRepository.delete(measure);
-    }
-
-    @Override
-    public ValidProtocolDTO findProtocolByMeasureId(Long id) {
-        return null;
-    }
-
-    private ValidProtocol getProtocol(Long id) {
-        if (id == null) throw new BadRequestException("validationProtocol can`t be null", null, null);
+    private ValidProtocol getProtocol(long id) {
         return protocolRepository.findById(id)
                                  .orElseThrow(() -> new ValidProtocolNotFoundException(id));
     }
