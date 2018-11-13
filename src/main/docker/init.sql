@@ -19,7 +19,7 @@
 -- Table structure for table `brands`
 --
 
-USE welding;
+USE welding_protocols;
 
 DROP TABLE IF EXISTS `brands`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
