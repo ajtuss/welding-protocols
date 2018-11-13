@@ -6,6 +6,8 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.context.annotation.Import;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.junit4.SpringRunner;
 import pl.coderslab.service.dto.BrandDTO;
@@ -20,15 +22,17 @@ import pl.coderslab.service.impl.WelderModelServiceImpl;
 
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.Optional;
 
 import static org.hamcrest.Matchers.containsInAnyOrder;
+import static org.hamcrest.Matchers.hasItems;
 import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.*;
 
 @RunWith(SpringRunner.class)
 @DataJpaTest
-@Import({WelderModelServiceImpl.class, BrandServiceImpl.class, ModelMapper.class})
+@Import({WelderModelServiceImpl.class, ModelMapper.class})
 @Sql(value = "/data-brands.sql")
 public class WelderModelServiceImplTest {
 
@@ -49,26 +53,21 @@ public class WelderModelServiceImplTest {
 
     @Test
     public void expectedTrueAfterFindById() {
-        //todo
         WelderModelDTO saved = modelService.save(MODEL_CREATION_1);
-//        WelderModelDTO found = modelService.findById(saved.getId());
-//        assertEquals(saved, found);
-    }
-
-    @Test(expected = WelderModelNotFoundException.class)
-    public void expectedExceptionAfterTryFindNotExistingModel(){
-        modelService.findById(Long.MAX_VALUE);
+        Optional<WelderModelDTO> found = modelService.findById(saved.getId());
+        assertTrue(found.isPresent());
+        assertEquals(found.get(), saved);
     }
 
     @Test
     public void expectedTrueAfterFindAll() {
         WelderModelDTO model1 = modelService.save(MODEL_CREATION_1);
         WelderModelDTO model2 = modelService.save(MODEL_CREATION_2);
-//todo
-//        List<WelderModelDTO> found = modelService.findAll(pageable);
-//
-//        assertThat(found, containsInAnyOrder(model1, model2));
-//        assertThat(found, hasSize(2));
+
+        Page<WelderModelDTO> found = modelService.findAll(new PageRequest(0, 20));
+
+        assertThat(found, hasItems(model1, model2));
+        assertThat(found.getContent(), hasSize(2));
     }
 
     @Test
@@ -176,18 +175,4 @@ public class WelderModelServiceImplTest {
         assertNull(model);
     }
 
-
-    @Test
-    public void expectedTrueAfterFindBrandByModelId() {
-        //todo
-        WelderModelDTO saved = modelService.save(MODEL_CREATION_1);
-//        BrandDTO brandDTO = modelService.findBrandByModelId(saved.getId());
-//        assertNotNull(brandDTO);
-    }
-
-
-    @Test
-    public void findAllMachinesByModelId() {
-        //todo
-    }
 }
