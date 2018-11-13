@@ -6,35 +6,37 @@ import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.config.EnableSpringDataWebSupport;
 import org.springframework.hateoas.MediaTypes;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
+import pl.coderslab.domain.PowerType;
+import pl.coderslab.service.MeasureService;
 import pl.coderslab.service.dto.MachineDTO;
 import pl.coderslab.service.dto.MeasureDTO;
 import pl.coderslab.service.dto.ValidProtocolDTO;
-import pl.coderslab.domain.PowerType;
-import pl.coderslab.service.MeasureService;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
-import java.util.Arrays;
+import java.util.Collections;
+import java.util.Optional;
 
 import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.CoreMatchers.notNullValue;
+import static org.hamcrest.core.IsNull.notNullValue;
 import static org.mockito.BDDMockito.given;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.verifyNoMoreInteractions;
+import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @RunWith(SpringRunner.class)
 @WebMvcTest(value = MeasureRestController.class, secure = false)
+@EnableSpringDataWebSupport
 public class MeasureRestControllerTest {
 
 
@@ -127,49 +129,37 @@ public class MeasureRestControllerTest {
 
     @Test
     public void getShouldFetchAllAHalDocument() throws Exception {
-//        given(measureService.findAll(pageable)).willReturn(Arrays.asList(MEASURE_1, MEASURE_2));
+        Page<MeasureDTO> page = new PageImpl<>(Collections.singletonList(MEASURE_1));
+        given(measureService.findAll(any(Pageable.class))).willReturn(page);
 
         mockMvc.perform(get("/api/measures")
-                .contentType(MediaTypes.HAL_JSON_UTF8_VALUE))
+                .contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
                .andDo(print())
                .andExpect(status().isOk())
-               .andExpect(header().string(HttpHeaders.CONTENT_TYPE, MediaTypes.HAL_JSON_UTF8_VALUE))
-               .andExpect(jsonPath("$._embedded.measures[0].id", is(MEASURE_1.getId().intValue())))
-               .andExpect(jsonPath("$._embedded.measures[0].iadjust", is(MEASURE_1.getIAdjust().intValue())))
-               .andExpect(jsonPath("$._embedded.measures[0].uadjust", is(MEASURE_1.getUAdjust().doubleValue())))
-               .andExpect(jsonPath("$._embedded.measures[0].validProtocolId", is(MEASURE_1.getValidProtocolId().intValue())))
-               .andExpect(jsonPath("$._embedded.measures[0].creationDate", is(notNullValue())))
-               .andExpect(jsonPath("$._embedded.measures[0].modificationDate", is(notNullValue())))
-               .andExpect(jsonPath("$._embedded.measures[0].versionId", is(MEASURE_1.getVersionId().intValue())))
-               .andExpect(jsonPath("$._embedded.measures[0]._links.self.href", is("http://localhost/api/measures/1")))
-               .andExpect(jsonPath("$._embedded.measures[0]._links.measures.href", is("http://localhost/api/measures")))
-               .andExpect(jsonPath("$._embedded.measures[0]._links.validations.href", is("http://localhost/api/measures/1/validations")))
-               .andExpect(jsonPath("$._embedded.measures[1].id", is(MEASURE_2.getId().intValue())))
-               .andExpect(jsonPath("$._embedded.measures[1].iadjust", is(MEASURE_2.getIAdjust().intValue())))
-               .andExpect(jsonPath("$._embedded.measures[1].uadjust", is(MEASURE_2.getUAdjust().doubleValue())))
-               .andExpect(jsonPath("$._embedded.measures[1].validProtocolId", is(MEASURE_2.getValidProtocolId().intValue())))
-               .andExpect(jsonPath("$._embedded.measures[1].creationDate", is(notNullValue())))
-               .andExpect(jsonPath("$._embedded.measures[1].modificationDate", is(notNullValue())))
-               .andExpect(jsonPath("$._embedded.measures[1].versionId", is(MEASURE_2.getVersionId().intValue())))
-               .andExpect(jsonPath("$._embedded.measures[1]._links.self.href", is("http://localhost/api/measures/2")))
-               .andExpect(jsonPath("$._embedded.measures[1]._links.measures.href", is("http://localhost/api/measures")))
-               .andExpect(jsonPath("$._embedded.measures[1]._links.validations.href", is("http://localhost/api/measures/2/validations")))
-               .andExpect(jsonPath("$._links.self.href", is("http://localhost/api/measures")))
+               .andExpect(header().string(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_UTF8_VALUE))
+               .andExpect(jsonPath("$[0].id", is(MEASURE_1.getId().intValue())))
+               .andExpect(jsonPath("$[0].iadjust", is(MEASURE_1.getIAdjust().intValue())))
+               .andExpect(jsonPath("$[0].uadjust", is(MEASURE_1.getUAdjust().doubleValue())))
+               .andExpect(jsonPath("$[0].validProtocolId", is(MEASURE_1.getValidProtocolId()
+                                                                       .intValue())))
+               .andExpect(jsonPath("$[0].creationDate", is(notNullValue())))
+               .andExpect(jsonPath("$[0].modificationDate", is(notNullValue())))
+               .andExpect(jsonPath("$[0].versionId", is(MEASURE_1.getVersionId().intValue())))
                .andReturn();
-//        verify(measureService, times(1)).findAll(pageable);
+        verify(measureService, times(1)).findAll(any(Pageable.class));
         verifyNoMoreInteractions(measureService);
     }
 
 
     @Test
     public void getShouldFetchAHalDocument() throws Exception {
-//        given(measureService.findById(1L)).willReturn(MEASURE_1);
+        given(measureService.findById(1L)).willReturn(Optional.of(MEASURE_1));
 
         mockMvc.perform(get("/api/measures/1")
-                .contentType(MediaTypes.HAL_JSON_UTF8_VALUE))
+                .contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
                .andDo(print())
                .andExpect(status().isOk())
-               .andExpect(header().string(HttpHeaders.CONTENT_TYPE, MediaTypes.HAL_JSON_UTF8_VALUE))
+               .andExpect(header().string(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_UTF8_VALUE))
                .andExpect(jsonPath("$.id", is(MEASURE_1.getId().intValue())))
                .andExpect(jsonPath("$.iadjust", is(MEASURE_1.getIAdjust().intValue())))
                .andExpect(jsonPath("$.uadjust", is(MEASURE_1.getUAdjust().doubleValue())))
@@ -177,9 +167,6 @@ public class MeasureRestControllerTest {
                .andExpect(jsonPath("$.creationDate", is(notNullValue())))
                .andExpect(jsonPath("$.modificationDate", is(notNullValue())))
                .andExpect(jsonPath("$.versionId", is(MEASURE_1.getVersionId().intValue())))
-               .andExpect(jsonPath("$._links.self.href", is("http://localhost/api/measures/1")))
-               .andExpect(jsonPath("$._links.measures.href", is("http://localhost/api/measures")))
-               .andExpect(jsonPath("$._links.validations.href", is("http://localhost/api/measures/1/validations")))
                .andReturn();
         verify(measureService, times(1)).findById(1L);
         verifyNoMoreInteractions(measureService);
