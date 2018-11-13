@@ -6,6 +6,8 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.context.annotation.Import;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.junit4.SpringRunner;
 import pl.coderslab.service.dto.MachineDTO;
@@ -22,9 +24,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
-import static org.hamcrest.Matchers.contains;
-import static org.hamcrest.Matchers.containsInAnyOrder;
-import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.*;
 import static org.junit.Assert.*;
 
 
@@ -147,23 +147,20 @@ public class ValidProtocolServiceImplTest {
                                                              .build();
 
 
-    @Test
-    public void expectedTrueAfterSaveProtocol() {
-
-    }
 
     @Test
     public void expectedTrueAfterFindById() {
         Optional<ValidProtocolDTO> found = protocolService.findById(1L);
 
-        assertThat(PROTOCOL_1_DB, is(found.orElse(null)));
+        assertTrue(found.isPresent());
+        assertThat(found.get(), is(PROTOCOL_1_DB));
     }
 
     @Test
     public void findAll() {
-//        List<ValidProtocolDTO> found = protocolService.findAll(pageable);
+        Page<ValidProtocolDTO> found = protocolService.findAll(new PageRequest(0, 20));
 
-//        assertThat(found, containsInAnyOrder(PROTOCOL_1_DB, PROTOCOL_2_DB));
+        assertThat(found, hasItems(PROTOCOL_1_DB, PROTOCOL_2_DB));
     }
 
 
@@ -176,24 +173,11 @@ public class ValidProtocolServiceImplTest {
         protocolService.remove(PROTOCOL_1_DB.getId());
     }
 
-    @Test(expected = ValidProtocolNotFoundException.class)
-    public void expectedExceptionAfterRemoveAndFind() {
-        protocolService.remove(PROTOCOL_1_DB.getId());
-        protocolService.findById(PROTOCOL_1_DB.getId());
-    }
-
     @Test
     public void expectedTrueAfterFindAllMeasures() {
-//        List<MeasureDTO> found = protocolService.findAllMeasures(PROTOCOL_1_DB.getId(), pageable);
+        Page<MeasureDTO> found = protocolService.findAllMeasures(PROTOCOL_1_DB.getId(), new PageRequest(0, 20));
 
-//        assertThat(found, contains(MEASURE_1_DB, MEASURE_2_DB, MEASURE_3_DB, MEASURE_4_DB, MEASURE_5_DB));
+        assertThat(found, hasItems(MEASURE_1_DB, MEASURE_2_DB, MEASURE_3_DB, MEASURE_4_DB, MEASURE_5_DB));
     }
 
-    @Test
-    public void expectedTrueAfterFindMachineByValidId() {
-
-//        MachineDTO found = protocolService.findMachineByValidProtocolId(MACHINE_1_DB.getId());
-
-//        assertThat(found, is(MACHINE_1_DB));
-    }
 }
