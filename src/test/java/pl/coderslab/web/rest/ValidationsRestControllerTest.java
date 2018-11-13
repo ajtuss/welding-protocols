@@ -6,19 +6,21 @@ import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.context.annotation.Import;
-import org.springframework.hateoas.MediaTypes;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.config.EnableSpringDataWebSupport;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import pl.coderslab.domain.PowerType;
 import pl.coderslab.service.ValidProtocolService;
 import pl.coderslab.service.dto.*;
-import pl.coderslab.web.rest.assemblers.*;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
-import java.util.Arrays;
+import java.util.Collections;
 import java.util.Optional;
 
 import static org.hamcrest.CoreMatchers.is;
@@ -31,7 +33,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @RunWith(SpringRunner.class)
 @WebMvcTest(value = ValidationsRestController.class, secure = false)
-@Import({MachineResourceAssembler.class, WelderModelResourceAssembler.class, CustomerResourceAssembler.class})
+@EnableSpringDataWebSupport
 public class ValidationsRestControllerTest {
 
     @Autowired
@@ -47,9 +49,12 @@ public class ValidationsRestControllerTest {
             "FIRMA SP. z O.O.", "CITY", "00-000", "Street 14",
             "firma@firma.pl", "123-456-32-18", DATE_TIME, DATE_TIME, 1L);
     private static final BrandDTO BRAND = new BrandDTO(1L, "Kemppi", DATE_TIME, DATE_TIME, 1L);
-    private static final RangeDTO RANGE_MIG = new RangeDTO(BigDecimal.valueOf(1.),BigDecimal.valueOf( 100.), BigDecimal.valueOf(10.), BigDecimal.valueOf(100.));
-    private static final RangeDTO RANGE_MMA = new RangeDTO(BigDecimal.valueOf(2.), BigDecimal.valueOf(200.), BigDecimal.valueOf(20.), BigDecimal.valueOf(200.));
-    private static final RangeDTO RANGE_TIG = new RangeDTO(BigDecimal.valueOf(3.), BigDecimal.valueOf(300.), BigDecimal.valueOf(30.), BigDecimal.valueOf(300.));
+    private static final RangeDTO RANGE_MIG = new RangeDTO(BigDecimal.valueOf(1.), BigDecimal.valueOf(100.), BigDecimal.valueOf(10.), BigDecimal
+            .valueOf(100.));
+    private static final RangeDTO RANGE_MMA = new RangeDTO(BigDecimal.valueOf(2.), BigDecimal.valueOf(200.), BigDecimal.valueOf(20.), BigDecimal
+            .valueOf(200.));
+    private static final RangeDTO RANGE_TIG = new RangeDTO(BigDecimal.valueOf(3.), BigDecimal.valueOf(300.), BigDecimal.valueOf(30.), BigDecimal
+            .valueOf(300.));
     private static final WelderModelDTO MODEL_1 = new WelderModelDTO(1L, "Mastertig 3000", BRAND.getId(),
             BRAND.getName(), true, true, true, true, true, false,
             RANGE_MIG, RANGE_MMA, RANGE_TIG, DATE_TIME, DATE_TIME, 1L);
@@ -103,10 +108,10 @@ public class ValidationsRestControllerTest {
         given(protocolService.findById(1L)).willReturn(Optional.of(VALID_PROTOCOL_1));
 
         mockMvc.perform(get("/api/validations/1")
-                .contentType(MediaTypes.HAL_JSON_UTF8_VALUE))
+                .contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
                .andDo(print())
                .andExpect(status().isOk())
-               .andExpect(header().string(HttpHeaders.CONTENT_TYPE, MediaTypes.HAL_JSON_UTF8_VALUE))
+               .andExpect(header().string(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_UTF8_VALUE))
                .andExpect(jsonPath("$.id", is(VALID_PROTOCOL_1.getId().intValue())))
                .andExpect(jsonPath("$.machineId", is(VALID_PROTOCOL_1.getMachineId().intValue())))
                .andExpect(jsonPath("$.machineSerialNumber", is(VALID_PROTOCOL_1.getMachineSerialNumber())))
@@ -122,12 +127,6 @@ public class ValidationsRestControllerTest {
                .andExpect(jsonPath("$.creationDate", is(notNullValue())))
                .andExpect(jsonPath("$.modificationDate", is(notNullValue())))
                .andExpect(jsonPath("$.versionId", is(VALID_PROTOCOL_1.getVersionId().intValue())))
-               .andExpect(jsonPath("$._links.self.href", is("http://localhost/api/validations/1")))
-               .andExpect(jsonPath("$._links.validations.href", is("http://localhost/api/validations")))
-               .andExpect(jsonPath("$._links.measures.href", is("http://localhost/api/validations/1/measures")))
-               .andExpect(jsonPath("$._links.machines.href", is("http://localhost/api/validations/1/machines")))
-               .andExpect(jsonPath("$._links.customers.href", is("http://localhost/api/validations/1/customers")))
-               .andExpect(jsonPath("$._links.models.href", is("http://localhost/api/validations/1/models")))
                .andReturn();
         verify(protocolService, times(1)).findById(1L);
         verifyNoMoreInteractions(protocolService);
@@ -136,66 +135,35 @@ public class ValidationsRestControllerTest {
     @Test
     public void getShouldFetchAllHalDocument() throws Exception {
 
-//        given(protocolService.findAll(pageable)).willReturn(Arrays.asList(VALID_PROTOCOL_1, VALID_PROTOCOL_2));
+        Page<ValidProtocolDTO> page = new PageImpl<>(Collections.singletonList(VALID_PROTOCOL_1));
+        given(protocolService.findAll(any(Pageable.class))).willReturn(page);
 
         mockMvc.perform(get("/api/validations")
-                .contentType(MediaTypes.HAL_JSON_UTF8_VALUE))
+                .contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
                .andDo(print())
                .andExpect(status().isOk())
-               .andExpect(header().string(HttpHeaders.CONTENT_TYPE, MediaTypes.HAL_JSON_UTF8_VALUE))
-               .andExpect(jsonPath("$._embedded.validations[0].id", is(VALID_PROTOCOL_1.getId().intValue())))
-               .andExpect(jsonPath("$._embedded.validations[0].machineId", is(VALID_PROTOCOL_1.getMachineId()
-                                                                                              .intValue())))
-               .andExpect(jsonPath("$._embedded.validations[0].machineSerialNumber", is(VALID_PROTOCOL_1.getMachineSerialNumber())))
-               .andExpect(jsonPath("$._embedded.validations[0].machineInwNumber", is(VALID_PROTOCOL_1.getMachineInwNumber())))
-               .andExpect(jsonPath("$._embedded.validations[0].machineWelderModelBrandId", is(VALID_PROTOCOL_1.getMachineWelderModelBrandId()
-                                                                                                              .intValue())))
-               .andExpect(jsonPath("$._embedded.validations[0].machineWelderModelBrandName", is(VALID_PROTOCOL_1.getMachineWelderModelBrandName())))
-               .andExpect(jsonPath("$._embedded.validations[0].machineWelderModelId", is(VALID_PROTOCOL_1.getMachineWelderModelId()
-                                                                                                         .intValue())))
-               .andExpect(jsonPath("$._embedded.validations[0].machineWelderModelName", is(VALID_PROTOCOL_1.getMachineWelderModelName())))
-               .andExpect(jsonPath("$._embedded.validations[0].machineCustomerId", is(VALID_PROTOCOL_1.getMachineCustomerId()
-                                                                                                      .intValue())))
-               .andExpect(jsonPath("$._embedded.validations[0].machineCustomerShortName", is(VALID_PROTOCOL_1.getMachineCustomerShortName())))
-               .andExpect(jsonPath("$._embedded.validations[0].type", is(VALID_PROTOCOL_1.getType().name())))
-               .andExpect(jsonPath("$._embedded.validations[0].creationDate", is(notNullValue())))
-               .andExpect(jsonPath("$._embedded.validations[0].modificationDate", is(notNullValue())))
-               .andExpect(jsonPath("$._embedded.validations[0].versionId", is(VALID_PROTOCOL_1.getVersionId()
-                                                                                              .intValue())))
-               .andExpect(jsonPath("$._embedded.validations[0]._links.self.href", is("http://localhost/api/validations/1")))
-               .andExpect(jsonPath("$._embedded.validations[0]._links.validations.href", is("http://localhost/api/validations")))
-               .andExpect(jsonPath("$._embedded.validations[0]._links.measures.href", is("http://localhost/api/validations/1/measures")))
-               .andExpect(jsonPath("$._embedded.validations[0]._links.machines.href", is("http://localhost/api/validations/1/machines")))
-               .andExpect(jsonPath("$._embedded.validations[0]._links.customers.href", is("http://localhost/api/validations/1/customers")))
-               .andExpect(jsonPath("$._embedded.validations[0]._links.models.href", is("http://localhost/api/validations/1/models")))
-               .andExpect(jsonPath("$._embedded.validations[1].id", is(VALID_PROTOCOL_2.getId().intValue())))
-               .andExpect(jsonPath("$._embedded.validations[1].machineId", is(VALID_PROTOCOL_2.getMachineId()
-                                                                                              .intValue())))
-               .andExpect(jsonPath("$._embedded.validations[1].machineSerialNumber", is(VALID_PROTOCOL_2.getMachineSerialNumber())))
-               .andExpect(jsonPath("$._embedded.validations[1].machineInwNumber", is(VALID_PROTOCOL_2.getMachineInwNumber())))
-               .andExpect(jsonPath("$._embedded.validations[1].machineWelderModelBrandId", is(VALID_PROTOCOL_2.getMachineWelderModelBrandId()
-                                                                                                              .intValue())))
-               .andExpect(jsonPath("$._embedded.validations[1].machineWelderModelBrandName", is(VALID_PROTOCOL_2.getMachineWelderModelBrandName())))
-               .andExpect(jsonPath("$._embedded.validations[1].machineWelderModelId", is(VALID_PROTOCOL_2.getMachineWelderModelId()
-                                                                                                         .intValue())))
-               .andExpect(jsonPath("$._embedded.validations[1].machineWelderModelName", is(VALID_PROTOCOL_2.getMachineWelderModelName())))
-               .andExpect(jsonPath("$._embedded.validations[1].machineCustomerId", is(VALID_PROTOCOL_2.getMachineCustomerId()
-                                                                                                      .intValue())))
-               .andExpect(jsonPath("$._embedded.validations[1].machineCustomerShortName", is(VALID_PROTOCOL_2.getMachineCustomerShortName())))
-               .andExpect(jsonPath("$._embedded.validations[1].type", is(VALID_PROTOCOL_2.getType().name())))
-               .andExpect(jsonPath("$._embedded.validations[1].creationDate", is(notNullValue())))
-               .andExpect(jsonPath("$._embedded.validations[1].modificationDate", is(notNullValue())))
-               .andExpect(jsonPath("$._embedded.validations[1].versionId", is(VALID_PROTOCOL_2.getVersionId()
-                                                                                              .intValue())))
-               .andExpect(jsonPath("$._embedded.validations[1]._links.self.href", is("http://localhost/api/validations/2")))
-               .andExpect(jsonPath("$._embedded.validations[1]._links.validations.href", is("http://localhost/api/validations")))
-               .andExpect(jsonPath("$._embedded.validations[1]._links.measures.href", is("http://localhost/api/validations/2/measures")))
-               .andExpect(jsonPath("$._embedded.validations[1]._links.machines.href", is("http://localhost/api/validations/2/machines")))
-               .andExpect(jsonPath("$._embedded.validations[1]._links.customers.href", is("http://localhost/api/validations/2/customers")))
-               .andExpect(jsonPath("$._embedded.validations[1]._links.models.href", is("http://localhost/api/validations/2/models")))
-               .andExpect(jsonPath("$._links.self.href", is("http://localhost/api/validations")))
+               .andExpect(header().string(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_UTF8_VALUE))
+               .andExpect(jsonPath("$[0].id", is(VALID_PROTOCOL_1.getId().intValue())))
+               .andExpect(jsonPath("$[0].machineId", is(VALID_PROTOCOL_1.getMachineId()
+                                                                        .intValue())))
+               .andExpect(jsonPath("$[0].machineSerialNumber", is(VALID_PROTOCOL_1.getMachineSerialNumber())))
+               .andExpect(jsonPath("$[0].machineInwNumber", is(VALID_PROTOCOL_1.getMachineInwNumber())))
+               .andExpect(jsonPath("$[0].machineWelderModelBrandId", is(VALID_PROTOCOL_1.getMachineWelderModelBrandId()
+                                                                                        .intValue())))
+               .andExpect(jsonPath("$[0].machineWelderModelBrandName", is(VALID_PROTOCOL_1.getMachineWelderModelBrandName())))
+               .andExpect(jsonPath("$[0].machineWelderModelId", is(VALID_PROTOCOL_1.getMachineWelderModelId()
+                                                                                   .intValue())))
+               .andExpect(jsonPath("$[0].machineWelderModelName", is(VALID_PROTOCOL_1.getMachineWelderModelName())))
+               .andExpect(jsonPath("$[0].machineCustomerId", is(VALID_PROTOCOL_1.getMachineCustomerId()
+                                                                                .intValue())))
+               .andExpect(jsonPath("$[0].machineCustomerShortName", is(VALID_PROTOCOL_1.getMachineCustomerShortName())))
+               .andExpect(jsonPath("$[0].type", is(VALID_PROTOCOL_1.getType().name())))
+               .andExpect(jsonPath("$[0].creationDate", is(notNullValue())))
+               .andExpect(jsonPath("$[0].modificationDate", is(notNullValue())))
+               .andExpect(jsonPath("$[0].versionId", is(VALID_PROTOCOL_1.getVersionId()
+                                                                        .intValue())))
                .andReturn();
-//        verify(protocolService, times(1)).findAll(pageable);
+        verify(protocolService, times(1)).findAll(any(Pageable.class));
         verifyNoMoreInteractions(protocolService);
     }
 
@@ -205,8 +173,8 @@ public class ValidationsRestControllerTest {
 
         given(protocolService.save(VALID_PROTOCOL_ADD)).willReturn(VALID_PROTOCOL_1);
         mockMvc.perform(post("/api/validations")
-                .accept(MediaTypes.HAL_JSON_UTF8_VALUE)
-                .contentType(MediaTypes.HAL_JSON_UTF8_VALUE)
+                .accept(MediaType.APPLICATION_JSON_UTF8_VALUE)
+                .contentType(MediaType.APPLICATION_JSON_UTF8_VALUE)
                 .content(contentBody))
                .andDo(print())
                .andExpect(status().isCreated())
@@ -225,12 +193,6 @@ public class ValidationsRestControllerTest {
                .andExpect(jsonPath("$.creationDate", is(notNullValue())))
                .andExpect(jsonPath("$.modificationDate", is(notNullValue())))
                .andExpect(jsonPath("$.versionId", is(VALID_PROTOCOL_1.getVersionId().intValue())))
-               .andExpect(jsonPath("$._links.self.href", is("http://localhost/api/validations/1")))
-               .andExpect(jsonPath("$._links.validations.href", is("http://localhost/api/validations")))
-               .andExpect(jsonPath("$._links.measures.href", is("http://localhost/api/validations/1/measures")))
-               .andExpect(jsonPath("$._links.machines.href", is("http://localhost/api/validations/1/machines")))
-               .andExpect(jsonPath("$._links.customers.href", is("http://localhost/api/validations/1/customers")))
-               .andExpect(jsonPath("$._links.models.href", is("http://localhost/api/validations/1/models")))
                .andReturn();
         verify(protocolService, times(1)).save(VALID_PROTOCOL_ADD);
         verifyNoMoreInteractions(protocolService);
@@ -242,10 +204,10 @@ public class ValidationsRestControllerTest {
         doNothing().when(protocolService).remove(1L);
 
         mockMvc.perform(delete("/api/validations/1")
-                .accept(MediaTypes.HAL_JSON_UTF8_VALUE)
-                .contentType(MediaTypes.HAL_JSON_UTF8_VALUE))
+                .accept(MediaType.APPLICATION_JSON_UTF8_VALUE)
+                .contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
                .andDo(print())
-               .andExpect(status().isNoContent())
+               .andExpect(status().isOk())
                .andReturn();
         verify(protocolService, times(1)).remove(1L);
         verifyNoMoreInteractions(protocolService);
