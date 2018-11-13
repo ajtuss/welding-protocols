@@ -31,7 +31,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @RunWith(SpringRunner.class)
 @WebMvcTest(value = ValidationsRestController.class, secure = false)
-@Import({ValidProtocolResourceAssembler.class, MeasureResourceAssembler.class, MachineResourceAssembler.class, WelderModelResourceAssembler.class, CustomerResourceAssembler.class})
+@Import({MachineResourceAssembler.class, WelderModelResourceAssembler.class, CustomerResourceAssembler.class})
 public class ValidationsRestControllerTest {
 
     @Autowired

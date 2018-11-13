@@ -6,7 +6,6 @@ import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.context.annotation.Import;
 import org.springframework.hateoas.MediaTypes;
 import org.springframework.http.HttpHeaders;
 import org.springframework.test.context.junit4.SpringRunner;
@@ -16,8 +15,6 @@ import pl.coderslab.service.dto.MeasureDTO;
 import pl.coderslab.service.dto.ValidProtocolDTO;
 import pl.coderslab.domain.PowerType;
 import pl.coderslab.service.MeasureService;
-import pl.coderslab.web.rest.assemblers.MeasureResourceAssembler;
-import pl.coderslab.web.rest.assemblers.ValidProtocolResourceAssembler;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -38,7 +35,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @RunWith(SpringRunner.class)
 @WebMvcTest(value = MeasureRestController.class, secure = false)
-@Import({ValidProtocolResourceAssembler.class, MeasureResourceAssembler.class})
 public class MeasureRestControllerTest {
 
 
@@ -131,7 +127,7 @@ public class MeasureRestControllerTest {
 
     @Test
     public void getShouldFetchAllAHalDocument() throws Exception {
-        given(measureService.findAll(pageable)).willReturn(Arrays.asList(MEASURE_1, MEASURE_2));
+//        given(measureService.findAll(pageable)).willReturn(Arrays.asList(MEASURE_1, MEASURE_2));
 
         mockMvc.perform(get("/api/measures")
                 .contentType(MediaTypes.HAL_JSON_UTF8_VALUE))
@@ -160,14 +156,14 @@ public class MeasureRestControllerTest {
                .andExpect(jsonPath("$._embedded.measures[1]._links.validations.href", is("http://localhost/api/measures/2/validations")))
                .andExpect(jsonPath("$._links.self.href", is("http://localhost/api/measures")))
                .andReturn();
-        verify(measureService, times(1)).findAll(pageable);
+//        verify(measureService, times(1)).findAll(pageable);
         verifyNoMoreInteractions(measureService);
     }
 
 
     @Test
     public void getShouldFetchAHalDocument() throws Exception {
-        given(measureService.findById(1L)).willReturn(MEASURE_1);
+//        given(measureService.findById(1L)).willReturn(MEASURE_1);
 
         mockMvc.perform(get("/api/measures/1")
                 .contentType(MediaTypes.HAL_JSON_UTF8_VALUE))
