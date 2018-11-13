@@ -1,32 +1,28 @@
 package pl.coderslab.service;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import pl.coderslab.service.dto.*;
 import pl.coderslab.domain.DBFile;
 
-import java.util.List;
+import java.util.Optional;
 
 public interface ValidProtocolService {
 
-    List<ValidProtocolDTO> findAll();
+    Page<ValidProtocolDTO> findAll(Pageable pageable);
 
-    ValidProtocolDTO findById(Long id);
+    Optional<ValidProtocolDTO> findById(long id);
 
     ValidProtocolDTO save(ValidProtocolDTO validProtocolDTO);
 
-    ValidProtocolDTO update(ValidProtocolDTO validProtocolDTO);
+    void remove(long id);
 
-    void remove(Long id);
+    Page<MeasureDTO> findAllMeasures(long id, Pageable pageable);
 
-    List<MeasureDTO> findAllMeasures(Long id);
+    Optional<ValidProtocolDTO> closeProtocol(long id);
 
-    MachineDTO findMachineByValidProtocolId(Long id);
+    Optional<ValidProtocolDTO> openProtocol(long id);
 
-    void closeProtocol(Long id);
-    void openProtocol(Long id);
+    DBFile getFile(long id);
 
-    DBFile getFile(Long id);
-
-    CustomerDTO findCustomerByValidProtocolId(Long id);
-
-    WelderModelDTO findWelderModelByValidProtocolId(Long id);
 }
